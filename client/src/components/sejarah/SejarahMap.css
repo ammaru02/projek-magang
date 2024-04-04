@@ -1,0 +1,69 @@
+.card-sejarah {
+    display: flex;
+    flex-direction: column; /* Ubah menjadi kolom agar konten bisa di-scroll */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 80%; /* Lebar card */
+    border-radius: 5px;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    background: #EEE7E7;
+    overflow: hidden; /* Mengatur overflow menjadi hidden */
+  }
+  
+  .card-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%; /* Lebar konten */
+    padding: 20px;
+  }
+  
+  .card-title-sejarah h1{
+    text-align: center;
+    font-size: 30px;
+    margin-right: 20px; /* Jarak antara judul dan deskripsi */
+    flex: 1;
+  }
+  
+  .card-description {
+    font-size: 16px;
+    margin-bottom: 20px;
+    flex: 1; /* Agar deskripsi memenuhi sisa ruang */
+    overflow-y: auto;
+  }
+  
+  .card-map{
+    width: 550px; /* Lebar peta */
+    height: 300px; /* Tinggi peta */
+  }
+  .card-map iframe{
+    width: 500px;
+    height: 300px;
+    border-radius: 7px;
+  }
+  
+  .card-description p{
+    margin-top: 20px;
+    margin-left: 15px;
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+  
+  .card-description button {
+    background-color: transparent;
+    color: #007bff;
+    padding: 0;
+    border: none;
+    font-size: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    margin-left: 15px;
+    margin-top: 10px; /* Atur margin atas agar tombol berada di bawah deskripsi */
+  }
+  
+  button:hover {
+    color: #0056b3;
+  }
+  

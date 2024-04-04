@@ -1,0 +1,14 @@
+.carousel .slider-wrapper{
+    width: 100%;
+}
+
+.carousel{
+    text-align: center;
+    margin-bottom: 100px;
+}
+.main-carousel{
+    margin-top: 80px;
+}
+.main-carousel img{
+    object-fit: cover;
+}
