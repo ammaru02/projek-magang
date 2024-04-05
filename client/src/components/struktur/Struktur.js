@@ -26,27 +26,7 @@ const DataImage = [
         "Image": image2,
         "Title": "Gambar4"
     }, 
-    {
-        "Image": image1,
-        "Title": "Gambar4"
-    },
-    {
-        "Image": image1,
-        "Title": "Gambar4"
-    },
-    {
-        "Image": image1,
-        "Title": "Gambar4"
-    },
-    {
-        "Image": image1,
-        "Title": "Gambar4"
-    },
-    {
-        "Image": image1,
-        "Title": "Gambar4"
-    },
-    
+ 
 ]
 
 function Struktur() {

@@ -1,6 +1,6 @@
 export const MenuItems =[
     {
-        title: 'Visi-Misi',
+        title: 'Visi Misi & Struktur Desa',
         path : '/visimisi',
         cName : 'dropdown-link'
     },
@@ -11,7 +11,7 @@ export const MenuItems =[
     },
     {
         title: 'Keunggulan Desa',
-        path : '/tentangkami',
+        path : '/keunggulan',
         cName : 'dropdown-link'
     }
 ];
