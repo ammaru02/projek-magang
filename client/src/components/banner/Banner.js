@@ -15,21 +15,21 @@ const Banner = ()=>{
         <>
         <Carousel className="main-carousel" showThumbs={false}>
                 <div>
-                    <img src={image1} height="500px" width="200px" />
+                    <img src={image1} height="550px" width="200px" />
                     
                 </div>
                 <div>
-                    <img src={image2} height="500px" width="200px" />
+                    <img src={image2} height="550px" width="200px" />
                     
                 </div>
                 <div>
-                    <img src={image3} height="500px" width="200px" />
+                    <img src={image3} height="550px" width="200px" />
                 </div>
                 <div>
-                    <img src={image4} height="500px" width="200px" />
+                    <img src={image4} height="550px" width="200px" />
                 </div>
                 <div>
-                    <img src={image5} height="500px" width="200px" />
+                    <img src={image5} height="550px" width="200px" />
                 </div>
             </Carousel>
         </>
