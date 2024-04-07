@@ -12,3 +12,11 @@
 .main-carousel img{
     object-fit: cover;
 }
+
+@media screen and (max-width: 768px) {
+    .main-carousel img {
+        width: 100%; /* Gambar akan mengambil lebar maksimum dari layar */
+        max-height: 300px; /* Tinggi gambar akan disesuaikan untuk menjaga aspek rasio */
+    }
+
+}

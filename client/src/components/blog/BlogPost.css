@@ -34,7 +34,7 @@
   }
   
   .blog-post img {
-    width: 50%; /* Lebar gambar sesuai dengan lebar konten utama */
+    width: 80%; /* Lebar gambar sesuai dengan lebar konten utama */
     height: 200px;
   }
   
@@ -112,8 +112,8 @@
     }
   
     .blog-post img {
-      width: 70%; /* Lebar gambar 100% pada layar kecil */
-      height: 300px;
+      max-width: 70%; /* Lebar gambar 100% pada layar kecil */
+      max-height: 300px;
     }
   
     .sidebar {
@@ -131,8 +131,8 @@
     }
   
     .recent-post-item img {
-      width: 60%; /* Lebar gambar 100% pada layar kecil */
-      height: auto;
+      max-width: 100%; /* Lebar gambar 100% pada layar kecil */
+      max-height: auto;
       margin-right: 0; /* Hapus margin kanan pada gambar pada layar kecil */
       margin-bottom: 10px; /* Tambahkan margin bottom pada gambar pada layar kecil */
     }

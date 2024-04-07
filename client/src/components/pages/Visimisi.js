@@ -1,13 +1,14 @@
 import React from 'react'
 import Navbar from '../header/Navbar'
-import Banner from '../banner/Banner'
 import Footer from '../footer/Footer'
+import VisimisiStruktu from '../visimisi-struktur/VisimisiStruktur'
+import './Visimisi.css';
 
 export default function Visimisi() {
   return (
-    <div>
+    <div className='pages-visimisi'>
       <Navbar/>
-      <Banner/>
+      <VisimisiStruktu/>
       <Footer/>
     </div>
   )
