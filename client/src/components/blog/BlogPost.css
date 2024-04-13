@@ -31,11 +31,13 @@
   
   .blog-post p {
     margin-bottom: 5px;
+    text-align: justify;
+    margin-right: 100px;
   }
   
   .blog-post img {
-    width: 80%; /* Lebar gambar sesuai dengan lebar konten utama */
-    height: 200px;
+    width: 90%; /* Lebar gambar sesuai dengan lebar konten utama */
+    height: 250px;
   }
   
   .truncate-text {
