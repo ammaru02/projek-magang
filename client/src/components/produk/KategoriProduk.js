@@ -4,7 +4,6 @@ import image1 from '../image/produk1.jpg'
 import image2 from '../image/produk2.jpg'
 import image3 from '../image/produk3.jpg'
 import image4 from '../image/produk4.jpg'
-import image5 from '../image/produk5.jpg'
 import { Link } from "react-router-dom";
 
 const DataImage = [
@@ -22,12 +21,8 @@ const DataImage = [
     },
     {
         "Image": image4,
-        "Title": "Sayuran"
+        "Title": "Sayuran & Buah"
     },
-    {
-        "Image": image5,
-        "Title": "Buah"
-    }, 
  
 ]
 
