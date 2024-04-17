@@ -2,13 +2,13 @@ import React from 'react'
 import './Produk.css'
 import Navbar from '../header/Navbar'
 import Footer from '../footer/Footer'
-import Blog from '../blog/BlogPost'
+import ProdukAll from '../produk/ProdukAll'
 
 export default function Produk() {
   return (
     <div className='pages-produk'>
       <Navbar/>
-      <Blog/>
+      <ProdukAll/>
       <Footer/>
     </div>
   )
