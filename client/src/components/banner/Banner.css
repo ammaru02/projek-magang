@@ -1,22 +1,27 @@
-.carousel .slider-wrapper{
+.main-carousel {
     width: 100%;
 }
 
-.carousel{
-    text-align: center;
-    margin-bottom: 100px;
-}
-.main-carousel{
-    margin-top: 80px;
-}
-.main-carousel img{
-    object-fit: cover;
-}
-
-@media screen and (max-width: 768px) {
-    .main-carousel img {
-        width: 100%; /* Gambar akan mengambil lebar maksimum dari layar */
-        max-height: 300px; /* Tinggi gambar akan disesuaikan untuk menjaga aspek rasio */
+@media (max-width: 600px) {
+    .main-carousel .carousel .slide img {
+        height: 200px;
+        object-fit: cover;
     }
+}
 
+@media (min-width: 601px) and (max-width: 1024px) {
+    .main-carousel .carousel .slide img {
+        height: 400px;
+        object-fit: cover;
+    }
+}
+
+@media (min-width: 1025px) {
+    .main-carousel .carousel .slide img {
+        height: 600px;
+        object-fit: cover;
+    }
+}
+.banner {
+    margin-top: 70px; /* adjust as needed */
 }
