@@ -5,6 +5,7 @@ import BlogPost from "../blog/BlogPost";
 import Struktur from "../struktur/Struktur";
 import SejarahMap from "../sejarah/SejarahMap";
 import Footer from "../footer/Footer";
+import StoreImage from "../StoreImage/StoreImage";
 
 const Home = () => {
     return(
