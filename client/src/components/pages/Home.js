@@ -6,6 +6,7 @@ import Struktur from "../struktur/Struktur";
 import SejarahMap from "../sejarah/SejarahMap";
 import Footer from "../footer/Footer";
 
+
 const Home = () => {
     return(
         <>
