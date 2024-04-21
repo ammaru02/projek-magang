@@ -1,29 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import './VisimisiStruktur.css'
 import image1 from '../image/Banner1.jpeg'
 
-const VisimisiStruktu = ()=>{
-    return(
+const VisimisiStruktu = () => {
+    const [visi, setVisi] = useState("");
+    const [misi, setMisi] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/visi') // ganti dengan URL API backend Flask Anda
+            .then(response => response.json())
+            .then(data => {
+                console.log('Data:', data);
+                if (data.data && data.data.length > 0) {
+                    setVisi(data.data[0].visi); // simpan visi ke dalam state
+                }
+            })
+            .catch(error => console.error('Error:', error)); // tambahkan penanganan error
+    }, []);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/misi') // ganti dengan URL API backend Flask Anda
+            .then(response => response.json())
+            .then(data => {
+                console.log('Data:', data);
+                if (data.data && data.data.length > 0) {
+                    setMisi(data.data); // simpan misi ke dalam state
+                }
+            })
+            .catch(error => console.error('Error:', error)); // tambahkan penanganan error
+    }, []);
+
+    return (
         <>
             <div className="container">
                 <div className="page-visimisi">
-                    <i class="fa-solid fa-house"><p className="teks-icon">/ Visi Misi & Struktur Desa</p></i>
+                    <i className="fa-solid fa-house"><p className="teks-icon">/ Visi Misi & Struktur Desa</p></i>
                     <h2 className="title-visimisi">VISI MISI DESA KASSI</h2>
                 </div>
                 <div className="visimisi-isi">
                     <h3>Visi</h3>
                     <p className="deskripsi-visimisi">
-                    Terwujudnya ekonomi kerakyatan yang tangguh, inovatif, dan berkeadilan berbasis pelayanan prima pemerintah desa kassi dan partisipasi masyarakat
+                        {visi}
                     </p>
                 </div>
                 <div className="visimisi-isi">
                     <h3>Misi</h3>
                     <ol className="list-misi">
-                        <li><p>Meningkatkan sumber daya aparatur pemerintah dan masyarakat untuk meningkatkan kapasitas dan kapabilitas aparatur dan meningkatkan kualitas hidup masyarakat</p></li>
-                        <li><p>Meningkatkan kulaitas pelayanan aparatur desa di desa</p></li>
-                        <li><p>Membangun kemandirian ekonomi masyarakat yang bertumpu pada potensi lokal</p></li>
-                        <li><p>Meningkatkan ekonomi masyarakat dengan mengoptimalkan pengelolaan sumber daya lokal secara berkelanjutan</p></li>
-                        <li><p>Meningkatkan kelembagaan masyarakat desa</p></li>
+                        {misi.map((item, index) => (
+                            <li key={index}><p>{item.misi}</p></li>
+                        ))}
                     </ol>
                 </div>
                 <div className="page-struktur">
