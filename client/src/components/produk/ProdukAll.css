@@ -1,73 +1,36 @@
-.page-produk-all{
-    margin-top: 100px;
-    width: 100%;
-}
-.teks-icon{
-    display: inline-block;
-    font-size: 20px;
-}
-.title-produkall{
-    margin-top: 20px;
-    color: #5739CF;
-}
-.card-image {
-    width: 100%; /* Lebar gambar */
-    height: 200px; /* Menyesuaikan tinggi gambar secara otomatis */
-    border-radius: 5px; /* Membuat sudut gambar menjadi bulat */
-    margin-top: 10px;
-}
-.card-produkall {
-    overflow-x: auto; /* Menambahkan scrollbar horizontal jika konten melebihi lebar */
+.card-container {
     display: flex;
-    flex-wrap: wrap; /* Mengatur agar kartu-kartu bisa pindah ke baris baru */
-    justify-content: center;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
+
 .card {
-    width: 200px; /* Lebar kartu */
-    margin-bottom: 20px; /* Jarak antara kartu */
-    border: 1px solid #ccc; /* Garis pinggir kartu */
-    border-radius: 8px; /* Membuat sudut kartu menjadi bulat */
-    padding: 10px; /* Ruang dalam kartu */
-    display: flex; /* Menggunakan flexbox untuk mengatur posisi tombol */
-    flex-direction: column; /* Mengatur arah konten ke vertikal */
-    justify-content: space-between; /* Menyusun konten secara vertikal dan memberikan ruang antara judul dan tombol */
-    align-items: center;
-}
-
-button {
-    background-color: #D2D5D7; /* Warna latar belakang tombol */
-    color: #000; /* Warna teks tombol */
-    border: none; /* Menghapus border tombol */
-    padding: 10px 20px; /* Ruang dalam tombol */
-    border-radius: 20px; /* Membuat sudut tombol menjadi bulat */
-    cursor: pointer; /* Mengubah kursor saat diarahkan ke tombol */
-    transition: background-color 0.3s; /* Efek transisi untuk perubahan warna latar belakang */
-    margin-top: 10px;
-    margin-bottom: 5px;
-    width: 150px;
-}
-
-button:hover {
-    background-color: #D2D5D7; /* Warna latar belakang tombol saat dihover */
-    color: #000;
-}
-.search-input{
+    border: 1px solid #ccc;
+    border-radius: 5px;
     width: 200px;
-    height: 25px;
-    border-radius: 10px;
-    padding: 5px;
+    margin: 20px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.search-container {
-    position: relative;
+.card-image {
+    width: 100%;
+    height: auto;
 }
 
+.card-title {
+    font-size: 20px;
+    margin: 10px 0;
+}
 
-.search-icon {
-    position: absolute;
-    top: 50%;
-    right: 10px; /* Sesuaikan dengan posisi horizontal ikon */
-    transform: translateY(-50%);
+.detail-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    text-align: center;
 }
