@@ -50,7 +50,9 @@ const Footer = () => {
             <div className='col'>
                 <h2>Kontak Kami</h2>
                 <p>Jl.Poros Majene No.16 Desa Lapeo</p>
-                <p>Kecamatan</p>
+                <p>Kecamatan Campalagian Kabupaten</p>
+                <p>Polewali Mandar Provinsi Sulawesi Barat</p>
+                <p>Kode Pos 91353</p>
             </div>
         </div>
     </div>
