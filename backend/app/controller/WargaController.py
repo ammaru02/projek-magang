@@ -2,6 +2,7 @@ from app.model.warga import Warga
 from app.model.produk import Produk
 from app import response, app, db
 from flask import request
+from flask import jsonify
 
 def index():
     try:
@@ -66,4 +67,15 @@ def formatProduk(data):
         array.append(singleProduk(i))
     return array
 
+def get(id):
+    warga = Warga.query.get(id)
+    if warga is None:
+        return jsonify({'message': 'Warga not found'}), 404
 
+    warga_dict = {
+        'id': warga.id,
+        'wa': warga.wa,
+        # tambahkan field lainnya jika ada
+    }
+
+    return jsonify(warga_dict), 200

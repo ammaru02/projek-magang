@@ -6,6 +6,7 @@ from app.model.kategori import Kategori
 class Produk(db.Model):
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
+    foto = db.Column(db.String(100), nullable=False)
     harga = db.Column(db.Float, nullable=False)
     deskripsi = db.Column(db.String(50), nullable=False)
     desa_id = db.Column(db.BigInteger, db.ForeignKey('desa.id'))
@@ -14,3 +15,12 @@ class Produk(db.Model):
     
     def __repr__(self):
         return '<Produk {}>'.format(self.name)
+    def serialize(self):
+            return {
+                'id': self.id,
+                'foto': self.foto,
+                'name': self.name,
+                'harga': self.harga,
+                'deskripsi': self.id,
+                # ... other fields ...
+            }

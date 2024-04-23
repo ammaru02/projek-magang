@@ -23,6 +23,10 @@ def wargas():
     else:
         return WargaController.index()
 
+@app.route('/warga/<int:id>', methods=['GET'])
+def get_warga(id):
+    return WargaController.get(id)
+
 @app.route('/banner', methods=['POST'])
 def add_banner():
     data = request.get_json()
@@ -80,6 +84,10 @@ def produks():
         return ProdukController.create()
     else:
         return ProdukController.index()
+    
+@app.route('/produk/<int:id>', methods=['GET'])
+def get_produk(id):
+    return ProdukController.get(id)
 
 @app.route('/sejarah', methods=['GET', 'POST'])
 def sejarahs():
