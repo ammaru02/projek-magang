@@ -7,7 +7,7 @@ import Sejarah from './components/pages/Sejarah';
 import Keunggulan from './components/pages/Keunggulan';
 import Produk from './components/pages/Produk';
 import ProdukKategori from './components/pages/ProdukKategori';
-import DetailProduk from './components/pages/DetailProduk';
+import ProdukDetail from './components/produk/ProdukDetail';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         <Route path='/keunggulan' element={<Keunggulan />} />
         <Route path='/produkdesa' element={<ProdukKategori />} />
         <Route path='/produk' element={<Produk />} />
-        <Route path='/produkdetail' element={<DetailProduk />} />
+        <Route path="/produkdetail/:id" element={<ProdukDetail />} />
       </Routes>
     </Router>
   );
