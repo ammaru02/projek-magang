@@ -46,8 +46,8 @@ const KategoriProduk = () => {
                         <img src={index === 0 ? image1 : index === 1 ? image2 : index === 2 ? image3 : image4} alt={item.name} className='card-image' />
                         {/* Menyertakan id kategori saat tombol "Show" diklik */}
                         <Link to={`/produk?kategoriId=${encodeURIComponent(item.id)}`}>
-    <button>Show</button>
-</Link>
+                            <button>Show</button>
+                        </Link>
                     </div>
                 ))}
             </div>

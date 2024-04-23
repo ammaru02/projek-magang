@@ -24,11 +24,15 @@ fetch(apiUrl)
 
     return (
         <div className="card-container">
+            <div className="page-all-produk">
+                <i className="fa-solid fa-house"><p className="teks-icon">/ PRODUK DESA</p></i>
+                <h2 className="title-produk">PRODUK DESA KASSI</h2>
+            </div>
             {produk.map((item, index) => (
                 <div key={index} className="card">
                     <img src={item.image} alt={item.name} className="card-image" />
                     <h2 className="card-title">{item.name}</h2>
-                    <Link to={`/detail/${item.id}`}>
+                    <Link to={`/produkdetail/${item.id}`}>
                         <button className="detail-button">Detail</button>
                     </Link>
                 </div>
