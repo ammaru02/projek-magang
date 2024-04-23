@@ -3,12 +3,23 @@
     flex-wrap: wrap;
     justify-content: space-around;
 }
+.page-all-produk{
+    margin-top: 100px;
+    margin-left: 30px;
+    width: 100%;
+}
 
+.title-produk{
+    margin-top: 20px;
+    color: #5739CF;
+}
 .card {
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 200px;
     margin: 20px;
+    margin-top: 100px;
+    height: 300px;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
@@ -24,13 +35,19 @@
 }
 
 .detail-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
+    background-color: #D2D5D7; /* Warna latar belakang tombol */
+    color: #000; /* Warna teks tombol */
+    border: none; /* Menghapus border tombol */
+    padding: 10px 20px; /* Ruang dalam tombol */
+    border-radius: 20px; /* Membuat sudut tombol menjadi bulat */
+    cursor: pointer; /* Mengubah kursor saat diarahkan ke tombol */
+    transition: background-color 0.3s; /* Efek transisi untuk perubahan warna latar belakang */
+    margin-top: 10px;
+    margin-bottom: 5px;
+    width: 150px;
+}
+
+.detail-button:hover{
+    background-color: #D2D5D7; /* Warna latar belakang tombol saat dihover */
+    color: #000;
 }

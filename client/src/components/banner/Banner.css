@@ -1,5 +1,6 @@
 .main-carousel {
     width: 100%;
+    margin-top: 80px;
 }
 
 @media (max-width: 600px) {
@@ -18,7 +19,7 @@
 
 @media (min-width: 1025px) {
     .main-carousel .carousel .slide img {
-        height: 600px;
+        height: 550px;
         object-fit: cover;
     }
 }
