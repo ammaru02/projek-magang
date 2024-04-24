@@ -20,7 +20,7 @@
     color: #5739CF;
 }
 
-.card-content {
+.card-content-keunggulan {
     display: flex;
     width: 100%;
     margin-bottom: 20px;
@@ -29,28 +29,28 @@
     
 }
 
-.card-map {
+.card-map-keunggulan {
     width: 30%;
     margin-right: 20px;
 }
 
-.card-map img {
+.card-map-keunggulan img {
     width: 100%;
     border-radius: 5px;
     margin-top: 20px;
 }
 
-.card-description {
+.card-description-keunggulan {
     width: 70%;
     overflow: visible;
     transition: height 0.3s ease-in-out;
 }
 
-.card-description p {
+.card-description-keunggulan p {
     margin-bottom: 10px;
 }
 
-.card-description button {
+.card-description-keunggulan button {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -58,9 +58,8 @@
     cursor: pointer;
 }
 
-.card-keunggulan1,
-.card-keunggulan2,
-.card-keunggulan3 {
+
+.card-keunggulan {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 5px;
