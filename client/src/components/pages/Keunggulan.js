@@ -1,13 +1,13 @@
 import React from 'react'
 import Navbar from '../header/Navbar'
-import Blog from '../blog/BlogPost'
 import Footer from '../footer/Footer'
+import KeunggulanComp from '../keunggulan/KeunggulanComp'
 
 export default function Keunggulan() {
   return (
     <div>
       <Navbar/>
-      <Blog/>
+      <KeunggulanComp/>
       <Footer/>
     </div>
   )

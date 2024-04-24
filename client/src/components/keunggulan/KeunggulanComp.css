@@ -1,0 +1,82 @@
+.container-sm {
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+    margin-right:50px;
+    margin-left:50px;
+    
+}
+
+.page-keunggulan{
+    width: 100%;
+    margin-bottom: 20px;
+}
+.teks-icon{
+    display: inline-block;
+    font-size: 20px;
+}
+.title-keunggulan{
+    margin-top: 20px;
+    color: #5739CF;
+}
+
+.card-content {
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    
+}
+
+.card-map {
+    width: 30%;
+    margin-right: 20px;
+}
+
+.card-map img {
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.card-description {
+    width: 70%;
+    overflow: visible;
+    transition: height 0.3s ease-in-out;
+}
+
+.card-description p {
+    margin-bottom: 10px;
+}
+
+.card-description button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.card-keunggulan1,
+.card-keunggulan2,
+.card-keunggulan3 {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    background: #EEE7E7;
+}
+
+@media (max-width: 768px) {
+    .card-map {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .card-content {
+        flex-direction: column;
+    }
+}
