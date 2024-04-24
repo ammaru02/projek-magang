@@ -11,4 +11,4 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from app import routes
-from app.model import admin, banner, artikel, desa, deskripsi_produk, kategori, produk, sejarah, struktur, visi, warga, misi
+from app.model import admin, banner, artikel, desa, deskripsi_produk, kategori, produk, sejarah, struktur, visi, warga, misi, keunggulan

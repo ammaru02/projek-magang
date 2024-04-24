@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from flask_cors import cross_origin
 from app import app, db
-from app.controller import DesaController, VisiController, WargaController, BannerController, AdminController, ArtikelController, KategoriController, ProdukController, SejarahController, StrukturController, MisiController
+from app.controller import DesaController, VisiController, WargaController, AdminController, ArtikelController, KategoriController, ProdukController, SejarahController, StrukturController, MisiController, KeunggulanController
 from app.model.banner import Banner  
 
 
@@ -116,3 +116,14 @@ def misis():
         return MisiController.create()
     else:
         return MisiController.index()
+    
+@app.route('/keunggulan', methods=['GET', 'POST'])
+def keunggulans():
+    if request.method == 'POST':
+        return KeunggulanController.create()
+    else:
+        return KeunggulanController.index()
+    
+@app.route('/keunggulan/<int:id>', methods=['GET'])
+def get_keunggulan(id):
+    return KeunggulanController.get(id)
