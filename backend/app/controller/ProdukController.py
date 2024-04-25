@@ -31,6 +31,7 @@ def singleObject(produk):
     produk = {
         'id' : produk.id,
         'name' : produk.name,
+        'foto' : produk.foto,
         'harga' : produk.harga,
         'deskripsi' : produk.deskripsi,
         'desa_id' : produk.desa_id,
@@ -47,6 +48,7 @@ def get(id):
     produk_dict = {
         'id': produk.id,
         'name': produk.name,
+        'foto': produk.foto,
         'deskripsi': produk.deskripsi,
         'harga': produk.harga,
         'kategori_id': produk.kategori_id,
