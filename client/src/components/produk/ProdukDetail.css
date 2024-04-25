@@ -1,0 +1,38 @@
+.page-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* membuat elemen berada di tengah vertikal halaman */
+    text-align: left; /* mengatur teks menjadi rata tengah */
+}
+
+.page-detail img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px; /* jarak antara gambar dengan teks */
+}
+
+.page-detail h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.page-detail p {
+    margin-bottom: 10px;
+}
+
+.page-detail button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.page-detail button:hover {
+    background-color: #0056b3;
+}
