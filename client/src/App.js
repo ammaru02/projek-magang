@@ -8,9 +8,7 @@ import Produk from './components/pages/Produk';
 import ProdukKategori from './components/pages/ProdukKategori';
 import Keunggulan from './components/pages/Keunggulan';
 import DetailProduk from './components/pages/DetailProduk';
-import Dashboard from './components/admin/dashboard/Dashboard';
-import Sidebar from './components/admin/sidebar/Sidebar';
-import { Button } from 'react-bootstrap';
+import HomeAdmin from './components/admin/pagesadmin/HomeAdmin';
 
 function App() {
   return (
@@ -24,8 +22,8 @@ function App() {
         <Route path='/produkdesa' element={<ProdukKategori />} />
         <Route path='/produk' element={<Produk />} />
         <Route path="/produkdetail/:id" element={<DetailProduk />} />
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/sidebar' element={<Sidebar />} />
+        <Route path="/homeadmin" element={<HomeAdmin />} />
+        
       </Routes>
     </Router>
   );
