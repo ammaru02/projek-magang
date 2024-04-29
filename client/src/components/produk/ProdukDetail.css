@@ -1,38 +1,46 @@
 .page-detail {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; /* membuat elemen berada di tengah vertikal halaman */
-    text-align: left; /* mengatur teks menjadi rata tengah */
+    height: 700px; /* Tetapkan tinggi konstan untuk wadah */
+    width: 100%; /* Tetapkan lebar konstan untuk wadah */
+    margin: 0 auto; /* Tengahkan wadah secara horizontal */
+    margin-top: 90px;
+    padding-left: 50px; /* Tambahkan padding untuk menggantikan margin kiri */
+    padding-right: 50px; 
 }
 
-.page-detail img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 20px; /* jarak antara gambar dengan teks */
+.judul-detail{
+    margin-top: 5px;
 }
 
-.page-detail h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
+.title-detail{
+    margin-top: 20px;
+    color: #5739CF;
 }
 
-.page-detail p {
-    margin-bottom: 10px;
+.detail-image img {
+    width: 100%; /* Buat gambar mengisi wadah gambar */
+    height: 400px; /* Biarkan gambar menyesuaikan tingginya sambil mempertahankan rasio aspek */
+    max-width: calc(100% - 500px);
+    margin-top: 20px;
+}   
+
+.detail-teks {
+    width: 100%; /* Buat wadah teks mengisi wadah utama */
+    /* Tambahkan padding untuk penataan yang lebih baik */
+    box-sizing: border-box; /* Termasuk padding dan border dalam perhitungan lebar */ /* Membuat margin kiri menjadi 0 */
 }
 
-.page-detail button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+.detail-teks h2 {
+    font-size: 24px; /* Ukuran teks untuk judul */
+    margin-top: 10px;
 }
 
-.page-detail button:hover {
-    background-color: #0056b3;
+.detail-teks p {
+    font-size: 16px; /* Ukuran teks untuk paragraf */
+    line-height: 1.6; /* Jarak antar baris */
+    margin-bottom: 10px; /* Spasi bawah untuk paragraf */
 }
+
+
+
