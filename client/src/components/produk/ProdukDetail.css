@@ -28,7 +28,7 @@
 .detail-teks {
     width: 100%; /* Buat wadah teks mengisi wadah utama */
     /* Tambahkan padding untuk penataan yang lebih baik */
-    box-sizing: border-box; /* Termasuk padding dan border dalam perhitungan lebar */ /* Membuat margin kiri menjadi 0 */
+    box-sizing: border-box; /* Termasuk padding dan border dalam perhitungan lebar / / Membuat margin kiri menjadi 0 */
 }
 
 .detail-teks h2 {
@@ -39,8 +39,5 @@
 .detail-teks p {
     font-size: 16px; /* Ukuran teks untuk paragraf */
     line-height: 1.6; /* Jarak antar baris */
-    margin-bottom: 10px; /* Spasi bawah untuk paragraf */
+    margin-bottom: 10px; /* Spasi bawah untuk paragraf */
 }
-
-
-
