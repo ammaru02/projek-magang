@@ -23,7 +23,7 @@ const SejarahDesa = () => {
                 <div className="sejarah-isi" key={index}>
                     <p className="sejarah-deskripsi">{item.deskripsi}</p>
                     {index === 0 && (
-                        <ul style={{ textAlign: 'left', paddingLeft: '20px' }}>
+                        <ul className="list-sejarah" style={{ textAlign: 'left', paddingLeft: '20px' }}>
                             <li>Sebelah Utara berbatasan dengan Desa Loka</li>
                             <li>Sebelah Selatan berbatasan dengan Desa Pallantikang</li>
                             <li>Sebelah Timur berbatasan dengan Kabupaten Bantaeng</li>
