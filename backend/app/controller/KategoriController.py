@@ -19,5 +19,6 @@ def singleObject(kategori):
     kategori = {
         'id' : kategori.id,
         'name' : kategori.name,
+        'foto' : kategori.foto,
     }
     return kategori

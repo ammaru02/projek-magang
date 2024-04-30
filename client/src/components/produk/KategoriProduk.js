@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 import './KategoriProduk.css';
 import image1 from '../image/produk1.jpg';
 import image2 from '../image/produk2.jpg';
@@ -8,8 +9,11 @@ import image4 from '../image/produk4.jpg';
 
 const KategoriProduk = () => {
     const [kategori, setKategori] = useState([]);
+    const [imageUrls, setImageUrls] = useState([]);
 
     useEffect(() => {
+        const storage = getStorage();
+        const storageRef = ref(storage, 'images/kategori/');
         fetch('http://localhost:5000/kategori')
             .then(response => {
                 if (!response.ok) {
@@ -23,6 +27,13 @@ const KategoriProduk = () => {
                     setKategori(data.data); // simpan kategori ke dalam state
                 }
             })
+            listAll(storageRef)
+        .then((res) => {
+            let promises = res.items.map((item) => getDownloadURL(item));
+            Promise.all(promises)
+                .then((urls) => setImageUrls(urls))
+                .catch((error) => console.log(error));
+        })
             .catch(error => console.error('Error:', error)); // tambahkan penanganan error
     }, []);
 
@@ -43,10 +54,11 @@ const KategoriProduk = () => {
                         <div className='card-title'>
                             <h4>{item.name}</h4>
                         </div>
-                        <img src={index === 0 ? image1 : index === 1 ? image2 : index === 2 ? image3 : image4} alt={item.name} className='card-image' />
+                        {/* <img src={index === 0 ? image1 : index === 1 ? image2 : index === 2 ? image3 : image4} alt={item.name} className='card-image' /> */}
+                        <img src={imageUrls[index]} alt={item.foto} className='card-image' />
                         {/* Menyertakan id kategori saat tombol "Show" diklik */}
                         <Link to={`/produk?kategoriId=${encodeURIComponent(item.id)}`}>
-                            <button>Lihat</button>
+                            <button>Show</button>
                         </Link>
                     </div>
                 ))}
