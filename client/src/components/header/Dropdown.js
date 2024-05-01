@@ -19,7 +19,7 @@ function Dropdown(){
                                 {item.title}
                             </Link>
                         </li>
-                    )
+                    );
                 })}
             </ul>
         </>

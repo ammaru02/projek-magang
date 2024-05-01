@@ -13,7 +13,7 @@ const SejarahDesa = () => {
 
     return (
         <>
-            <div className="container">
+            <div className="container-sm">
                 <div className="page-sejarah">
                     <i className="fa-solid fa-house"><p className="teks-icon">/ SEJARAH DESA</p></i>
                     <h2 className="title-sejarah">SEJARAH DESA KASSI</h2>

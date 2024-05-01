@@ -62,7 +62,7 @@ const handleReadMoreDescription = (index) => {
                     ) : (
                     <p>{news.description}</p>
                     )}
-                    <button onClick={() => setShowFullContent(!showFullContent)} className='read-more-button'>
+                    <button onClick={() => setShowFullContent(!showFullContent)} className='read-more-button1'>
                     {showFullContent ? "Tutup" : "Baca Selengkapnya"}
                     </button>
                 </div>

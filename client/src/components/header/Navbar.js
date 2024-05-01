@@ -1,43 +1,49 @@
-/* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-// import { Button } from './Button';
 import './Navbar.css';
 import Dropdown from './Dropdown';
 import gambar from '../image/logo.png';
 
-
-
-
 function Navbar(){
     const [click, setClick] = useState(false);
     const [dropdown, setDropdown] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const updateMedia = () => {
+            setIsMobile(window.innerWidth < 960);
+        };
+        updateMedia();
+        window.addEventListener("resize", updateMedia);
+        return () => window.removeEventListener("resize", updateMedia);
+    }, []);
 
     const handleClick = () => setClick(!click);
     const closeMobileMenu = () => setClick(false);
 
     const onMouseEnter = () =>{
-        if (window.innerWidth < 960) {
-            setDropdown(false)
-        }else{
-            setDropdown(true)
+        if (isMobile) {
+            setDropdown(false);
+        } else {
+            setDropdown(true);
         }
     };
 
     const onMouseLeave = () =>{
-        if (window.innerWidth < 960) {
-            setDropdown(false)
-        }else{
-            setDropdown(false)
+        if (isMobile) {
+            setDropdown(false);
         }
     };
-    
+
+    const handleDropdownLeave = () => {
+        setDropdown(false); // Menutup dropdown ketika kursor keluar dari dropdown
+    };
 
     return(
         <>
             <nav className='navbar'>
                 <Link to='/' className='navbar-logo'>
-                    <img src={gambar} className='logo'/>
+                    <img src={gambar} alt='logo' className='logo'/>
                     <h1 className='logo-text'>DESA KASSI KABUPATEN JENEPONTO</h1>
                 </Link>
                 <div className='menu-icon' onClick={handleClick}>
@@ -51,24 +57,38 @@ function Navbar(){
                         <Link to='/profildesa' className='nav-links' onClick={closeMobileMenu}>
                             Profil Desa <i className='fas fa-caret-down'/>
                         </Link>
-                        {dropdown && <Dropdown/>}
+                        {dropdown && <Dropdown onMouseLeave={handleDropdownLeave} />}
                     </li>
                     <li className='nav-item'>
                         <Link to='/produkdesa' className='nav-links' onClick={closeMobileMenu}>
                             Produk Desa
                         </Link>
                     </li>
-                    {/* <li className='nav-item'>
-                        <Link to='/login' className='nav-links-mobile' onClick={closeMobileMenu}>
-                            Login
+                    {isMobile &&
+                    <li className='nav-item'>
+                        <Link to='/visimisi' className='nav-links' onClick={closeMobileMenu}>
+                            Visi Misi & Struktur Desa
                         </Link>
-                        <Button/>
-                    </li> */}
+                    </li>
+                    }
+                    {isMobile &&
+                    <li className='nav-item'>
+                        <Link to='/sejarah' className='nav-links' onClick={closeMobileMenu}>
+                            Sejarah Desa
+                        </Link>
+                    </li>
+                    }
+                    {isMobile &&
+                    <li className='nav-item'>
+                        <Link to='/keunggulan' className='nav-links' onClick={closeMobileMenu}>
+                            Keunggulan Desa
+                        </Link>
+                    </li>
+                    }
                 </ul>
             </nav>
         </>
     )
-
 }
 
 export default Navbar;

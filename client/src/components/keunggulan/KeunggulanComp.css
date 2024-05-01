@@ -72,13 +72,22 @@
 }
 
 @media (max-width: 768px) {
-    .card-map {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
+    .card-content-keunggulan {
+        flex-direction: column; /* Mengatur tata letak menjadi kolom */
+        align-items: center; /* Memusatkan item di tengah */
     }
-    
-    .card-content {
-        flex-direction: column;
+
+    .card-description-keunggulan p{
+        text-align: justify;
+    }
+
+    .card-map-keunggulan,
+    .card-description-keunggulan {
+        width: 90%; /* Mengatur lebar menjadi penuh */
+        margin: 0; /* Menghapus margin */
+    }
+
+    .card-map-keunggulan img {
+        margin-top: 10px; /* Mengatur margin atas gambar */
     }
 }

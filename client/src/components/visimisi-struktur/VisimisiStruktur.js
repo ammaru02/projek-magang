@@ -32,7 +32,7 @@ const VisimisiStruktu = () => {
 
     return (
         <>
-            <div className="container">
+            <div className="container-sm">
                 <div className="page-visimisi">
                     <i className="fa-solid fa-house"><p className="teks-icon">/ Visi Misi & Struktur Desa</p></i>
                     <h2 className="title-visimisi">VISI MISI DESA KASSI</h2>

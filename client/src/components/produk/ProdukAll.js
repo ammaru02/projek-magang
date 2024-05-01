@@ -48,25 +48,27 @@ fetch(apiUrl)
     }, [location]);
 
     return (
-        <div className="card-container">
+        <div className="container-sm">
             <div className="page-all-produk">
                 <i className="fa-solid fa-house"><p className="teks-icon">/ PRODUK DESA</p></i>
                 <h2 className="title-produk">PRODUK DESA KASSI</h2>
             </div>
+            <div className="card-produk">
             {produk.map((item, index) => (
-                <div key={index} className="card">
+                <div key={index} className="produk-card">
                     {imageUrls.map((url, index) => {
-    if(url.endsWith(item.foto)) {
-        return <img key={index} src={url} alt={item.name} className="card-images" />;
-    }
-    return null;
-})}
-                    <h2 className="card-title">{item.name}</h2>
+                if(url.endsWith(item.foto)) {
+                    return <img key={index} src={url} alt={item.name} className="card-images" />;
+                }
+                return null;
+                 })}
+                    <h4 className="card-title-produkall">{item.name}</h4>
                     <Link to={`/produkdetail/${item.id}`}>
                         <button className="detail-button">Detail</button>
                     </Link>
                 </div>
             ))}
+            </div>
         </div>
     )
 }

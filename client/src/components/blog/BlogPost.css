@@ -82,7 +82,7 @@
   
 /* CSS untuk tombol "Baca Selengkapnya" */
 /* CSS untuk tombol "Baca Selengkapnya" */
-.read-more-button {
+.read-more-button, .read-more-button1 {
     background-color: transparent; /* Latar belakang transparan */
     color: #007bff; /* Warna panah */
     border: none; /* Hapus border */
@@ -94,6 +94,9 @@
   
   /* Gaya saat tombol dihover */
   .read-more-button:hover {
+    color: #0056b3; /* Ubah warna saat tombol dihover */
+  }
+  .read-more-button1:hover {
     color: #0056b3; /* Ubah warna saat tombol dihover */
   }
   
@@ -139,7 +142,12 @@
       margin-bottom: 10px; /* Tambahkan margin bottom pada gambar pada layar kecil */
     }
     .read-more-button{
-        margin-left: 20px;
+        margin-left: 10px;
+    }
+
+    .read-more-button1{
+      margin-left: auto;
+      
     }
   }
   
