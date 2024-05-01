@@ -41,10 +41,10 @@ const KeunggulanComp = () => {
                             </div>
                             <div className="card-description-keunggulan">
                                 <p ref={el => descriptionRefs.current[index] = el} className={expandedIndexes.includes(index) ? '' : 'text-clamp'}>
-                                    {expandedIndexes.includes(index) ? item.deskripsi : `${item.deskripsi.split(' ').slice(0, 100).join(' ')}...`}
+                                    {expandedIndexes.includes(index) ? item.deskripsi : `${item.deskripsi.split(' ').slice(0, 80).join(' ')}...`}
                                 </p>
                                 <button className="btn btn-primary" onClick={() => toggleExpand(index)}>
-                                    {expandedIndexes.includes(index) ? 'Tutup' : 'Read More'}
+                                    {expandedIndexes.includes(index) ? 'Tutup' : 'Lihat Selengkapnya'}
                                 </button>
                             </div>
                         </div>
