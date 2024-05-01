@@ -59,7 +59,7 @@
     border-radius: 5px;
     cursor: pointer;
     transition: color 0.3s ease;
-    margin-left: 15px;
+    margin-left: 5px;
     margin-top: 10px; /* Atur margin atas agar tombol berada di bawah deskripsi */
   }
   
@@ -80,3 +80,4 @@
       margin-top: 20px; /* Jarak antara peta dan deskripsi */
     }
   }
+  
