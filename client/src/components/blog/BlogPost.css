@@ -3,16 +3,17 @@
   display: flex;
   max-width: 1200px;
   margin: 0 auto;
+  margin-top: 50px;
   padding: 20px;
 }
 
 .main-content {
-  width: 70%; /* Lebar konten utama */
+  width: 60%; /* Lebar konten utama */
+  margin-right: 30px; /* Margin kanan antara konten utama dan sidebar */
 }
 
 .sidebar {
-  width: 30%; /* Lebar sidebar */
-  float: right; /* Sidebar diletakkan di sebelah kanan */
+  width: 35%; /* Lebar sidebar */
 }
 
 /* Gaya untuk postingan blog */
@@ -31,7 +32,7 @@
 
 .blog-post img {
   width: 100%; /* Lebar gambar mengisi lebar konten utama */
-  height: auto;
+  height: 200px;
 }
 
 .truncate-text {
@@ -51,16 +52,16 @@
 }
 
 .sidebar-thumbnail {
-  width: 50px; /* Lebar gambar thumbnail */
+  width: 50px; /* Lebar gambar thumbnail, sama dengan lebar sidebar */
   height: auto; /* Tinggi gambar menyesuaikan proporsi */
-  margin-right: 10px; /* Jarak kanan gambar dari konten lainnya */
-  float: left; /* Letakkan gambar di sebelah kiri konten lainnya */
+  float: left; /* Letakkan gambar di sebelah kiri sidebar */
+  margin-right: 10px; /* Jarak kanan gambar dari deskripsi */
+  max-width: 100%; /* Batasi lebar maksimum gambar */
+  margin-top: 50px;
 }
 
 .sidebar-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  overflow: hidden; /* Mengatasi float dengan overflow */
 }
 
 .sidebar-content h3 {
@@ -70,10 +71,30 @@
 .sidebar-content p {
   margin: 0;
 }
-.full-description {
-  text-align: justify;
+
+.read-more-button1, .read-more-button2 {
+  background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
-.short-description {
-  text-align: justify;
+.read-more-button1:hover, .read-more-button2:hover {
+  color: #0056b3;
+}
+
+@media only screen and (max-width: 768px) {
+  .blog {
+    flex-direction: column; /* Mengubah tata letak menjadi kolom saat lebar layar kecil */
+  }
+  
+  .main-content, .sidebar {
+    width: 100%; /* Mengisi lebar penuh saat lebar layar kecil */
+    margin-right: 0; /* Menghapus margin kanan pada konten utama */
+  }
+
+  .sidebar {
+    margin-top: 10px; /* Mengurangi margin atas pada sidebar */
+  }
 }
