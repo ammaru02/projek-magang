@@ -1,100 +1,86 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './BlogPost.css';
 
 const Blog = () => {
   const [showFullContent, setShowFullContent] = useState(false);
-  const [showFullDescription, setShowFullDescription] = useState({});
+  const [mainNews, setMainNews] = useState(null);
+  const [sidebarNews, setSidebarNews] = useState([]);
 
-const handleReadMoreDescription = (index) => {
-    setShowFullDescription(prevState => ({
-        ...prevState,
-        [index]: !prevState[index] !== undefined ? !prevState[index] : true
-    }));
-};
+  useEffect(() => {
+    const fetchNewsData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/artikel');
+        const data = await response.json();
+        if (Array.isArray(data.data)) {
+          setMainNews(data.data[0]); // Set data utama dengan data pertama dari response
+          setSidebarNews(data.data.slice(1)); // Set data sidebar dengan sisa data dari response
+        } else {
+          console.error('Data is not an array:', data);
+        }
+      } catch (error) {
+        console.error('Error fetching news data:', error);
+      }
+    };
 
-  const currentNews = [
-    {
-      title: "DESA KASSI TAWARKAN WISATA ALAM DAN AGRO",
-      date: "March 27, 2024",
-      image: require("../image/Banner2.jpg"),
-      description: "Wakil Bupati Jeneponto Paris Yasir mengatakan, Desa Wisata Kassi memiliki keunggulan berupa daya tarik agrowisata sekaligus edukasi bercocok ...",
-      content: "<p>Tanam jkdajdlksjkadjsadhjsahfsb fn kjdshfkdksadsabdjsa csadnsndksa</p>"
+    fetchNewsData();
+  }, []);
+
+  const handleSidebarItemClick = (news) => {
+    setMainNews(news); // Set data utama dengan data yang diklik dari sidebar
+    setShowFullContent(false); // Menutup deskripsi ketika beralih ke data baru
+  };
+
+  const toggleShowFullContent = () => {
+    setShowFullContent(!showFullContent); // Toggle status tampilan deskripsi
+  };
+
+  const truncateDescription = (text) => {
+    const words = text.split(' ');
+    if (words.length > 100) {
+      return words.slice(0, 100).join(' ') + '...';
+    } else {
+      return text;
     }
-    // tambahkan data lain jika diperlukan
-  ];
-
-  const recentPosts = [
-    { 
-      title: "Judul Pertama",
-      date: "March 27, 2024",
-      description: "Ini penjelasan singkat tentang hdjsadksjak dsjkjdksajd dsajdklsajdlkas",
-      image: require("../image/Banner1.jpeg"),
-      
-    },
-    { 
-      title: "Judul Kedua",
-      date: "Januari 27, 2024",
-      description: "Ini penjelasan singkat tentang hdsjhdskjadlksajlk dsjadklsjadjska dsadskladjsakld ndsaklksadjask dskajdlsdjas   ",
-      image: require("../image/Banner4.jpg"),
-      
-    },
-    { 
-      title: "Judul Ketiga",
-      date: "Januari 27, 2024",
-      description: "Ini penjelasan singkat tentang",
-      image: require("../image/Banner5.jpg"),
-      
-    }
-    // tambahkan data lain jika diperlukan
-  ];
+  };
 
   return (
-        <div className='container-blog'>
-            <div className="blog">
-            <div className="main-content">
-                {currentNews.map((news, index) => (
-                <div className="blog-post" key={index}>
-                    <h2>{news.title}</h2>
-                    <p>Date: {news.date}</p>
-                    <img src={news.image} alt={news.title} />
-                    {showFullContent ? (
-                    <div dangerouslySetInnerHTML={{ __html: news.content }} />
-                    ) : (
-                    <p>{news.description}</p>
-                    )}
-                    <button onClick={() => setShowFullContent(!showFullContent)} className='read-more-button1'>
-                    {showFullContent ? "Tutup" : "Baca Selengkapnya"}
-                    </button>
-                </div>
-                ))}
+    <div className='container-blog'>
+      <div className="blog">
+        <div className="main-content">
+          {mainNews && (
+            <div className="blog-post">
+              <h2>{mainNews.judul}</h2>
+              <p>Date: {mainNews.tanggal}</p>
+              <img src={mainNews.foto} alt={mainNews.judul} />
+              {showFullContent ? (
+                <div className="full-description" dangerouslySetInnerHTML={{ __html: mainNews.deskripsi }} />
+              ) : (
+                <p className="short-description">{truncateDescription(mainNews.deskripsi)}</p>
+              )}
+              <button onClick={toggleShowFullContent} className='read-more-button1'>
+                {showFullContent ? "Tutup" : "Baca Selengkapnya"}
+              </button>
             </div>
-            <div className="sidebar">
-                {/* <h2>Recent Posts</h2> */}
-                <ul>
-                {recentPosts.map((post, index) => (
-                    <li key={index}>
-                    <div className="recent-post-item">
-                        <img src={post.image} alt={post.title} />
-                        <div>
-                        <h3>{post.title}</h3>
-                        <p>{post.date}</p>
-                        {showFullDescription ? (
-                            <p className={showFullDescription[index] ? 'show-full-text' : 'truncate-text'}>{post.description}</p>
-                        ) : (
-                            <p>{post.description.substring(0, 50)}......</p>
-                        )}
-                        <button onClick={() => handleReadMoreDescription(index)} className='read-more-button'>
-                            {showFullDescription[index] ? "Tutup" : "Baca Selengkapnya"}
-                        </button>
-                        </div>
-                    </div>
-                    <div dangerouslySetInnerHTML={{ __html: post.content }} />
-                    </li>
-                ))}
-                </ul>
-            </div>
-            </div>
+          )}
         </div>
+        <div className="sidebar">
+          <ul>
+            {sidebarNews.map((news, index) => (
+              <li key={index} onClick={() => handleSidebarItemClick(news)}>
+                <div className="recent-post-item">
+                  <img className="sidebar-thumbnail" src={news.foto} alt={news.judul} />
+                  <div className="sidebar-content">
+                    <h3>{news.judul}</h3>
+                    <p>{news.tanggal}</p>
+                    <p className="truncate-text">{truncateDescription(news.deskripsi)}</p>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 }
 

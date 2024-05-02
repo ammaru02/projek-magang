@@ -14,7 +14,6 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    border: 3px solid black;
     margin: 0 auto; /* Mengatur margin untuk pusat */
 }
 

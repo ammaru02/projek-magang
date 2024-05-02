@@ -1,17 +1,16 @@
-/* eslint-disable jsx-a11y/iframe-has-title */
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './SejarahMap.css';
 
 function SejarahMap() {
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const [description] = useState("Kota Tertua adalah sebuah kota yang kaya akan sejarah. Dibangun pada abad ke-10 oleh bangsa kuno, kota ini telah menjadi pusat perdagangan dan kebudayaan selama berabad-abad. Klik Baca Selengkapnya untuk melihat lebih banyak.djskkajdklsajkdjaskldhsakhdklsddsadjsakdlsjakldjskadjskajdksajdkjsakdjksajdlksjadklsjakldjlksajdklsjakdjskadjksajdksajdksajdkjsakdjsajdksajdksajdksjadkjskadjksajdsajdklsajdsjkladjskladjskadjskadjksadjksajdksjdksjakdsjakdjskdjksdjksadjkasdjkasldkasdjsklaSejak itu, dunia terus mengalami perubahan yang cepat dan mendalam dalam berbagai bidang. Revolusi Teknologi Informasi pada akhir abad ke-20 dan awal abad ke-21 telah mengubah cara kita berkomunikasi, bekerja, dan hidup. Internet, komputer, dan telepon pintar telah menjadi bagian tak terpisahkan dari kehidupan sehari-hari.Revolusi Teknologi Informasi pada akhir abad ke-20 dan awal abad ke-21 telah mengubah cara kita berkomunikasi, bekerja, dan hidup. Internet, komputer, dan telepon pintar telah menjadi bagian tak terpisahkan dari kehidupan sehari-hari.");
-
+  const [sejarah, setSejarah] = useState('');
   const descriptionRef = useRef(null);
+
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
     if (descriptionRef.current) {
-        descriptionRef.current.style.height = showFullDescription ? 'auto' : '300px'; // Setel tinggi deskripsi
-      }
+      descriptionRef.current.style.height = showFullDescription ? 'auto' : '300px';
+    }
   };
 
   const buttonText = showFullDescription ? "Tutup" : "Baca Selengkapnya";
@@ -23,6 +22,12 @@ function SejarahMap() {
     return text;
   };
 
+  useEffect(() => {
+    fetch('http://localhost:5000/sejarah')
+      .then(response => response.json())
+      .then(data => setSejarah(data.data.map(item => item.deskripsi).join(' '))); // menggabungkan deskripsi dari semua item menjadi satu string
+  }, []);
+
   return (
     <div className="card-sejarah">
       <div className="card-content">
@@ -33,7 +38,7 @@ function SejarahMap() {
           <h1>Sejarah Desa</h1>
           <div className="card-description" ref={descriptionRef}>
             <p>
-              {shortenDescription(description, 500)}
+              {shortenDescription(sejarah, 500)}
             </p>
             <button onClick={toggleDescription}>{buttonText}</button>
           </div>
