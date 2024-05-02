@@ -1,153 +1,79 @@
-.container-blog{
-    margin-top: 80px;
+/* CSS untuk layout blog dan sidebar */
+.blog {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-/* CSS untuk tata letak blog dan sidebar */
-.blog {
-    display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .main-content {
-    width: 70%; /* Lebar konten utama */
-  }
-  
-  .sidebar {
-    width: 30%; /* Lebar sidebar */
-  }
-  
-  /* Gaya untuk postingan blog */
-  .blog-post {
-    margin-bottom: 40px;
-    margin: auto;
-  }
-  
-  .blog-post h2 {
-    margin-bottom: 10px;
-  }
-  
-  .blog-post p {
-    margin-bottom: 5px;
-    text-align: justify;
-    margin-right: 100px;
-  }
-  
-  .blog-post img {
-    width: 90%; /* Lebar gambar sesuai dengan lebar konten utama */
-    height: 250px;
-  }
-  
-  .truncate-text {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    /* Batasi teks hingga 3 baris */
-    -webkit-line-clamp: 1;
-  }
-  
-  .sidebar {
-    margin-bottom: 20px;
-  }
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-  }
-  .sidebar li{
-    margin-bottom: 20px;
-  }
-  
-  .recent-post-item {
-    display: flex;
-    align-items: center; /* Mengatur posisi vertikal agar gambar dan teks berada pada tengah */
-    margin-bottom: 20px; /* Jarak antar item */
-  }
-  
-  .recent-post-item img {
-    width: 100px; /* Lebar gambar */
-    height: auto; /* Tinggi gambar menyesuaikan proporsi */
-    margin-right: 20px; /* Jarak antara gambar dan teks */
-  }
-  
-  .recent-post-item h3 {
-    margin: 0; /* Menghapus margin bawaan untuk judul */
-  }
-  
-  .recent-post-item p {
-    margin: 0; /* Menghapus margin bawaan untuk deskripsi */
-  }
+.main-content {
+  width: 70%; /* Lebar konten utama */
+}
 
-  
-/* CSS untuk tombol "Baca Selengkapnya" */
-/* CSS untuk tombol "Baca Selengkapnya" */
-.read-more-button, .read-more-button1 {
-    background-color: transparent; /* Latar belakang transparan */
-    color: #007bff; /* Warna panah */
-    border: none; /* Hapus border */
-    padding: 0; /* Hapus padding */
-    font-size: 16px; /* Ukuran font */
-    cursor: pointer; /* Ganti kursor saat hover */
-    transition: color 0.3s ease; /* Efek transisi warna saat hover */
-  }
-  
-  /* Gaya saat tombol dihover */
-  .read-more-button:hover {
-    color: #0056b3; /* Ubah warna saat tombol dihover */
-  }
-  .read-more-button1:hover {
-    color: #0056b3; /* Ubah warna saat tombol dihover */
-  }
-  
- /* Media queries untuk layar kecil */
-@media (max-width: 768px) {
-    .blog {
-      flex-direction: column; /* Susun elemen secara vertikal pada layar kecil */
-    }
-  
-    .main-content,
-    .sidebar {
-      width: 100%; /* Lebar konten utama dan sidebar 100% pada layar kecil */
-    }
-  
-    .blog-post {
-      margin-left: 0; /* Set margin kiri menjadi 0 pada layar kecil */
-      margin-bottom: 20px; /* Ubah margin bottom untuk memisahkan setiap posting */
-    }
-  
-    .blog-post img {
-      max-width: 70%; /* Lebar gambar 100% pada layar kecil */
-      max-height: 300px;
-    }
-  
-    .sidebar {
-      margin-bottom: 20px; /* Tambahkan margin bottom pada sidebar pada layar kecil */
-    }
-  
-    .recent-post-item {
-      margin-bottom: 20px; /* Tambahkan margin bottom pada recent post item pada layar kecil */
-    }
-    .recent-post-item p{
-        margin-left: 20px;
-    }
-    .recent-post-item h3{
-        margin-left: 20px;
-    }
-  
-    .recent-post-item img {
-      max-width: 100%; /* Lebar gambar 100% pada layar kecil */
-      max-height: auto;
-      margin-right: 0; /* Hapus margin kanan pada gambar pada layar kecil */
-      margin-bottom: 10px; /* Tambahkan margin bottom pada gambar pada layar kecil */
-    }
-    .read-more-button{
-        margin-left: 10px;
-    }
+.sidebar {
+  width: 30%; /* Lebar sidebar */
+  float: right; /* Sidebar diletakkan di sebelah kanan */
+}
 
-    .read-more-button1{
-      margin-left: auto;
-      
-    }
-  }
-  
+/* Gaya untuk postingan blog */
+.blog-post {
+  margin-bottom: 40px;
+}
+
+.blog-post h2 {
+  margin-bottom: 10px;
+}
+
+.blog-post p {
+  margin-bottom: 5px;
+  text-align: justify;
+}
+
+.blog-post img {
+  width: 100%; /* Lebar gambar mengisi lebar konten utama */
+  height: auto;
+}
+
+.truncate-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 3; /* Batasi teks hingga 3 baris */
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  cursor: pointer; /* Ganti kursor saat mengarah ke item sidebar */
+}
+
+.sidebar-thumbnail {
+  width: 50px; /* Lebar gambar thumbnail */
+  height: auto; /* Tinggi gambar menyesuaikan proporsi */
+  margin-right: 10px; /* Jarak kanan gambar dari konten lainnya */
+  float: left; /* Letakkan gambar di sebelah kiri konten lainnya */
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sidebar-content h3 {
+  margin: 0;
+}
+
+.sidebar-content p {
+  margin: 0;
+}
+.full-description {
+  text-align: justify;
+}
+
+.short-description {
+  text-align: justify;
+}
