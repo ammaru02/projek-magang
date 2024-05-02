@@ -26,8 +26,12 @@ const Blog = () => {
   }, []);
 
   const handleSidebarItemClick = (news) => {
-    setMainNews(news); // Set data utama dengan data yang diklik dari sidebar
-    setShowFullContent(false); // Menutup deskripsi ketika beralih ke data baru
+    const clickedNewsIndex = sidebarNews.findIndex(item => item === news);
+    const clickedNews = sidebarNews[clickedNewsIndex];
+    const updatedSidebarNews = [...sidebarNews];
+    updatedSidebarNews[clickedNewsIndex] = mainNews;
+    setSidebarNews(updatedSidebarNews);
+    setMainNews(clickedNews);
   };
 
   const toggleShowFullContent = () => {
@@ -73,6 +77,9 @@ const Blog = () => {
                     <h3>{news.judul}</h3>
                     <p>{news.tanggal}</p>
                     <p className="truncate-text">{truncateDescription(news.deskripsi)}</p>
+                    <button onClick={() => handleSidebarItemClick(news)} className='read-more-button2'>
+                      Selengkapnya
+                    </button>
                   </div>
                 </div>
               </li>
