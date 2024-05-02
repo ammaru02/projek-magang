@@ -12,13 +12,11 @@ const Home = () => {
         <>
           <div className="page-container">
             <Navbar/>
-            <div>
             <Banner/>
             <BlogPost/>
             <Struktur/>
             <SejarahMap/>
             <Footer/>
-            </div>
           </div>
         </>
     );

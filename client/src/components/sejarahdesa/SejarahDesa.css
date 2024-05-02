@@ -1,5 +1,4 @@
 .page-sejarah{
-    margin-top: 100px;
     width: 100%;
 }
 .teks-icon{
@@ -28,4 +27,27 @@
     margin-top: 10px;
     text-align: justify;
     margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    .image-sejarah {
+        width: 100%; /* Mengatur lebar gambar menjadi 100% dari lebar layar */
+        height: auto; /* Mengatur tinggi gambar agar proporsional */
+        margin: 10px auto; /* Mengatur margin atas dan bawah, dan memusatkan gambar */
+    }
+
+    .page-sejarah {
+        margin-top: 10px; /* Mengurangi margin atas */
+    }
+
+
+    .list-sejarah {
+        margin-left: 10px; /* Mengurangi margin kiri */
+    }
+
+    .deskripsi,
+    .sejarah-deskripsi {
+        margin: 0 10px; /* Mengurangi margin kiri dan kanan */
+        margin-bottom: 20px;
+    }
 }

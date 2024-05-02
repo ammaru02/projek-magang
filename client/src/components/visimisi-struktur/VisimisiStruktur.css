@@ -1,5 +1,5 @@
 .page-visimisi{
-    margin-top: 100px;
+    
     width: 100%;
 }
 .teks-icon{
@@ -45,4 +45,18 @@
     margin-bottom: 20px;
     margin-top: 20px;
     display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .image-struktur {
+        width: 100%; /* Mengatur lebar gambar menjadi 100% dari lebar layar */
+        height: auto; /* Mengatur tinggi gambar agar proporsional */
+        margin: 10px auto; /* Mengatur margin atas dan bawah, dan memusatkan gambar */
+    }
+
+    .page-struktur {
+        margin-top: 10px; /* Mengurangi margin atas */
+        margin-bottom: 10px; /* Mengurangi margin bawah */
+    }
+
 }

@@ -24,8 +24,8 @@ function Struktur() {
                 <h1 className='struktur-judul'>STRUKTUR DESA</h1>
                 <div className='container'>
                     {strukturData.map((item, index) => (
-                        <div key={index} className='card'>
-                            <img src={item.foto} alt={item.name} className='card-image' />
+                        <div key={index} className='struktur-card'>
+                            <img src={item.foto} alt={item.name} className='card-image-struktur' />
                             <div className='card-title'>
                                 <h4>{item.name}</h4>
                                 <p>{item.jabatan}</p>

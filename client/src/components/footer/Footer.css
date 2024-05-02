@@ -1,60 +1,61 @@
 .footer {
-    background-color: #5E75EC; /* Warna latar belakang footer */
-    color: #fff; /* Warna teks */
-    padding: 20px 0; /* Padding atas dan bawah */
-  }
-  
-  .container {
-    max-width: 1200px; /* Lebar maksimum konten */
-    margin: 0 auto; /* Posisi tengah */
-  }
-  
+  background-color: #5E75EC; /* Warna latar belakang footer */
+  color: #fff; /* Warna teks */
+  padding: 20px 0; /* Padding atas dan bawah */
+}
+
+.footer-container {
+  max-width: 1200px; /* Lebar maksimum konten */
+  margin: 0 auto; /* Posisi tengah */
+}
+
+.row {
+  display: flex; /* Menggunakan flexbox untuk layout */
+  justify-content: space-between; /* Menyusun item ke sisi kiri dan kanan */
+}
+
+.col {
+  flex: 1; /* Mengisi ruang yang tersedia */
+  margin-right: 50px;
+  margin-left: 50px;
+}
+
+.footer-list {
+  list-style-type: none; /* Menghilangkan tanda list */
+  padding: 0;
+}
+
+.footer-list li {
+  margin-bottom: 10px; /* Margin bawah setiap item */
+}
+
+.footer-list a {
+  color: #fff; /* Warna teks untuk link */
+  text-decoration: none; /* Menghilangkan garis bawah pada link */
+}
+
+.footer-list a:hover {
+  color: #ccc; /* Warna teks saat hover */
+}
+
+hr {
+  border-color: #fff; /* Warna garis pemisah */
+  margin-top: 20px;
+}
+
+.copyright{
+  justify-content: center;
+  text-align: center;
+}
+
+
+
+@media (max-width: 768px) {
   .row {
-    display: flex; /* Menggunakan flexbox untuk layout */
-    justify-content: space-between; /* Menyusun item ke sisi kiri dan kanan */
+    flex-direction: column; /* Mengubah layout menjadi vertikal pada layar kecil */
   }
-  
+
   .col {
-    flex: 1; /* Mengisi ruang yang tersedia */
-    margin-right: 150px; /* Margin antar kolom */
+    margin-bottom: 20px; /* Margin bawah antar kolom pada layar kecil */
   }
-  
-  .footer-list {
-    list-style-type: none; /* Menghilangkan tanda list */
-    padding: 0;
-  }
-  
-  .footer-list li {
-    margin-bottom: 10px; /* Margin bawah setiap item */
-  }
-  
-  .footer-list a {
-    color: #fff; /* Warna teks untuk link */
-    text-decoration: none; /* Menghilangkan garis bawah pada link */
-  }
-  
-  .footer-list a:hover {
-    color: #ccc; /* Warna teks saat hover */
-  }
-  
-  hr {
-    border-color: #fff; /* Warna garis pemisah */
-    margin-top: 20px;
-  }
-  .copyright{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  @media (max-width: 768px) {
-    .row {
-      flex-direction: column; /* Mengubah layout menjadi vertikal pada layar kecil */
-    }
-  
-    .col {
-      margin-bottom: 20px; /* Margin bawah antar kolom pada layar kecil */
-    }
-  }
-  
+}

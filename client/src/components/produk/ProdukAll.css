@@ -1,54 +1,65 @@
-.card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-.page-all-produk{
-    margin-top: 100px;
-    margin-left: 30px;
-    width: 100%;
-}
+    .container-sm {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    .page-all-produk{
+        margin-left: 30px;
+        width: 100%;
+    }
 
-.title-produk{
-    margin-top: 20px;
-    color: #5739CF;
-}
-.card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 200px;
-    margin: 20px;
-    margin-top: 100px;
-    height: 350px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
+    .title-produk{
+        margin-top: 20px;
+        color: #5739CF;
+    }
 
-.card-images {
-    width: 250%;
-    height: 150px;
-    object-fit: contain;
-}
+    .card-produk {
+        overflow-x: auto; /* Menambahkan scrollbar horizontal jika konten melebihi lebar */
+        display: flex;
+        flex-wrap: wrap; /* Mengatur agar kartu-kartu bisa pindah ke baris baru */
+        justify-content: center;
+        margin-bottom: 20px;
+    }
 
-.card-title {
-    font-size: 20px;
-    margin-top: 10px;
-}
+    .produk-card {
+        width: 220px; /* Lebar kartu */
+        margin: 10px;
+        margin-top: 20px;
+        margin-bottom: 20px; /* Jarak antara kartu */
+        border: 1px solid #ccc; /* Garis pinggir kartu */
+        border-radius: 8px; /* Membuat sudut kartu menjadi bulat */
+        padding: 10px; /* Ruang dalam kartu */
+        display: flex; /* Menggunakan flexbox untuk mengatur posisi tombol */
+        flex-direction: column; /* Mengatur arah konten ke vertikal */
+        justify-content: space-between; /* Menyusun konten secara vertikal dan memberikan ruang antara judul dan tombol */
+        align-items: center;
+    }
 
-.detail-button {
-    background-color: #D2D5D7; /* Warna latar belakang tombol */
-    color: #000; /* Warna teks tombol */
-    border: none; /* Menghapus border tombol */
-    padding: 10px 20px; /* Ruang dalam tombol */
-    border-radius: 20px; /* Membuat sudut tombol menjadi bulat */
-    cursor: pointer; /* Mengubah kursor saat diarahkan ke tombol */
-    transition: background-color 0.3s; /* Efek transisi untuk perubahan warna latar belakang */
-    /* margin-top: 10px; */
-    margin-bottom: 30px;
-    width: 150px;
-}
+    .card-images {
+        width: 200px; /* Sesuaikan lebar gambar dengan lebar card */
+        height: 200px; /* Biarkan tinggi gambar menyesuaikan proporsi */
+        border-radius: 8px; /* Tambahkan border-radius jika diperlukan */
+    }
 
-.detail-button:hover{
-    background-color: #D2D5D7; /* Warna latar belakang tombol saat dihover */
-    color: #000;
-}
+    .card-title-produkall {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+    .detail-button {
+        width: 100%; /* Tombol akan mengisi seluruh lebar card */
+        margin-top: 20px; /* Membuat tombol berada di bagian bawah card */
+        margin-bottom: 10px; /* Jarak antara tombol dan konten lainnya */
+        background-color: #D2D5D7; /* Warna latar belakang tombol */
+        color: #000; /* Warna teks tombol */
+        border: none; /* Menghapus border tombol */
+        padding: 10px 20px; /* Ruang dalam tombol */
+        border-radius: 20px; /* Membuat sudut tombol menjadi bulat */
+        cursor: pointer; /* Mengubah kursor saat diarahkan ke tombol */
+        transition: background-color 0.3s; /* Efek transisi untuk perubahan warna latar belakang */
+    }
+
+    .detail-button:hover{
+        background-color: #D2D5D7; /* Warna latar belakang tombol saat dihover */
+        color: #000;
+    }

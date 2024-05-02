@@ -1,5 +1,4 @@
 .page-kategori-produk{
-    margin-top: 100px;
     width: 100%;
 }
 .teks-icon{
@@ -23,8 +22,10 @@
     justify-content: center;
     margin-bottom: 20px;
 }
-.card {
+.kategori-card {
     width: 200px; /* Lebar kartu */
+    margin: 10px;
+    margin-top: 20px;
     margin-bottom: 20px; /* Jarak antara kartu */
     border: 1px solid #ccc; /* Garis pinggir kartu */
     border-radius: 8px; /* Membuat sudut kartu menjadi bulat */
@@ -33,6 +34,11 @@
     flex-direction: column; /* Mengatur arah konten ke vertikal */
     justify-content: space-between; /* Menyusun konten secara vertikal dan memberikan ruang antara judul dan tombol */
     align-items: center;
+}
+
+.card-title-produk{
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
 button {
