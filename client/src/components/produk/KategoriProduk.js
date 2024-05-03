@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 import './KategoriProduk.css';
-
 
 const KategoriProduk = () => {
     const [kategori, setKategori] = useState([]);
@@ -11,6 +10,7 @@ const KategoriProduk = () => {
     useEffect(() => {
         const storage = getStorage();
         const storageRef = ref(storage, 'images/kategori/');
+        
         fetch('http://localhost:5000/kategori')
             .then(response => {
                 if (!response.ok) {
@@ -21,17 +21,21 @@ const KategoriProduk = () => {
             .then(data => {
                 console.log('Data:', data);
                 if (data.data && data.data.length > 0) {
-                    setKategori(data.data); // simpan kategori ke dalam state
+                    // Mengurutkan data kategori sesuai abjad berdasarkan nama
+                    const sortedKategori = data.data.sort((a, b) => a.name.localeCompare(b.name));
+                    setKategori(sortedKategori); // Simpan kategori ke dalam state
                 }
             })
-            listAll(storageRef)
-        .then((res) => {
-            let promises = res.items.map((item) => getDownloadURL(item));
-            Promise.all(promises)
-                .then((urls) => setImageUrls(urls))
-                .catch((error) => console.log(error));
-        })
-            .catch(error => console.error('Error:', error)); // tambahkan penanganan error
+            .catch(error => console.error('Error:', error)); // Tambahkan penanganan error
+
+        listAll(storageRef)
+            .then((res) => {
+                let promises = res.items.map((item) => getDownloadURL(item));
+                Promise.all(promises)
+                    .then((urls) => setImageUrls(urls))
+                    .catch((error) => console.log(error));
+            })
+            .catch(error => console.error('Error:', error)); // Tambahkan penanganan error
     }, []);
 
     const handleShowClick = (kategoriId) => {
@@ -51,15 +55,13 @@ const KategoriProduk = () => {
                         <div className='card-title-produk'>
                             <h4>{item.name}</h4>
                         </div>
-                        {imageUrls.map((url, index) => {
-                         if(url.endsWith(item.foto)) {
-                            return <img key={index} src={url} alt={item.name} className="card-image" />;
-                        }
-                         return null;
-                         })}
-                        <Link to={`/produk?kategoriId=${encodeURIComponent(item.id)}`}>
-                            <button>Show</button>
-                        </Link>
+                        {imageUrls.map((url, idx) => {
+                            if (url.endsWith(item.foto)) {
+                                return <img key={idx} src={url} alt={item.name} className="card-image" />;
+                            }
+                            return null;
+                        })}
+                        <button onClick={() => handleShowClick(item.id)}>Show</button>
                     </div>
                 ))}
             </div>
