@@ -17,19 +17,23 @@ const ProdukAll = () => {
             ? `http://localhost:5000/produk?kategoriId=${kategoriId}` 
             : `http://localhost:5000/produk`;
 
-fetch(apiUrl)
-    .then(response => response.json())
-    .then(data => {
-        if (Array.isArray(data)) {
-            setProduk(data);
-        } else if (data && data.data && Array.isArray(data.data)) {
-            setProduk(data.data);
-        } else {
-            console.error('Unexpected data format:', data);
-            setProduk([]);
-        }
-    })
-    .catch(error => console.error('Error:', error));
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    // Mengurutkan data produk sesuai abjad berdasarkan nama
+                    const sortedProduk = data.sort((a, b) => a.name.localeCompare(b.name));
+                    setProduk(sortedProduk);
+                } else if (data && data.data && Array.isArray(data.data)) {
+                    // Jika response memiliki format data.data, juga mengurutkan sesuai abjad
+                    const sortedProduk = data.data.sort((a, b) => a.name.localeCompare(b.name));
+                    setProduk(sortedProduk);
+                } else {
+                    console.error('Unexpected data format:', data);
+                    setProduk([]);
+                }
+            })
+            .catch(error => console.error('Error:', error));
 
         listAll(storageRef)
             .then((res) => {
@@ -54,23 +58,23 @@ fetch(apiUrl)
                 <h2 className="title-produk">PRODUK DESA KASSI</h2>
             </div>
             <div className="card-produk">
-            {produk.map((item, index) => (
-                <div key={index} className="produk-card">
-                    {imageUrls.map((url, index) => {
-                if(url.endsWith(item.foto)) {
-                    return <img key={index} src={url} alt={item.name} className="card-images" />;
-                }
-                return null;
-                 })}
-                    <h4 className="card-title-produkall">{item.name}</h4>
-                    <Link to={`/produkdetail/${item.id}`}>
-                        <button className="detail-button">Detail</button>
-                    </Link>
-                </div>
-            ))}
+                {produk.map((item, index) => (
+                    <div key={index} className="produk-card">
+                        {imageUrls.map((url, idx) => {
+                            if (url.endsWith(item.foto)) {
+                                return <img key={idx} src={url} alt={item.name} className="card-images" />;
+                            }
+                            return null;
+                        })}
+                        <h4 className="card-title-produkall">{item.name}</h4>
+                        <Link to={`/produkdetail/${item.id}`}>
+                            <button className="detail-button">Detail</button>
+                        </Link>
+                    </div>
+                ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default ProdukAll;
