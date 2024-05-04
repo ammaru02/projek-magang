@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 import './KategoriProduk.css';
 

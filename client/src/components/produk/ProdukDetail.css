@@ -1,43 +1,65 @@
 .page-detail {
     display: flex;
     flex-direction: column;
-    height: 700px; /* Tetapkan tinggi konstan untuk wadah */
-    width: 100%; /* Tetapkan lebar konstan untuk wadah */
-    margin: 0 auto; /* Tengahkan wadah secara horizontal */
-    margin-top: 90px;
-    padding-left: 50px; /* Tambahkan padding untuk menggantikan margin kiri */
-    padding-right: 50px; 
+    min-height: calc(100vh - 90px); /* Set tinggi minimum sesuai tinggi layar dikurangi tinggi header */
+    width: 100%;
+    margin: 0 auto;
+    /* padding-left: 20px; Mengurangi padding kiri */
+    padding-right: 20px; /* Mengurangi padding kanan */
+    overflow: auto; /* Tambahkan overflow auto agar konten dapat discroll jika melebihi tinggi layar */
 }
 
-.judul-detail{
+.judul-detail {
     margin-top: 5px;
 }
 
-.title-detail{
+.title-detail {
     margin-top: 20px;
     color: #5739CF;
 }
 
 .detail-image img {
-    width: 100%; /* Buat gambar mengisi wadah gambar */
-    height: 400px; /* Biarkan gambar menyesuaikan tingginya sambil mempertahankan rasio aspek */
-    max-width: calc(100% - 500px);
+    width: 60%;
+    height: 400px;
+    max-width: calc(100% - 40px); /* Sesuaikan maksimum lebar gambar dengan padding */
     margin-top: 20px;
-}   
+}
 
 .detail-teks {
-    width: 100%; /* Buat wadah teks mengisi wadah utama */
-    /* Tambahkan padding untuk penataan yang lebih baik */
-    box-sizing: border-box; /* Termasuk padding dan border dalam perhitungan lebar / / Membuat margin kiri menjadi 0 */
+    width: 100%;
+    box-sizing: border-box;
+    padding-bottom: 10px; /* Tambahkan padding bawah untuk memberi ruang bagi footer */
+}
+
+.btn-detail {
+    margin-top: 10px; /* Ubah margin top agar tombol tidak terlalu jauh dari teks */
+    margin-bottom: 20px; /* Ubah margin bottom agar ada ruang di antara tombol */
 }
 
 .detail-teks h2 {
-    font-size: 24px; /* Ukuran teks untuk judul */
+    font-size: 24px;
     margin-top: 10px;
 }
 
 .detail-teks p {
-    font-size: 16px; /* Ukuran teks untuk paragraf */
-    line-height: 1.6; /* Jarak antar baris */
-    margin-bottom: 10px; /* Spasi bawah untuk paragraf */
+    font-size: 16px;
+    line-height: 1.2;
+    margin-bottom: 5px;
+}
+
+/* Media query untuk ukuran layar mobile */
+@media (max-width: 768px) {
+    .page-detail {
+        padding: 0 5px;
+        min-height: auto; /* Ubah tinggi minimum menjadi otomatis */
+    }
+
+    .detail-image img {
+        width: 100%;
+        height: 250px;
+    }
+
+    .btn-detail {
+        margin-bottom: 30px; /* Kurangi margin bottom tombol pada ukuran layar kecil */
+    }
 }

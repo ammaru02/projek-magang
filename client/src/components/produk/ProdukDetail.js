@@ -23,7 +23,7 @@ function ProdukDetail() {
     }
 
     return (
-        
+        <div className='container-sm'>
         <div className='page-detail'>
             <div className="judul-detail">
                 <i className="fa-solid fa-house"><p className="teks-icon">/ PRODUK DESA</p></i>
@@ -40,6 +40,7 @@ function ProdukDetail() {
             <a href={`https://wa.me/${warga.wa}`} target="_blank" rel="noopener noreferrer">
                 <button className='btn-detail'>Hubungi Kami</button>
             </a>
+        </div>
         </div>
     );
 }
