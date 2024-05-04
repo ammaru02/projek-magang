@@ -58,3 +58,23 @@ button:hover {
     background-color: #D2D5D7; /* Warna latar belakang tombol saat dihover */
     color: #000;
 }
+
+@media (max-width: 768px) {
+    .kategori-card {
+        width: calc(50% - 10px); /* Lebar kartu (50% - margin) */
+        margin: 5px; /* Mengurangi margin kartu */
+    }
+    .card-kategori{
+        margin-top: 20px;
+    }
+    .card-image{
+        height: 130px;
+    }
+    .card-title-produk{
+        font-size: 16px;
+    }
+    button{
+        padding: 5px 5px;
+        width: 100px;
+    }
+}
