@@ -1,23 +1,66 @@
 import React, { useState } from 'react';
+import "./Sidebar.css";
 import { Link } from 'react-router-dom';
-import { FaBars, FaSignOutAlt } from 'react-icons/fa'; // tambahkan FaBars di sini
-import { Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt, faBars } from '@fortawesome/free-solid-svg-icons';
 
-const Sidebar = () => {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+export default function Sidebar() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleSidebar = () => {
+        setIsOpen(!isOpen);
+    }
+
+    const handleItemClick = () => {
+        if (window.innerWidth <= 768) {
+            setIsOpen(false); // Menutup sidebar saat item menu diklik di ukuran layar mobile
+        }
+    }
 
     return (
-        <div className="sidebar">
-            <h2>Admin</h2>
-            <ul>
-                <li><Link to="/dashboard">Dashboard</Link></li>
-                <li><Link to="/produk-desa">Produk Desa</Link></li>
-                <li><Link to="/visi-misi">Visi Misi</Link></li>
-                <li><Link to="/akun">Akun</Link></li>
-            </ul>
-            <button className="logout-btn"><FaSignOutAlt /></button>
+        <div>
+            <div className={`sidebarAdmin ${isOpen ? 'open' : ''}`}>
+                <div className='sidebarWrapper'>
+                    <div className='sidebarMenu'>
+                        <h3 className='sidebarTitle'>Admin</h3>
+                        <ul className='sidebarList'>
+                            <li>
+                                <Link to='/homeadmin' className='sidebarListItem active' onClick={handleItemClick}>
+                                    Dashboard
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to='/profildesaadmin' className='sidebarListItem' onClick={handleItemClick}>
+                                    Profil Desa
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to='/produkdesaadmin' className='sidebarListItem' onClick={handleItemClick}>
+                                    Produk Desa
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to='/artikeladmin' className='sidebarListItem' onClick={handleItemClick}>
+                                    Artikel
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to='/akunadmin' className='sidebarListItem' onClick={handleItemClick}>
+                                    Data Admin
+                                </Link>
+                            </li>
+                        </ul>
+                        <div className='sidebarLogout'>
+                            <Link to='/logout' className='sidebarLogoutLink'>
+                                <FontAwesomeIcon icon={faSignOutAlt} />
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="burger" onClick={toggleSidebar}>
+                <FontAwesomeIcon icon={faBars} />
+            </div>
         </div>
-    );
-};
-
-export default Sidebar;
+    )
+}
