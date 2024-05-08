@@ -9,6 +9,8 @@ import ProdukKategori from './components/pages/ProdukKategori';
 import Keunggulan from './components/pages/Keunggulan';
 import DetailProduk from './components/pages/DetailProduk';
 import HomeAdmin from './components/admin/pagesadmin/HomeAdmin';
+import ProfilDesaAdmin from './components/admin/pagesadmin/ProfilDesaAdmin';
+import ProdukDesaAdmin from './components/admin/pagesadmin/ProdukDesaAdmin';
 
 function App() {
   return (
@@ -23,7 +25,8 @@ function App() {
         <Route path='/produk' element={<Produk />} />
         <Route path="/produkdetail/:id" element={<DetailProduk />} />
         <Route path="/homeadmin" element={<HomeAdmin />} />
-        
+        <Route path="/profildesaadmin" element={<ProfilDesaAdmin />} />
+        <Route path="/produkdesaadmin" element={<ProdukDesaAdmin />} />
       </Routes>
     </Router>
   );

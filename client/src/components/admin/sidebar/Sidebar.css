@@ -1,45 +1,105 @@
-.sidebar {
-    width: 200px;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    background-color: #f5f5f5;
+.sidebarAdmin {
+    flex: 1;
+    height: calc(100vh - 60px);
+    background-color: #F9F6EE;
+    position: sticky;
+    top: 50px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.4); /* Tambahkan bayangan */
+    transition: width 0.3s; /* Animasi lebar saat diubah */
+    width: 200px; /* Lebar sidebar default */
+}
+
+.sidebarAdmin.open {
+    width: 0; /* Sidebar ditutup saat isOpen true */
+}
+
+.sidebarWrapper {
     padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    position: relative;
 }
 
-.sidebar h2 {
+.sidebarTitle {
+    font-size: 30px;
     margin-bottom: 20px;
+    justify-content: center;
+    text-align: center;
 }
 
-.sidebar ul {
+.sidebarList {
     list-style: none;
-    padding: 0;
-    margin: 0;
 }
 
-.sidebar ul li {
+.sidebarListItem {
+    padding: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+    display: block;
+    justify-content: center;
+    text-align: center;
     margin-bottom: 10px;
 }
 
-.sidebar ul li a {
-    text-decoration: none;
-    color: #333;
+.sidebarListItem.active,
+.sidebarListItem:hover {
+    padding: 5px 10px;
+    background-color: #D3D5D6;
+    border-radius: 15px;
 }
 
-.sidebar .logout-btn {
-    background: none;
-    border: none;
-    color: #333;
-    cursor: pointer;
+.sidebarLogout {
+    padding: 5px;
+    margin-top: 200px;
     display: flex;
-    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
-.sidebar .logout-btn:hover {
-    color: #007bff;
+.sidebarLogoutLink {
+    color: #000;
+    margin-top: 5px;
+}
+
+.sidebarLogoutLink svg {
+    font-size: 24px; /* Mengatur ukuran ikon logout */
+}
+
+.burger {
+    display: none; /* Sembunyikan burger menu di desktop */
+}
+
+@media (max-width: 768px) {
+    .sidebarAdmin {
+        width: 0; /* Sembunyikan sidebar */
+        overflow: hidden; /* Sembunyikan isi sidebar yang melebihi lebar */
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        transition: width 0.3s;
+    }
+
+    .sidebarListItem{
+        margin: 15px 10px;
+    }
+
+    .sidebarAdmin.open {
+        width: 250px; /* Buka sidebar saat hamburger menu diklik */
+    }
+
+    .sidebarAdmin.open {
+        width: 250px; /* Buka sidebar saat hamburger menu diklik */
+        transform: translateX(0); /* Tampilkan sidebar di layar */
+    }
+
+    .burger {
+        display: block; /* Tampilkan burger menu di layar mobile */
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        cursor: pointer;
+    }
 }

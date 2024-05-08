@@ -1,9 +1,9 @@
 from flask import jsonify, request
 from flask_cors import cross_origin
+from app.model.produk import Produk
 from app import app, db
 from app.controller import DesaController, VisiController, WargaController, AdminController, ArtikelController, KategoriController, ProdukController, SejarahController, StrukturController, MisiController, KeunggulanController
 from app.model.banner import Banner  
-
 
 @app.route('/')
 def index():
@@ -81,13 +81,34 @@ def kategoris():
 @app.route('/produk', methods=['GET', 'POST'])
 def produks():
     if request.method == 'POST':
-        return ProdukController.create()
+        try:
+            kategori_id = request.form.get('kategori_id')
+            name = request.form.get('name')
+            harga = request.form.get('harga')
+            deskripsi = request.form.get('deskripsi')
+
+            # Proses penyimpanan gambar ke firebase
+            # ...
+
+            # Simpan data produk ke database
+            new_produk = Produk(kategori_id=kategori_id, name=name, harga=harga, deskripsi=deskripsi)
+            db.session.add(new_produk)
+            db.session.commit()
+
+            return jsonify({'message': 'success'}), 201
+        except Exception as e:
+            return jsonify({'message': str(e)}), 500
+    elif request.method == 'PUT':  # Menambahkan kondisi untuk metode PUT
+        return ProdukController.update(request)  # Panggil fungsi update dengan parameter request
     else:
         return ProdukController.index()
     
-@app.route('/produk/<int:id>', methods=['GET'])
-def get_produk(id):
-    return ProdukController.get(id)
+@app.route('/produk/<int:id>', methods=['GET', 'PUT'])
+def get_or_update_produk(id):
+    if request.method == 'GET':
+        return ProdukController.get(id)
+    elif request.method == 'PUT':
+        return ProdukController.update(id)
 
 @app.route('/sejarah', methods=['GET', 'POST'])
 def sejarahs():
