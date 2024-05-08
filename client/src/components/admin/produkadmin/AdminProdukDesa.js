@@ -69,21 +69,16 @@ export default function AdminProdukDesa() {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewProduk((prevNewProduk) => ({
-      ...prevNewProduk,
-      [name]: value
-    }));
+    setSearchInput(e.target.value);
   };
-  
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setNewProduk((prevNewProduk) => ({
-      ...prevNewProduk,
+    setNewProduk({
+      ...newProduk,
       foto: file
-    }));
+    });
   };
-  
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
@@ -124,19 +119,10 @@ export default function AdminProdukDesa() {
       formData.append("harga", editProduk.harga);
       formData.append("foto", editProduk.foto);
       formData.append("deskripsi", editProduk.deskripsi);
-  
+
       const response = await fetch(`http://127.0.0.1:5000/produk/${editProduk.id}`, {
         method: "PUT",
-        body: JSON.stringify({
-          name: editProduk.name,
-          harga: editProduk.harga,
-          foto: editProduk.foto,
-          deskripsi: editProduk.deskripsi,
-          kategori_id: editProduk.kategori_id
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
+        body: formData
       });
       const responseData = await response.json();
       console.log("Product updated:", responseData);
@@ -147,7 +133,6 @@ export default function AdminProdukDesa() {
       console.error("Error updating product:", error);
     }
   };
-  
 
   return (
     <div className="admin-produk-container">
@@ -176,66 +161,65 @@ export default function AdminProdukDesa() {
 
         {showAddForm && (
           <form onSubmit={handleAddSubmit}>
-          <h2>Tambah Produk</h2>
-          <div className="form-group">
-            <label htmlFor="kategori_id">Kategori Produk</label>
-            <br />
-            <select
-              id="kategori_id"
-              name="kategori_id"
-              value={newProduk.kategori_id}
-              onChange={handleInputChange}
-            >
-              <option value="">Pilih Kategori</option>
-              {kategoriList.map((kategori) => (
-                <option key={kategori.id} value={kategori.id}>
-                  {kategori.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="name">Nama Produk</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={newProduk.name}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="harga">Harga</label>
-            <input
-              type="text"
-              id="harga"
-              name="harga"
-              value={newProduk.harga}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="foto">Gambar</label>
-            <input
-              type="file"
-              id="foto"
-              name="foto"
-              onChange={handleImageChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="deskripsi">Deskripsi</label>
-            <textarea
-              id="deskripsi"
-              name="deskripsi"
-              value={newProduk.deskripsi}
-              onChange={handleInputChange}
-            ></textarea>
-          </div>
-          <button type="submit">Tambah</button>
-          <button type="button" onClick={handleCancelClick}>Batal</button>
-        </form>
-        
+            <h2>Tambah Produk</h2>
+            <div className="form-group">
+              <label htmlFor="kategori_id">Kategori Produk</label>
+              <br></br>
+              <select
+                id="kategori_id"
+                name="kategori_id"
+                value={newProduk.kategori_id}
+                onChange={handleInputChange}
+              >
+                <option value="">Pilih Kategori</option>
+                {kategoriList.map((kategori) => (
+                  <option key={kategori.id} value={kategori.id}>
+                    {kategori.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="name">Nama Produk</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={newProduk.name}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="harga">Harga</label>
+              <input
+                type="text"
+                id="harga"
+                name="harga"
+                value={newProduk.harga}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="foto">Gambar</label>
+              <input
+                type="file"
+                id="foto"
+                name="foto"
+                onChange={handleImageChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="deskripsi">Deskripsi</label>
+              <textarea
+                id="deskripsi"
+                name="deskripsi"
+                value={newProduk.deskripsi}
+                onChange={handleInputChange}
+              ></textarea>
+            </div>
+            <button type="submit">Tambah</button>
+            <button type="button" onClick={handleCancelClick}>Batal</button>
+          </form>
         )}
 
         {showEditForm && editProduk && (
@@ -317,7 +301,7 @@ export default function AdminProdukDesa() {
             <tbody>
               {produkList
                 .filter((produk) =>
-                  produk.name.toLowerCase().includes(searchInput.toLowerCase())
+                  produk.name.toLowerCase().includes(searchInput.toLowerCase())||produk.deskripsi.toLowerCase().includes(searchInput.toLowerCase())
                 )
                 .map((produk) => (
                   <tr key={produk.id}>
