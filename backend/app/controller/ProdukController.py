@@ -58,7 +58,7 @@ def update(id):
         if produk is None:
             return jsonify({'message': 'Produk not found'}), 404
         
-        data = request.json
+        data = request.json  # Assuming JSON data is sent in the request body
         if 'name' in data:
             produk.name = data['name']
         if 'foto' in data:
@@ -81,16 +81,23 @@ def update(id):
 def create():
     try:
         data = request.json
+        # Dapatkan URL gambar dari data yang diterima
+        foto_url = data['foto']
+        # Buat objek Produk dengan URL gambar yang diterima
         produk = Produk(
             name=data['name'],
-            foto=data['foto'],
+            foto=foto_url,
             harga=data['harga'],
             deskripsi=data['deskripsi'],
             kategori_id=data['kategori_id']
         )
+        # Tambahkan produk ke sesi database
         db.session.add(produk)
+        # Commit perubahan ke database
         db.session.commit()
         
         return jsonify({'message': 'Product added successfully'}), 201
     except Exception as e:
+        # Tangani kesalahan dengan memberikan respons JSON
         return jsonify({'message': str(e)}), 500
+
