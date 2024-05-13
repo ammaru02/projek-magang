@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./AdminProdukDesa.css"; // Import file CSS untuk styling
-import { storage, ref, uploadBytesResumable, getDownloadURL } from './txtImgConfig';
+import "./AdminProdukDesa.css";
+import { storage, ref, uploadBytesResumable, getDownloadURL } from "./txtImgConfig";
 
 export default function AdminProdukDesa() {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -13,22 +13,23 @@ export default function AdminProdukDesa() {
     kategori_id: "",
     name: "",
     harga: "",
-    foto: null,
+    foto: "",
     deskripsi: "",
   });
   const [editProduk, setEditProduk] = useState(null);
   const [searchInput, setSearchInput] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchProdukList();
-    fetchKategoriList(); // Fetch categories when component mounts
+    fetchKategoriList();
   }, []);
 
   const fetchProdukList = async () => {
     try {
       const response = await fetch("http://127.0.0.1:5000/produk");
       const responseData = await response.json();
-      console.log("Data received:", responseData); // Check the structure of responseData
       if (Array.isArray(responseData.data)) {
         setProdukList(responseData.data);
       } else {
@@ -43,7 +44,6 @@ export default function AdminProdukDesa() {
     try {
       const response = await fetch("http://127.0.0.1:5000/kategori");
       const responseData = await response.json();
-      console.log("Kategori Data received:", responseData); // Check the structure of responseData
       if (Array.isArray(responseData.data)) {
         setKategoriList(responseData.data);
       } else {
@@ -57,6 +57,7 @@ export default function AdminProdukDesa() {
   const handleAddButtonClick = () => {
     setShowAddForm(true);
     setShowEditForm(false);
+    setShowEditSuccess(false);
   };
 
   const handleEditClick = (produk) => {
@@ -67,7 +68,10 @@ export default function AdminProdukDesa() {
   };
 
   const handleNewProductFotoChange = (event) => {
-    setNewProductFoto(event.target.files[0]);
+    // Ensure a file is selected before setting it
+    if (event.target.files.length > 0) {
+      setNewProductFoto(event.target.files[0]);
+    }
   };
 
   const handleCancelClick = () => {
@@ -75,144 +79,144 @@ export default function AdminProdukDesa() {
     setShowEditForm(false);
     setEditProduk(null);
     setShowEditSuccess(false);
+    setNewProductFoto(null);
+    setNewProduk({
+      kategori_id: "",
+      name: "",
+      harga: "",
+      foto: "",
+      deskripsi: "",
+    });
   };
 
   const handleInputChange = (e) => {
     setSearchInput(e.target.value);
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setNewProduk({
-      ...newProduk,
-      foto: file,
-    });
-  };
-
-// Hapus definisi variabel yang tidak digunakan
-// const newProductFoto = ...
-// const handleImageChange = ...
-// const StoreImage = ...
-
-const handleAddSubmit = async (event) => {
-  event.preventDefault();
-  try {
-    if (editProduk && editProduk.foto instanceof File) {
-      const fotoRef = ref(storage, `image/produk/${editProduk.foto.name}`);
-      const uploadTask = uploadBytesResumable(fotoRef, editProduk.foto);
-      uploadTask.on('state_changed', 
-        (snapshot) => {
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-        }, 
-        (error) => {
-          // Handle unsuccessful uploads
-          console.error('Upload failed:', error);
-        }, 
-        async () => {
-          // Define formData
-          let formData = new FormData();
-
-          // Handle successful uploads on complete
-          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          console.log('File available at', downloadURL);
-
-// Add the download URL to the form data
-formData.append('foto', downloadURL);
-formData.append('nama', editProduk.nama);
-formData.append('deskripsi', editProduk.deskripsi);
-
-// Send the form data to your server
-try {
-  const response = await fetch('http://your-server-url/your-endpoint', {
-    method: 'POST',
-    body: formData
-  });
-  if (!response.ok) {
-    console.error(`Server responded with ${response.status}: ${response.statusText}`);
-    const responseBody = await response.json();
-    console.error('Response body:', responseBody);
-  } else {
-    const responseBody = await response.json();
-    console.log('New product added:', responseBody);
-  }
-} catch (error) {
-  console.error('Failed to add product:', error);
-}
-        }
-      );
-    }
-  } catch (error) {
-    console.error('Failed to upload image:', error);
-  }
-};
+  const handleAddSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      if (
+        !newProduk.name ||
+        !newProductFoto ||
+        !newProduk.kategori_id ||
+        !newProduk.harga ||
+        !newProduk.deskripsi
+      ) {
+        console.error("Please fill in all fields and select an image.");
+        return;
+      }
   
+      const fotoRef = ref(storage, `images/produk/${newProductFoto.name}`);
+      const uploadTaskSnapshot = await uploadBytesResumable(fotoRef, newProductFoto);
+      const downloadURL = await getDownloadURL(uploadTaskSnapshot.ref);
+      
+      console.log("Firebase download URL:", downloadURL); // Log Firebase URL
+  
+      const formData = new FormData();
+      formData.append('name', newProduk.name);
+      formData.append('kategori_id', newProduk.kategori_id);
+      formData.append('harga', newProduk.harga);
+      formData.append('deskripsi', newProduk.deskripsi);
+      formData.append('foto', newProductFoto); // Append the file to FormData
+  
+      const response = await fetch("http://127.0.0.1:5000/produk", {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        console.error(
+          `Server responded with ${response.status}: ${response.statusText}`
+        );
+        const responseBody = await response.json();
+        console.error("Response body:", responseBody);
+      } else {
+        console.log("New product added successfully.");
+        setNewProduk({
+          kategori_id: "",
+          name: "",
+          harga: "",
+          foto: "", // Reset foto to empty string
+          deskripsi: ""
+        });
+        setNewProductFoto(null);
+        fetchProdukList();
+        setShowAddForm(false);
+      }
+    } catch (error) {
+      console.error("Failed to add product:", error);
+    }
+  };
   
   const handleEditSubmit = async (event) => {
     event.preventDefault();
     try {
+      if (!editProduk) {
+        console.error("No product selected for editing.");
+        return;
+      }
+
+      setUploading(true);
+
       if (editProduk.foto instanceof File) {
-        const fotoRef = ref(storage, `image/produk/${editProduk.foto.name}`);
-        const uploadTask = uploadBytesResumable(fotoRef, editProduk.foto);
+        const fotoRef = ref(storage, `images/produk/${editProduk.foto.name}`);
+        const uploadTask = uploadBytesResumable(fotoRef, editProduk.foto, (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadProgress(progress);
+        });
         uploadTask.on(
           "state_changed",
-          (snapshot) => {
-            // Tampilkan progress unggah jika diperlukan
-          },
+          () => {},
           (error) => {
             console.error("Error uploading image:", error);
           },
           () => {
-            // Gambar baru berhasil diunggah, dapatkan URL gambar
+            // Image upload successful, get the image URL
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              // Simpan perubahan pada produk bersama dengan URL gambar ke server Flask
-              const updatedProduk = { ...editProduk, foto: downloadURL };
-              fetch(`http://127.0.0.1:5000/produk/${editProduk.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updatedProduk),
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  console.log("Product updated:", data);
-                  setShowEditForm(false);
-                  setShowEditSuccess(true);
-                })
-                .catch((error) => {
-                  console.error("Failed to update product:", error);
-                });
+              // Update product data with the new image URL
+              editProductOnServer({ ...editProduk, foto: downloadURL });
             });
           }
         );
       } else {
-        const response = await fetch(
-          `http://127.0.0.1:5000/produk/${editProduk.id}`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(editProduk),
-          }
-        );
-        if (!response.ok) {
-          console.error(
-            `Server responded with ${response.status}: ${response.statusText}`
-          );
-          const responseBody = await response.json();
-          console.error("Response body:", responseBody);
-        } else {
-          const responseBody = await response.json();
-          console.log("Product updated:", responseBody);
-          setShowEditForm(false);
-          setShowEditSuccess(true);
-        }
+        // If no new image is selected, update the product data directly
+        editProductOnServer(editProduk);
       }
     } catch (error) {
       console.error("Failed to update product:", error);
     }
   };
-  
+
+  const editProductOnServer = async (updatedProduk) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:5000/produk/${updatedProduk.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedProduk),
+        }
+      );
+      if (!response.ok) {
+        console.error(
+          `Server responded with ${response.status}: ${response.statusText}`
+        );
+        const responseBody = await response.json();
+        console.error("Response body:", responseBody);
+      } else {
+        console.log("Product updated successfully.");
+        fetchProdukList();
+        setShowEditForm(false);
+        setShowEditSuccess(true);
+      }
+    } catch (error) {
+      console.error("Failed to update product:", error);
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
+    }
+  };
 
   return (
     <div className="admin-produk-container">
@@ -222,10 +226,10 @@ try {
       <div className="admin-produk-desa">
         {!showAddForm && !showEditForm && (
           <div className="toolbar">
-            <span className="add-button" onClick={handleAddButtonClick}>
+            <button className="add-button" onClick={handleAddButtonClick}>
               <i className="fas fa-plus"></i>
               <p>Tambah Produk</p>
-            </span>
+            </button>
             <div className="search">
               <label htmlFor="search">Search :</label>
               <input
@@ -240,11 +244,11 @@ try {
         )}
 
         {showAddForm && (
-          <form onSubmit={handleAddSubmit}>
+          <form onSubmit={handleAddSubmit} encType="multipart/form-data">
             <h2>Tambah Produk</h2>
             <div className="form-group">
               <label htmlFor="kategori_id">Kategori Produk</label>
-              <br></br>
+              <br />
               <select
                 id="kategori_id"
                 name="kategori_id"
@@ -286,9 +290,14 @@ try {
               />
             </div>
             <div className="form-group">
-  <label htmlFor="foto">Foto Produk</label>
-  <input type="file" id="foto" name="foto" onChange={handleNewProductFotoChange} />
-</div>
+              <label htmlFor="foto">Foto Produk</label>
+              <input
+                type="file"
+                id="foto"
+                name="foto"
+                onChange={handleNewProductFotoChange}
+              />
+            </div>
             <div className="form-group">
               <label htmlFor="deskripsi">Deskripsi</label>
               <textarea
@@ -300,6 +309,7 @@ try {
                 }
               ></textarea>
             </div>
+            {uploading && <progress value={uploadProgress} max="100" />}
             <button type="submit">Tambah</button>
             <button type="button" onClick={handleCancelClick}>
               Batal
@@ -382,6 +392,7 @@ try {
                 }
               ></textarea>
             </div>
+            {uploading && <progress value={uploadProgress} max="100" />}
             <button type="submit">Simpan Perubahan</button>
             <button type="button" onClick={handleCancelClick}>
               Batal

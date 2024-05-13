@@ -5,6 +5,7 @@ function UploadImage() {
   const [image, setImage] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [name, setName] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const handleImageUpload = event => {
     setImage(event.target.files[0]);
@@ -14,62 +15,69 @@ function UploadImage() {
     setName(event.target.value);
   };
 
-const handleUpload = async () => {
-  // Create a reference to 'images/produk/name'
-  let imageRef = ref(storage, `images/produk/${name}`);
-
-  // Upload file and metadata to the object 'images/produk/name'
-  let uploadTask = uploadBytesResumable(imageRef, image);
-
-  // Listen for state changes, errors, and completion of the upload.
-  uploadTask.on('state_changed', 
-    (snapshot) => {
-      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Upload is ' + progress + '% done');
-      setUploadProgress(progress);
-    }, 
-    (error) => {
-      // Handle unsuccessful uploads
-      console.error('Upload failed:', error);
-    }, 
-    async () => {
-      // Handle successful uploads on complete
-      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-      const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-      console.log('File available at', downloadURL);
-
-      // Add the download URL to the form data
-      formData.append('foto', downloadURL);
-
-      // Send the form data to your server
-      try {
-        const response = await fetch('http://127.0.0.1:5000/produk', {
-          method: 'POST',
-          body: formData
-        });
-        if (!response.ok) {
-          console.error(`Server responded with ${response.status}: ${response.statusText}`);
-          const responseBody = await response.json();
-          console.error('Response body:', responseBody);
-        } else {
-          const responseBody = await response.json();
-          console.log('New product added:', responseBody);
-        }
-      } catch (error) {
-        console.error('Failed to add product:', error);
-      }
+  const handleUpload = async () => {
+    if (!image || !name) {
+      console.error('Please select an image and enter a name.');
+      return;
     }
-  );
-};
+
+    setUploading(true);
+
+    try {
+      const imageRef = ref(storage, `images/produk/${name}`);
+      const uploadTask = uploadBytesResumable(imageRef, image);
+
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadProgress(progress);
+        }, 
+        (error) => {
+          console.error('Upload failed:', error);
+          setUploading(false);
+        }, 
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            
+            const formData = new FormData();
+            formData.append('foto', downloadURL); // Append the URL string, not a file
+            formData.append('name', name);
+
+            const response = await fetch('http://127.0.0.1:5000/produk', {
+              method: 'POST',
+              body: formData
+            });
+
+            if (!response.ok) {
+              console.error(`Server responded with ${response.status}: ${response.statusText}`);
+              const responseBody = await response.json();
+              console.error('Response body:', responseBody);
+            } else {
+              const responseBody = await response.json();
+              console.log('New product added:', responseBody);
+            }
+          } catch (error) {
+            console.error('Failed to add product:', error);
+          } finally {
+            setUploading(false);
+            setUploadProgress(0);
+          }
+        }
+      );
+    } catch (error) {
+      console.error('Failed to upload image:', error);
+    }
+  };
 
   return (
     <div>
-      <input type="file" id="fileInput" onChange={handleImageUpload} style={{display: 'none'}} />
-      <label htmlFor="fileInput" style={{cursor: 'pointer'}}>Add</label>
+      <input type="file" id="fileInput" onChange={handleImageUpload} style={{ display: 'none' }} />
+      <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>Add</label>
       <input type="text" value={name} onChange={handleNameChange} placeholder="Enter name" />
-      <button onClick={handleUpload}>Upload</button>
-      <p>Upload progress: {uploadProgress}%</p>
+      <button onClick={handleUpload} disabled={!image || !name || uploading}>Upload</button>
+      {uploading && <p>Uploading...</p>}
+      {uploadProgress > 0 && <p>Upload progress: {uploadProgress.toFixed(2)}%</p>}
     </div>
   );
 }

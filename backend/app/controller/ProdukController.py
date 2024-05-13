@@ -1,6 +1,16 @@
+import os
 from app.model.produk import Produk
 from app import response, db
 from flask import request, jsonify
+from firebase_admin import storage
+
+# Fungsi untuk mengunggah file ke Firebase Storage
+def upload_to_firebase_storage(file):
+    bucket = storage.bucket()
+    blob = bucket.blob(file.filename)
+    blob.upload_from_file(file)
+    blob.make_public()  # Membuat URL gambar publik
+    return blob.public_url
 
 def index():
     try:
@@ -61,14 +71,19 @@ def update(id):
         data = request.json  # Assuming JSON data is sent in the request body
         if 'name' in data:
             produk.name = data['name']
-        if 'foto' in data:
-            produk.foto = data['foto']
         if 'harga' in data:
             produk.harga = data['harga']
         if 'deskripsi' in data:
             produk.deskripsi = data['deskripsi']
         if 'kategori_id' in data:
             produk.kategori_id = data['kategori_id']
+
+        # Jika ada file foto yang diunggah, upload ke Firebase Storage dan perbarui URL foto di database
+        if 'foto' in request.files:
+            foto = request.files['foto']
+            if foto.filename != '':
+                foto_url = upload_to_firebase_storage(foto)
+                produk.foto = foto_url
         
         # Commit changes to database
         db.session.commit()
@@ -76,28 +91,3 @@ def update(id):
         return jsonify({'message': 'Product updated successfully'}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 500
-
-
-def create():
-    try:
-        data = request.json
-        # Dapatkan URL gambar dari data yang diterima
-        foto_url = data['foto']
-        # Buat objek Produk dengan URL gambar yang diterima
-        produk = Produk(
-            name=data['name'],
-            foto=foto_url,
-            harga=data['harga'],
-            deskripsi=data['deskripsi'],
-            kategori_id=data['kategori_id']
-        )
-        # Tambahkan produk ke sesi database
-        db.session.add(produk)
-        # Commit perubahan ke database
-        db.session.commit()
-        
-        return jsonify({'message': 'Product added successfully'}), 201
-    except Exception as e:
-        # Tangani kesalahan dengan memberikan respons JSON
-        return jsonify({'message': str(e)}), 500
-

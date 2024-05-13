@@ -4,6 +4,7 @@ from app.model.produk import Produk
 from app import app, db
 from app.controller import DesaController, VisiController, WargaController, AdminController, ArtikelController, KategoriController, ProdukController, SejarahController, StrukturController, MisiController, KeunggulanController
 from app.model.banner import Banner  
+from app.controller import upload_to_firebase_storage
 
 @app.route('/')
 def index():
@@ -78,32 +79,41 @@ def kategoris():
     else:
         return KategoriController.index()
 
-@app.route('/produk', methods=['GET', 'POST'])
+from flask import request, jsonify
+
+@app.route('/produk', methods=['GET', 'POST', 'PUT'])
 def produks():
     if request.method == 'POST':
         try:
-            kategori_id = request.form.get('kategori_id')
-            name = request.form.get('name')
-            harga = request.form.get('harga')
-            deskripsi = request.form.get('deskripsi')
+            # Ambil data dari request JSON
+            data = request.json
+            kategori_id = data.get('kategori_id')
+            name = data.get('name')
+            harga = data.get('harga')
+            deskripsi = data.get('deskripsi')
 
-            # Proses penyimpanan gambar ke firebase
-            # ...
+            # Pastikan ada URL foto yang diunggah
+            if 'foto_url' not in data:
+                return jsonify({'message': 'No file URL provided'}), 400
+
+            foto_url = data['foto_url']
 
             # Simpan data produk ke database
-            new_produk = Produk(kategori_id=kategori_id, name=name, harga=harga, deskripsi=deskripsi)
+            new_produk = Produk(
+                kategori_id=kategori_id,
+                name=name,
+                harga=harga,
+                deskripsi=deskripsi,
+                foto=foto_url  # Simpan URL foto ke kolom 'foto'
+            )
             db.session.add(new_produk)
             db.session.commit()
 
-            return jsonify({'message': 'success'}), 201
+            return jsonify({'message': 'Product added successfully', 'foto_url': foto_url}), 201
         except Exception as e:
             return jsonify({'message': str(e)}), 500
-    elif request.method == 'PUT':  # Menambahkan kondisi untuk metode PUT
-        return ProdukController.update(request)  # Panggil fungsi update dengan parameter request
-    else:
-        return ProdukController.index()
     
-@app.route('/produk/<int:id>', methods=['GET', 'PUT'])
+@app.route('/produk/<int:id>', methods=['GET', 'PUT'])  # Menambahkan metode PUT untuk mengupdate produk
 def get_or_update_produk(id):
     if request.method == 'GET':
         return ProdukController.get(id)
