@@ -15,14 +15,15 @@ class Produk(db.Model):
     
     def __repr__(self):
         return '<Produk {}>'.format(self.name)
-def serialize(self):
-    return {
-        'id': self.id,
-        'name': self.name,
-        'foto': self.foto,
-        'harga': self.harga,
-        'deskripsi': self.deskripsi,
-        'desa_id': self.desa_id,
-        'warga_id': self.warga_id,
-        'kategori_id': self.kategori_id
-    }
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'foto': self.foto,
+            'harga': self.harga,
+            'deskripsi': self.deskripsi,
+            'desa_id': self.desa_id,
+            'warga_id': self.warga_id,
+            'kategori_id': self.kategori_id
+        }
