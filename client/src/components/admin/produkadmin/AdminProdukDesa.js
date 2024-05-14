@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from "react";
 import "./AdminProdukDesa.css";
-import { storage, ref, uploadBytesResumable, getDownloadURL } from "./txtImgConfig";
+import {
+  storage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "./txtImgConfig";
 
 export default function AdminProdukDesa() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showEditSuccess, setShowEditSuccess] = useState(false);
-  const [newProductFoto, setNewProductFoto] = useState(null);
+  const [image, setImage] = useState(null);
   const [produkList, setProdukList] = useState([]);
   const [kategoriList, setKategoriList] = useState([]);
   const [newProduk, setNewProduk] = useState({
     kategori_id: "",
     name: "",
     harga: "",
-    foto: "",
     deskripsi: "",
   });
   const [editProduk, setEditProduk] = useState(null);
   const [searchInput, setSearchInput] = useState("");
+  // eslint-disable-next-line no-unused-vars
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchProdukList();
@@ -30,10 +34,10 @@ export default function AdminProdukDesa() {
     try {
       const response = await fetch("http://127.0.0.1:5000/produk");
       const responseData = await response.json();
-      if (Array.isArray(responseData.data)) {
-        setProdukList(responseData.data);
+      if (Array.isArray(responseData)) {
+        setProdukList(responseData);
       } else {
-        console.error("Data received is not an array:", responseData.data);
+        console.error("Data received is not an array:", responseData);
       }
     } catch (error) {
       console.error("Error fetching produk:", error);
@@ -47,7 +51,7 @@ export default function AdminProdukDesa() {
       if (Array.isArray(responseData.data)) {
         setKategoriList(responseData.data);
       } else {
-        console.error("Data received is not an array:", responseData.data);
+        console.error("Data received is not an array:", responseData);
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -57,7 +61,6 @@ export default function AdminProdukDesa() {
   const handleAddButtonClick = () => {
     setShowAddForm(true);
     setShowEditForm(false);
-    setShowEditSuccess(false);
   };
 
   const handleEditClick = (produk) => {
@@ -67,11 +70,8 @@ export default function AdminProdukDesa() {
     setShowEditSuccess(false);
   };
 
-  const handleNewProductFotoChange = (event) => {
-    // Ensure a file is selected before setting it
-    if (event.target.files.length > 0) {
-      setNewProductFoto(event.target.files[0]);
-    }
+  const handleImageUpload = (event) => {
+    setImage(event.target.files[0]);
   };
 
   const handleCancelClick = () => {
@@ -79,14 +79,6 @@ export default function AdminProdukDesa() {
     setShowEditForm(false);
     setEditProduk(null);
     setShowEditSuccess(false);
-    setNewProductFoto(null);
-    setNewProduk({
-      kategori_id: "",
-      name: "",
-      harga: "",
-      foto: "",
-      deskripsi: "",
-    });
   };
 
   const handleInputChange = (e) => {
@@ -98,57 +90,80 @@ export default function AdminProdukDesa() {
     try {
       if (
         !newProduk.name ||
-        !newProductFoto ||
         !newProduk.kategori_id ||
         !newProduk.harga ||
-        !newProduk.deskripsi
+        !newProduk.deskripsi ||
+        !image
       ) {
         console.error("Please fill in all fields and select an image.");
         return;
       }
-  
-      const fotoRef = ref(storage, `images/produk/${newProductFoto.name}`);
-      const uploadTaskSnapshot = await uploadBytesResumable(fotoRef, newProductFoto);
-      const downloadURL = await getDownloadURL(uploadTaskSnapshot.ref);
-      
-      console.log("Firebase download URL:", downloadURL); // Log Firebase URL
-  
-      const formData = new FormData();
-      formData.append('name', newProduk.name);
-      formData.append('kategori_id', newProduk.kategori_id);
-      formData.append('harga', newProduk.harga);
-      formData.append('deskripsi', newProduk.deskripsi);
-      formData.append('foto', newProductFoto); // Append the file to FormData
-  
-      const response = await fetch("http://127.0.0.1:5000/produk", {
-        method: "POST",
-        body: formData,
-      });
-  
-      if (!response.ok) {
-        console.error(
-          `Server responded with ${response.status}: ${response.statusText}`
-        );
-        const responseBody = await response.json();
-        console.error("Response body:", responseBody);
-      } else {
-        console.log("New product added successfully.");
-        setNewProduk({
-          kategori_id: "",
-          name: "",
-          harga: "",
-          foto: "", // Reset foto to empty string
-          deskripsi: ""
-        });
-        setNewProductFoto(null);
-        fetchProdukList();
-        setShowAddForm(false);
-      }
+
+      // Simpan gambar ke Firebase Storage
+      const storageRef = ref(storage, `images/produk/${image.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, image);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setUploadProgress(progress);
+        },
+        (error) => {
+          console.error(error);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log(`File available at ${downloadURL}`);
+
+            // Buat objek produk dengan desa_id dan warga_id yang otomatis 1
+            const newProductData = {
+              name: newProduk.name,
+              kategori_id: newProduk.kategori_id,
+              harga: newProduk.harga,
+              deskripsi: newProduk.deskripsi,
+              foto: downloadURL,
+              desa_id: 1,
+              warga_id: 1,
+            };
+
+            // Simpan produk ke dalam database XAMPP
+            const response = await fetch("http://localhost:5000/produk", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(newProductData),
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("Success:", data);
+
+            // Clear form fields and fetch updated product list
+            setNewProduk({
+              kategori_id: "",
+              name: "",
+              harga: "",
+              deskripsi: "",
+            });
+            setImage(null);
+            fetchProdukList();
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        }
+      );
     } catch (error) {
       console.error("Failed to add product:", error);
     }
   };
-  
+
   const handleEditSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -157,64 +172,80 @@ export default function AdminProdukDesa() {
         return;
       }
 
-      setUploading(true);
-
+      const formData = new FormData();
+      formData.append("name", editProduk.name);
+      formData.append("kategori_id", editProduk.kategori_id);
+      formData.append("harga", editProduk.harga);
+      formData.append("deskripsi", editProduk.deskripsi);
       if (editProduk.foto instanceof File) {
-        const fotoRef = ref(storage, `images/produk/${editProduk.foto.name}`);
-        const uploadTask = uploadBytesResumable(fotoRef, editProduk.foto, (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setUploadProgress(progress);
-        });
+        const storageRef = ref(
+          storage,
+          `images/produk/${editProduk.foto.name}`
+        );
+        const uploadTask = uploadBytesResumable(storageRef, editProduk.foto);
         uploadTask.on(
           "state_changed",
-          () => {},
-          (error) => {
-            console.error("Error uploading image:", error);
+          (snapshot) => {
+            const progress = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+            setUploadProgress(progress);
           },
-          () => {
-            // Image upload successful, get the image URL
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              // Update product data with the new image URL
-              editProductOnServer({ ...editProduk, foto: downloadURL });
-            });
+          (error) => {
+            console.error(error);
+          },
+          async () => {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            formData.append("foto", downloadURL);
+
+            const response = await fetch(
+              `http://127.0.0.1:5000/produk/${editProduk.id}`,
+              {
+                method: "PUT",
+                body: formData,
+              }
+            );
+            if (!response.ok) {
+              console.error(
+                `Server responded with ${response.status}: ${response.statusText}`
+              );
+              const responseBody = await response.json();
+              console.error("Response body:", responseBody);
+            } else {
+              const responseBody = await response.json();
+              console.log("Product updated:", responseBody);
+              setShowEditForm(false);
+              setShowEditSuccess(true);
+              fetchProdukList();
+            }
           }
         );
       } else {
-        // If no new image is selected, update the product data directly
-        editProductOnServer(editProduk);
-      }
-    } catch (error) {
-      console.error("Failed to update product:", error);
-    }
-  };
+        formData.append("foto", editProduk.foto);
 
-  const editProductOnServer = async (updatedProduk) => {
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:5000/produk/${updatedProduk.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedProduk),
-        }
-      );
-      if (!response.ok) {
-        console.error(
-          `Server responded with ${response.status}: ${response.statusText}`
+        const response = await fetch(
+          `http://127.0.0.1:5000/produk/${editProduk.id}`,
+          {
+            method: "PUT",
+            body: formData,
+          }
         );
-        const responseBody = await response.json();
-        console.error("Response body:", responseBody);
-      } else {
-        console.log("Product updated successfully.");
-        fetchProdukList();
-        setShowEditForm(false);
-        setShowEditSuccess(true);
+        if (!response.ok) {
+          console.error(
+            `Server responded with ${response.status}: ${response.statusText}`
+          );
+          const responseBody = await response.json();
+          console.error("Response body:", responseBody);
+        } else {
+          const responseBody = await response.json();
+          console.log("Product updated:", responseBody);
+          setShowEditForm(false);
+          setShowEditSuccess(true);
+          fetchProdukList();
+        }
       }
     } catch (error) {
       console.error("Failed to update product:", error);
-    } finally {
-      setUploading(false);
-      setUploadProgress(0);
     }
   };
 
@@ -290,14 +321,17 @@ export default function AdminProdukDesa() {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="foto">Foto Produk</label>
+              <label htmlFor="fotoInput">
+                Choose File
+              </label>
               <input
                 type="file"
-                id="foto"
-                name="foto"
-                onChange={handleNewProductFotoChange}
+                id="fotoInput"
+                onChange={handleImageUpload}
+                accept="image/*"
               />
             </div>
+
             <div className="form-group">
               <label htmlFor="deskripsi">Deskripsi</label>
               <textarea
@@ -309,8 +343,9 @@ export default function AdminProdukDesa() {
                 }
               ></textarea>
             </div>
-            {uploading && <progress value={uploadProgress} max="100" />}
-            <button type="submit">Tambah</button>
+            <button type="submit" onClick={handleAddSubmit}>
+              Tambah
+            </button>
             <button type="button" onClick={handleCancelClick}>
               Batal
             </button>
@@ -392,7 +427,6 @@ export default function AdminProdukDesa() {
                 }
               ></textarea>
             </div>
-            {uploading && <progress value={uploadProgress} max="100" />}
             <button type="submit">Simpan Perubahan</button>
             <button type="button" onClick={handleCancelClick}>
               Batal
