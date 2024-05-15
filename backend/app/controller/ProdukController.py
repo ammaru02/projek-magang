@@ -1,4 +1,3 @@
-import os
 from app.model.produk import Produk
 from app import response, db
 from flask import request, jsonify
@@ -89,5 +88,25 @@ def update(id):
         db.session.commit()
         
         return jsonify({'message': 'Product updated successfully'}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
+def delete(id):
+    try:
+        produk = Produk.query.get(id)
+        if produk is None:
+            return jsonify({'message': 'Produk not found'}), 404
+        
+        # Delete the photo from Firebase Storage
+        if produk.foto:
+            bucket = storage.bucket()
+            blob = bucket.blob(produk.foto)
+            blob.delete()
+
+        # Delete the product from the database
+        db.session.delete(produk)
+        db.session.commit()
+        
+        return jsonify({'message': 'Product and its photo deleted successfully'}), 200
     except Exception as e:
         return jsonify({'message': str(e)}), 500

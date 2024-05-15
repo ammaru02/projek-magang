@@ -121,8 +121,8 @@ def produks():
         except Exception as e:
             return jsonify({'message': str(e)}), 500
 
-@app.route('/produk/<int:id>', methods=['GET', 'PUT'])
-def get_or_update_produk(id):
+@app.route('/produk/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def get_update_or_delete_produk(id):
     produk = Produk.query.get(id)
     if not produk:
         return jsonify({'message': 'Produk not found'}), 404
@@ -145,6 +145,13 @@ def get_or_update_produk(id):
 
             db.session.commit()
             return jsonify({'message': 'Product updated successfully'}), 200
+        except Exception as e:
+            return jsonify({'message': str(e)}), 500
+    elif request.method == 'DELETE':
+        try:
+            db.session.delete(produk)
+            db.session.commit()
+            return jsonify({'message': 'Product deleted successfully'}), 200
         except Exception as e:
             return jsonify({'message': str(e)}), 500
 
