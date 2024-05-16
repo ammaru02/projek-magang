@@ -2,8 +2,8 @@
     flex: 1;
     height: calc(100vh - 60px);
     background-color: #F9F6EE;
-    position: sticky;
-    top: 50px;
+    position: fixed;
+    top: 60px;
     box-shadow: 0 3px 15px rgba(0,0,0,0.4); /* Tambahkan bayangan */
     transition: width 0.3s; /* Animasi lebar saat diubah */
     width: 200px; /* Lebar sidebar default */
@@ -68,6 +68,7 @@
 
 .burger {
     display: none; /* Sembunyikan burger menu di desktop */
+    z-index: 1000;
 }
 
 @media (max-width: 768px) {
@@ -75,7 +76,7 @@
         width: 0; /* Sembunyikan sidebar */
         overflow: hidden; /* Sembunyikan isi sidebar yang melebihi lebar */
         position: fixed;
-        z-index: 1000;
+        z-index: 1010;
         top: 0;
         left: 0;
         height: 100vh;
@@ -97,7 +98,7 @@
 
     .burger {
         display: block; /* Tampilkan burger menu di layar mobile */
-        position: absolute;
+        position: fixed;
         top: 20px;
         left: 20px;
         cursor: pointer;

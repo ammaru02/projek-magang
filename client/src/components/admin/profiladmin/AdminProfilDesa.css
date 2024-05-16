@@ -1,85 +1,103 @@
 .profildesa-container {
-    text-align: center;
-    margin: 0 auto; /* Menengahkan container horizontal */
-    width: 800px; /* Membatasi lebar maksimal container */
-  }
-  
-  .buttons-container {
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Menengahkan vertikal */
-    max-width: 400px; /* Menentukan lebar maksimal container tombol */
-    margin: 0 auto; /* Menengahkan secara horizontal */
-    min-width: 250px; /* Lebar minimum tombol */
-    max-width: 600px; /* Lebar maksimum tombol */
-  }
-  
-  .buttons-container button {
-    margin: 20px 10px;
-    padding: 8px 20px;
-    background-color: #D3D5D6;
-    color: #000;
-    font-weight: 800;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .buttons-container button:hover {
-    background-color: #D3D5D6;
-  }
-  
-  .form-container {
-    text-align: left;
-    margin-top: 10px;
-  }
-  
-  .form-container label,
-  .form-container input{
-    display: block;
-    margin-bottom: 10px;
-    font-size: 16px;
-    font-weight: bold;
-  }
+  text-align: center;
+  margin: 0 auto; /* Menengahkan container horizontal */
+  max-width: 100%; /* Membatasi lebar maksimal container */
+  margin-top: 60px;
+}
 
-  .form-container textarea {
-    width: 100%;
-    resize: none;
-    font-size: 15px;
-    padding: 5px;
-    border-radius: 15px;
-  }
-  
-  .form-container input[type="file"] {
-    margin-top: 10px;
-  }
-  
-  .form-container button[type="submit"] {
-    margin-top: 10px;
-    background-color: #D3D5D6;
-    color: #000;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 800;
-  }
-  
-  .form-container button[type="submit"]:hover {
-    background-color: #D3D5D6;
-    
-  }
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Menengahkan vertikal */
+  padding: 10px;
+  width: 700px; /* Menentukan lebar maksimal container tombol */
+  margin: 0 auto; /* Menengahkan secara horizontal */
+  margin-left: 150px;
+}
+
+.buttons-container button {
+  margin: 20px 5px;
+  padding: 10px 20px;
+  width: 400px;
+  background-color: #D3D5D6;
+  color: #000;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+}
+
+.buttons-container button:hover {
+  background-color: #D3D5D6;
+}
+
+.form-container {
+  text-align: left;
+  margin-left: 150px;
+  margin-top: 10px;
+  width: 700px;
+}
+
+.form-container label,
+.form-container input{
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.form-container textarea {
+  width: 100%;
+  resize: none;
+  font-size: 15px;
+  padding: 5px;
+  border-radius: 15px;
+}
+
+.form-container input[type="file"] {
+  margin-top: 10px;
+}
+
+.form-container button[type="submit"] {
+  margin-top: 10px;
+  background-color: #D3D5D6;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.form-container button[type="submit"]:hover {
+  background-color: #D3D5D6;
+}
+
   
   @media screen and (max-width: 768px) {
     .profildesa-container {
-      max-width: 90%; /* Mengatur lebar maksimal container untuk layar kecil */
+      max-width: 100%; /* Mengatur lebar maksimal container untuk layar kecil */
+      margin-left: 0;
+    }
+
+    .form-container{
+      max-width: 90%;
+      margin: auto;
     }
   
     .buttons-container {
-        flex-direction: column; /* Mengatur tata letak tombol menjadi vertikal saat layar kecil */
+      max-width: 80%;  
+      flex-direction: column; /* Mengatur tata letak tombol menjadi vertikal saat layar kecil */
+      margin: auto;
+      padding: 30px 0;
       }
-    
+
       .buttons-container button {
         width: 80%; /* Mengatur lebar tombol agar mengisi hampir seluruh lebar container */
+        margin: 5px auto; /* Mengatur jarak atas dan bawah, serta menengahkan horizontal */
+    }
+    
+      .form-container button[type="submit"] {
+        width: 50%; /* Mengatur lebar tombol agar mengisi hampir seluruh lebar container */
         margin: 15px 10px; /* Menengahkan secara horizontal */
       }
   }
