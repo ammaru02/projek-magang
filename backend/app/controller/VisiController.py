@@ -19,5 +19,6 @@ def singleObject(visi):
     visi = {
         'id' : visi.id,
         'visi' : visi.visi,
+        'foto' : visi.foto,
     }
     return visi

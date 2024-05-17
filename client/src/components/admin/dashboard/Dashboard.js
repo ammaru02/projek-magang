@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
 
 const Dashboard = () => {
-    const [produkCount, setProdukCount] = useState(0); // State to hold produk count
-    const [strukturDesaCount, setStrukturDesaCount] = useState(0); // State to hold struktur desa count
-    const [dataArtikelCount, setDataArtikelCount] = useState(0); // State to hold data artikel count
+    const [produkCount, setProdukCount] = useState(0);
+    const [strukturDesaCount, setStrukturDesaCount] = useState(0);
+    const [dataArtikelCount, setDataArtikelCount] = useState(0);
 
     useEffect(() => {
         fetchData();
@@ -13,16 +13,22 @@ const Dashboard = () => {
     const fetchData = async () => {
         try {
             const produkResponse = await fetch('http://127.0.0.1:5000/produk');
-            const produkData = await produkResponse.json();
-            setProdukCount(produkData.data.length);
+const produkData = await produkResponse.json();
+if (produkData.length) {
+    setProdukCount(produkData.length);
+}
 
             const strukturDesaResponse = await fetch('http://127.0.0.1:5000/struktur');
             const strukturDesaData = await strukturDesaResponse.json();
-            setStrukturDesaCount(strukturDesaData.data.length);
+            if (strukturDesaData && strukturDesaData.data) {
+                setStrukturDesaCount(strukturDesaData.data.length);
+            }
 
             const dataArtikelResponse = await fetch('http://127.0.0.1:5000/artikel');
             const dataArtikelData = await dataArtikelResponse.json();
-            setDataArtikelCount(dataArtikelData.data.length);
+            if (dataArtikelData && dataArtikelData.data) {
+                setDataArtikelCount(dataArtikelData.data.length);
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
         }

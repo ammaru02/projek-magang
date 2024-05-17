@@ -120,7 +120,6 @@ def produks():
             return jsonify(produk_list), 200
         except Exception as e:
             return jsonify({'message': str(e)}), 500
-
 @app.route('/produk/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def get_update_or_delete_produk(id):
     produk = Produk.query.get(id)
@@ -155,6 +154,7 @@ def get_update_or_delete_produk(id):
         except Exception as e:
             return jsonify({'message': str(e)}), 500
 
+
 @app.route('/sejarah', methods=['GET', 'POST'])
 def sejarahs():
     if request.method == 'POST':
@@ -172,9 +172,11 @@ def strukturs():
 @app.route('/visi', methods=['GET', 'POST'])
 def visis():
     if request.method == 'POST':
-        return VisiController.create()
-    else:
+        return VisiController.create(request)
+    elif request.method == 'GET':
         return VisiController.index()
+    else:
+        return jsonify({'message': 'Method not allowed'}), 405
 
 @app.route('/misi', methods=['GET', 'POST'])
 def misis():

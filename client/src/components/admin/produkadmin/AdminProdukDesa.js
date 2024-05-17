@@ -37,24 +37,44 @@ export default function AdminProdukDesa() {
   }, []);
 
   useEffect(() => {
-    createPaginationDots();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, produkList, itemsPerPage]);
+    if (!showEditForm) {
+      createPaginationDots();
+    }
+  }, [currentPage, produkList, itemsPerPage, showEditForm]);
+
+  useEffect(() => {
+    if (!showAddForm) {
+      createPaginationDots();
+    }
+  }, [currentPage, produkList, itemsPerPage, showAddForm]);
+  
+  
 
   const createPaginationDots = () => {
-    
     const paginationContainer = document.querySelector(".pagination-dots");
-    paginationContainer.innerHTML = "";
-
+    paginationContainer.innerHTML = ""; // Bersihkan kontainer
+  
+    // Buat ulang tanda navigasi sesuai dengan jumlah halaman
     for (let i = 1; i <= Math.ceil(produkList.length / itemsPerPage); i++) {
       const dot = document.createElement("span");
       dot.classList.add("dot");
+  
+      // Tambahkan kelas aktif jika halaman saat ini sama dengan halaman yang sedang diproses
+      if (currentPage === i) {
+        dot.classList.add("active");
+      }
+  
+      // Tambahkan event listener untuk memanggil fungsi paginate
       dot.addEventListener("click", () => {
         paginate(i);
       });
-      paginationContainer.appendChild(dot);
+  
+      paginationContainer.appendChild(dot); // Tambahkan dot ke kontainer
     }
   };
+  
+  
+  
 
 
   const fetchProdukList = async () => {

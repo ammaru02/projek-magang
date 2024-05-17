@@ -20,6 +20,7 @@ def index():
         else:
             produk = Produk.query.all()
         
+        print(produk)  # Debugging line
         data = format_array(produk)
         return response.success(data, "success")
     except Exception as e:
@@ -32,7 +33,7 @@ def format_array(datas):
     return array
         
 def single_object(produk):
-    produk = {
+    return {
         'id': produk.id,
         'name': produk.name,
         'foto': produk.foto,
@@ -42,24 +43,16 @@ def single_object(produk):
         'warga_id': produk.warga_id,
         'kategori_id': produk.kategori_id,
     }
-    return produk
 
 def get(id):
-    produk = Produk.query.get(id)
-    if produk is None:
-        return jsonify({'message': 'Produk not found'}), 404
+    try:
+        produk = Produk.query.get(id)
+        if produk is None:
+            return jsonify({'message': 'Produk not found'}), 404
 
-    produk_dict = {
-        'id': produk.id,
-        'name': produk.name,
-        'foto': produk.foto,
-        'deskripsi': produk.deskripsi,
-        'harga': produk.harga,
-        'kategori_id': produk.kategori_id,
-        'warga_id': produk.warga_id,
-    }
-
-    return jsonify(produk_dict), 200
+        return jsonify(single_object(produk)), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
 
 def update(id):
     try:
@@ -67,7 +60,7 @@ def update(id):
         if produk is None:
             return jsonify({'message': 'Produk not found'}), 404
         
-        data = request.json  # Assuming JSON data is sent in the request body
+        data = request.json
         if 'name' in data:
             produk.name = data['name']
         if 'harga' in data:
@@ -77,14 +70,12 @@ def update(id):
         if 'kategori_id' in data:
             produk.kategori_id = data['kategori_id']
 
-        # Jika ada file foto yang diunggah, upload ke Firebase Storage dan perbarui URL foto di database
         if 'foto' in request.files:
             foto = request.files['foto']
             if foto.filename != '':
                 foto_url = upload_to_firebase_storage(foto)
                 produk.foto = foto_url
         
-        # Commit changes to database
         db.session.commit()
         
         return jsonify({'message': 'Product updated successfully'}), 200
@@ -97,13 +88,11 @@ def delete(id):
         if produk is None:
             return jsonify({'message': 'Produk not found'}), 404
         
-        # Delete the photo from Firebase Storage
         if produk.foto:
             bucket = storage.bucket()
             blob = bucket.blob(produk.foto)
             blob.delete()
 
-        # Delete the product from the database
         db.session.delete(produk)
         db.session.commit()
         

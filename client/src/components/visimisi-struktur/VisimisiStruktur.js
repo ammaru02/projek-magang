@@ -1,63 +1,62 @@
 import React, { useState, useEffect } from "react";
 import './VisimisiStruktur.css'
-import image1 from '../image/Banner1.jpeg'
 
 const VisimisiStruktu = () => {
     const [visi, setVisi] = useState("");
     const [misi, setMisi] = useState([]);
+    const [strukturImage, setStrukturImage] = useState(""); // State untuk menyimpan URL gambar
 
     useEffect(() => {
-        fetch('http://localhost:5000/visi') // ganti dengan URL API backend Flask Anda
+        fetch('http://localhost:5000/visi') // Ganti dengan endpoint yang sesuai untuk mengambil data Visi
             .then(response => response.json())
             .then(data => {
-                console.log('Data:', data);
+                console.log('Data Visi:', data);
                 if (data.data && data.data.length > 0) {
-                    setVisi(data.data[0].visi); // simpan visi ke dalam state
+                    setVisi(data.data[0].visi);
+                    setStrukturImage(data.data[0].foto); // Ambil URL gambar dari data
                 }
             })
-            .catch(error => console.error('Error:', error)); // tambahkan penanganan error
+            .catch(error => console.error('Error:', error));
     }, []);
 
     useEffect(() => {
-        fetch('http://localhost:5000/misi') // ganti dengan URL API backend Flask Anda
+        fetch('http://localhost:5000/misi') // Ganti dengan endpoint yang sesuai untuk mengambil data Misi
             .then(response => response.json())
             .then(data => {
-                console.log('Data:', data);
+                console.log('Data Misi:', data);
                 if (data.data && data.data.length > 0) {
-                    setMisi(data.data); // simpan misi ke dalam state
+                    setMisi(data.data);
                 }
             })
-            .catch(error => console.error('Error:', error)); // tambahkan penanganan error
+            .catch(error => console.error('Error:', error));
     }, []);
 
     return (
-        <>
-            <div className="container-sm">
-                <div className="page-visimisi">
-                    <i className="fa-solid fa-house"><p className="teks-icon">/ Visi Misi & Struktur Desa</p></i>
-                    <h2 className="title-visimisi">VISI MISI DESA KASSI</h2>
-                </div>
-                <div className="visimisi-isi">
-                    <h3>Visi</h3>
-                    <p className="deskripsi-visimisi">
-                        {visi}
-                    </p>
-                </div>
-                <div className="visimisi-isi">
-                    <h3>Misi</h3>
-                    <ol className="list-misi">
-                        {misi.map((item, index) => (
-                            <li key={index}><p>{item.misi}</p></li>
-                        ))}
-                    </ol>
-                </div>
-                <div className="page-struktur">
-                    <h2 className="title-struktur">STRUKTUR DESA KASSI</h2>
-                    <img src={image1} alt="struktur" className="image-struktur"/>
-                </div>
+        <div className="container-sm">
+            <div className="page-visimisi">
+                <i className="fa-solid fa-house"><p className="teks-icon">/ Visi Misi & Struktur Desa</p></i>
+                <h2 className="title-visimisi">VISI MISI DESA KASSI</h2>
             </div>
-        </>
-    )
+            <div className="visimisi-isi">
+                <h3>Visi</h3>
+                <p className="deskripsi-visimisi">
+                    {visi}
+                </p>
+            </div>
+            <div className="visimisi-isi">
+                <h3>Misi</h3>
+                <ol className="list-misi">
+                    {misi.map((item, index) => (
+                        <li key={index}><p>{item.misi}</p></li>
+                    ))}
+                </ol>
+            </div>
+            <div className="page-struktur">
+                <h2 className="title-struktur">STRUKTUR DESA KASSI</h2>
+                {strukturImage && <img src={strukturImage} alt="struktur" className="image-struktur"/>}
+            </div>
+        </div>
+    );
 }
 
 export default VisimisiStruktu;
