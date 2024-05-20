@@ -1,0 +1,100 @@
+.admin-artikel-container {
+    flex: 6;
+    margin: 0 auto;
+    margin-left: 200px;
+    height: auto;
+    margin-top: 60px;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .admin-artikel-list {
+    width: 70%;
+    margin: auto; /* Mengatur margin atas dan bawah menjadi auto dan membiarkan margin kiri kanan menjadi auto */
+  }
+
+  .title-admin-artikel {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-left: 10px;
+    padding: 5px;
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+    padding: 3px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+  }
+
+  .add-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 200px;
+  }
+
+  .add-button i {
+    margin-right: 5px;
+    font-size: 25px;
+    background-color: #8F9A93;
+  }
+
+  .add-button p{
+    font-size: 16px;
+    margin-left: 5px;
+    font-weight: 600;
+  }
+
+  .search {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .search label{
+    font-size: 16px;
+    font-weight: 600;
+    display: none;
+  }
+
+  .search i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+  .search input[type="text"] {
+    margin-left: 5px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+  .form-tambah {
+    margin-top: 20px; /* Tambahkan margin atas */
+    margin-bottom: 20px;
+  }
+
+  .form-tambah h2{
+    margin-bottom: 10px;
+    font-size: 30px;
+  }
+  
+  .form-group {
+    margin-bottom: 5px; /* Tambahkan margin bawah antara setiap grup form */
+  }
+
+  .form-group label {
+    display: flex; /* Tampilkan label sebagai blok agar muncul satu per baris */
+    margin-bottom: 5px; /* Tambahkan margin bawah pada label */
+  }

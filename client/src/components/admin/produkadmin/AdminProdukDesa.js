@@ -40,12 +40,14 @@ export default function AdminProdukDesa() {
     if (!showEditForm) {
       createPaginationDots();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, produkList, itemsPerPage, showEditForm]);
 
   useEffect(() => {
     if (!showAddForm) {
       createPaginationDots();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, produkList, itemsPerPage, showAddForm]);
   
   
@@ -361,7 +363,6 @@ export default function AdminProdukDesa() {
             <br/>
             <div className="form-group">
               <label htmlFor="kategori_id">Kategori Produk</label>
-
               <select
                 id="kategori_id"
                 name="kategori_id"
