@@ -126,6 +126,11 @@ def get_update_or_delete_artikel(id):
         try:
             db.session.delete(artikel)
             db.session.commit()
+
+            # Reset auto-increment (for SQLite)
+            db.session.execute('VACUUM')
+            db.session.commit()
+
             return jsonify({'message': 'Article deleted successfully'}), 200
         except Exception as e:
             return jsonify({'message': str(e)}), 500
