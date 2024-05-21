@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from flask_cors import cross_origin
 from app.model.produk import Produk
+from app.model.artikel import Artikel
 from app import app, db
 from app.controller import DesaController, VisiController, WargaController, AdminController, ArtikelController, KategoriController, ProdukController, SejarahController, StrukturController, MisiController, KeunggulanController
 from app.model.banner import Banner  
@@ -67,9 +68,67 @@ def admins():
 @app.route('/artikel', methods=['GET', 'POST'])
 def artikels():
     if request.method == 'POST':
-        return ArtikelController.create()
-    else:
-        return ArtikelController.index()
+        try:
+            data = request.json
+            judul = data.get('judul')
+            tanggal = data.get('tanggal')
+            foto = data.get('foto')
+            deskripsi = data.get('deskripsi')
+
+            if not (judul and tanggal and foto and deskripsi):
+                return jsonify({'message': 'Incomplete data provided'}), 400
+
+            new_artikel = Artikel(
+                judul=judul,
+                tanggal=tanggal,
+                foto=foto,
+                deskripsi=deskripsi
+            )
+            db.session.add(new_artikel)
+            db.session.commit()
+
+            return jsonify({'message': 'Article added successfully'}), 201
+        except Exception as e:
+            return jsonify({'message': str(e)}), 500
+    elif request.method == 'GET':
+        try:
+            artikels = Artikel.query.all()
+            artikel_list = [artikel.serialize() for artikel in artikels]
+            return jsonify(artikel_list), 200
+        except Exception as e:
+            return jsonify({'message': str(e)}), 500
+        
+@app.route('/artikel/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def get_update_or_delete_artikel(id):
+    artikel = Artikel.query.get(id)
+    if not artikel:
+        return jsonify({'message': 'Article not found'}), 404
+
+    if request.method == 'GET':
+        return jsonify(artikel.serialize()), 200
+    elif request.method == 'PUT':
+        try:
+            data = request.json
+            if 'judul' in data:
+                artikel.judul = data['judul']
+            if 'tanggal' in data:
+                artikel.tanggal = data['tanggal']
+            if 'foto' in data:
+                artikel.foto = data['foto']
+            if 'deskripsi' in data:
+                artikel.deskripsi = data['deskripsi']
+
+            db.session.commit()
+            return jsonify({'message': 'Article updated successfully'}), 200
+        except Exception as e:
+            return jsonify({'message': str(e)}), 500
+    elif request.method == 'DELETE':
+        try:
+            db.session.delete(artikel)
+            db.session.commit()
+            return jsonify({'message': 'Article deleted successfully'}), 200
+        except Exception as e:
+            return jsonify({'message': str(e)}), 500
 
 @app.route('/kategori', methods=['GET', 'POST'])
 def kategoris():
@@ -120,6 +179,7 @@ def produks():
             return jsonify(produk_list), 200
         except Exception as e:
             return jsonify({'message': str(e)}), 500
+        
 @app.route('/produk/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def get_update_or_delete_produk(id):
     produk = Produk.query.get(id)
@@ -153,7 +213,6 @@ def get_update_or_delete_produk(id):
             return jsonify({'message': 'Product deleted successfully'}), 200
         except Exception as e:
             return jsonify({'message': str(e)}), 500
-
 
 @app.route('/sejarah', methods=['GET', 'POST'])
 def sejarahs():
