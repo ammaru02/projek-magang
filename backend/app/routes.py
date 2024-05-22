@@ -2,6 +2,7 @@ from flask import jsonify, request
 from flask_cors import cross_origin
 from app.model.produk import Produk
 from app.model.artikel import Artikel
+from app.model.sejarah import Sejarah
 from app.model.visi import Visi
 from app.model.misi import Misi
 from app import app, db
@@ -221,12 +222,31 @@ def get_update_or_delete_produk(id):
         except Exception as e:
             return jsonify({'message': str(e)}), 500
 
-@app.route('/sejarah', methods=['GET', 'POST'])
-def sejarahs():
-    if request.method == 'POST':
-        return SejarahController.create()
-    else:
-        return SejarahController.index()
+@app.route('/sejarah', methods=['GET', 'PUT'])
+def get_update_sejarah():
+    if request.method == 'GET':
+        try:
+            sejarah = Sejarah.query.all()
+            return jsonify([s.serialize() for s in sejarah]), 200
+        except Exception as e:
+            return jsonify({'message': str(e)}), 500
+    elif request.method == 'PUT':
+        try:
+            data = request.json
+            sejarah = Sejarah.query.first()  # Ambil sejarah pertama untuk diperbarui (atau disesuaikan sesuai kebutuhan)
+            if not sejarah:
+                return jsonify({'message': 'Tidak ada sejarah ditemukan'}), 404
+            
+            if 'deskripsi' in data:
+                sejarah.deskripsi = data['deskripsi']
+            if 'foto' in data:  # Perbarui foto jika ada di data yang dikirimkan
+                sejarah.foto = data['foto'] 
+            
+            db.session.commit()
+            return jsonify({'message': 'Sejarah berhasil diperbarui'}), 200
+        except Exception as e:
+            db.session.rollback()  # Rollback perubahan jika terjadi kesalahan
+            return jsonify({'message': str(e)}), 500
 
 @app.route('/struktur', methods=['GET', 'POST'])
 def strukturs():

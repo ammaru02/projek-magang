@@ -6,20 +6,19 @@ const SejarahDesa = () => {
     const [sejarah, setSejarah] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/sejarah') // ganti dengan URL API backend Flask Anda
+        fetch('http://localhost:5000/sejarah') // Sesuaikan dengan URL API backend Flask Anda
             .then(response => response.json())
-            .then(data => setSejarah(data.data)); // simpan semua data ke dalam state sejarah
+            .then(data => setSejarah(data)); // Simpan semua data ke dalam state sejarah
     }, []);
 
     return (
-        <>
-            <div className="container-sm">
-                <div className="page-sejarah">
-                    <i className="fa-solid fa-house"><p className="teks-icon">/ SEJARAH DESA</p></i>
-                    <h2 className="title-sejarah">SEJARAH DESA KASSI</h2>
+        <div className="container-sm">
+            <div className="page-sejarah">
+                <i className="fas fa-home"><p className="teks-icon">/ SEJARAH DESA</p></i>
+                <h2 className="title-sejarah">SEJARAH DESA KASSI</h2>
             </div>
             <img src={image1} alt="sejarah" className="image-sejarah"/>
-            {sejarah.map((item, index) => ( // gunakan fungsi map untuk menampilkan semua data sejarah
+            {sejarah.map((item, index) => (
                 <div className="sejarah-isi" key={index}>
                     <p className="sejarah-deskripsi">{item.deskripsi}</p>
                     {index === 0 && (
@@ -32,9 +31,8 @@ const SejarahDesa = () => {
                     )}
                 </div>
             ))}
-            </div>
-                    </>
-                );
-            }
+        </div>
+    );
+}
 
 export default SejarahDesa;

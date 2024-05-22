@@ -5,6 +5,8 @@ import { storage, ref, uploadBytesResumable, getDownloadURL } from "./txtImgConf
 export default function AdminProfilDesa() {
   const [showVisiMisiForm, setShowVisiMisiForm] = useState(true);
   const [showSejarahForm, setShowSejarahForm] = useState(false);
+  const [sejarahDesa, setSejarahDesa] = useState("");
+  const [sejarahImageUrl, setSejarahImageUrl] = useState("");
   const [showKeunggulanForm, setShowKeunggulanForm] = useState(false);
   const [visi, setVisi] = useState("");
   const [misi, setMisi] = useState("");
@@ -17,6 +19,7 @@ export default function AdminProfilDesa() {
 
   const fetchVisiMisi = async () => {
     try {
+      // Fetch visi dan misi
       const responseVisi = await fetch('http://127.0.0.1:5000/visi');
       const dataVisi = await responseVisi.json();
       if (dataVisi && dataVisi.length > 0) {
@@ -29,8 +32,16 @@ export default function AdminProfilDesa() {
       if (dataMisi && dataMisi.length > 0) {
         setMisi(dataMisi.map(misiItem => misiItem.misi).join("\n"));
       }
+
+      // Fetch data sejarah desa
+      const responseSejarah = await fetch('http://127.0.0.1:5000/sejarah');
+      const dataSejarah = await responseSejarah.json();
+      if (dataSejarah && dataSejarah.length > 0) {
+        setSejarahDesa(dataSejarah[0].deskripsi);
+        setSejarahImageUrl(dataSejarah[0].foto);
+      }
     } catch (error) {
-      console.error('Error fetching visi/misi:', error);
+      console.error('Error fetching data:', error);
     }
   };
 
@@ -46,11 +57,124 @@ export default function AdminProfilDesa() {
     setShowKeunggulanForm(false);
   };
 
+  const handleSejarahChange = (e) => {
+    setSejarahDesa(e.target.value);
+  };
+  
+  const handleSejarahSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Jika ada gambar yang dipilih, unggah ke Firebase Storage
+      if (selectedImageFile) {
+        const storageRef = ref(storage, `images/sejarah/${selectedImageFile.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, selectedImageFile);
+  
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload progress:', progress);
+          },
+          (error) => {
+            console.error('Error uploading image:', error);
+          },
+          async () => {
+            try {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              console.log('Firebase download URL:', downloadURL);
+              
+              // Setel URL gambar yang baru di state
+              setSejarahImageUrl(downloadURL);
+  
+              // Kirim data sejarah beserta URL gambar baru ke server
+              const response = await fetch('http://127.0.0.1:5000/sejarah', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ deskripsi: sejarahDesa, foto: downloadURL })
+              });
+              const data = await response.json();
+              console.log('Sejarah response:', data);
+              alert('Data sejarah berhasil disimpan');
+            } catch (error) {
+              console.error('Error sending sejarah data:', error);
+            }
+          }
+        );
+      } else {
+        // Jika tidak ada gambar yang dipilih, kirim hanya deskripsi sejarah ke server
+        const response = await fetch('http://127.0.0.1:5000/sejarah', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ deskripsi: sejarahDesa })
+        });
+        const data = await response.json();
+        console.log('Sejarah response:', data);
+        alert('Data sejarah berhasil disimpan');
+      }
+    } catch (error) {
+      console.error('Error updating sejarah:', error);
+    }
+  };
+  
+  const fetchSejarah = async () => {
+    try {
+      const responseSejarah = await fetch('http://127.0.0.1:5000/sejarah');
+      const dataSejarah = await responseSejarah.json();
+      if (dataSejarah && dataSejarah.length > 0) {
+        setSejarahDesa(dataSejarah[0].deskripsi);
+        setSejarahImageUrl(dataSejarah[0].foto);
+      }
+    } catch (error) {
+      console.error('Error fetching sejarah:', error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchSejarah(); // Memanggil fetchSejarah saat komponen dimuat
+  }, []);
+  
+  const handleSejarahImageChange = async (e) => {
+    const file = e.target.files[0];
+    setSelectedImageFile(file);
+    
+    try {
+      const storageRef = ref(storage, `images/sejarah/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+  
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload progress:', progress);
+        },
+        (error) => {
+          console.error('Error uploading image:', error);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log('Firebase download URL:', downloadURL);
+            setSejarahImageUrl(downloadURL);
+          } catch (error) {
+            console.error('Error getting download URL:', error);
+          }
+        }
+      );
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };  
+
   const handleKeunggulanDesaClick = () => {
     setShowVisiMisiForm(false);
     setShowSejarahForm(false);
     setShowKeunggulanForm(true);
   };
+
   const handleVisiChange = (e) => {
     setVisi(e.target.value);
   };
@@ -72,7 +196,7 @@ export default function AdminProfilDesa() {
       if (selectedImageFile) {
         const storageRef = ref(storage, `images/struktur/${selectedImageFile.name}`);
         const uploadTask = uploadBytesResumable(storageRef, selectedImageFile);
-  
+
         await new Promise((resolve, reject) => {
           uploadTask.on(
             'state_changed',
@@ -94,7 +218,7 @@ export default function AdminProfilDesa() {
           );
         });
       }
-  
+
       const visiResponse = await fetch('http://127.0.0.1:5000/visi', {
         method: 'PUT',
         headers: {
@@ -104,28 +228,28 @@ export default function AdminProfilDesa() {
       });
       const visiData = await visiResponse.json();
       console.log('Visi response:', visiData);
-  
+
       const misiResponse = await fetch('http://127.0.0.1:5000/misi', {
-        method: 'PUT', 
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ misi })
       });
-      
+
       const misiData = await misiResponse.json();
       console.log('Misi response:', misiData);
-  
+
       fetchVisiMisi();
       alert('Data visi dan misi berhasil disimpan');
     } catch (error) {
       console.error('Error creating visi/misi:', error);
     }
   };
-  
+
   return (
     <div className='profildesa-container'>
-<div className="buttons-container">
+      <div className="buttons-container">
         <button onClick={handleVisiMisiClick}>Visi Misi dan Struktur Desa</button>
         <button onClick={handleSejarahDesaClick}>Sejarah Desa</button>
         <button onClick={handleKeunggulanDesaClick}>Keunggulan Desa</button>
@@ -169,17 +293,36 @@ export default function AdminProfilDesa() {
           <button type="submit">Simpan</button>
         </form>
       )}
-      {showSejarahForm && (
-        <form className="form-container">
-          <label htmlFor="gambar">Upload Gambar</label>
-          <input type="file" id="gambar" name="gambar" accept="image/*" />
-          <br />
-          <label htmlFor="sejarah">Deskripsi</label>
-          <textarea id="sejarah" name="sejarah" rows="4" cols="50"></textarea>
-          <br />
-          <button type="submit">Simpan</button>
-        </form>
-      )}
+{showSejarahForm && (
+    <form className="form-container" onSubmit={handleSejarahSubmit}>
+        <label htmlFor="sejarah">Deskripsi Sejarah Desa</label>
+        <textarea 
+            id="sejarah" 
+            name="sejarah" 
+            rows="4" 
+            cols="50" 
+            value={sejarahDesa} 
+            onChange={handleSejarahChange}
+        ></textarea>
+        <br />
+        <label htmlFor="gambarSejarah">Gambar Sejarah Desa</label>
+        {sejarahImageUrl && (
+            <div>
+                <img src={sejarahImageUrl} alt="Sejarah Desa" style={{ width: '200px', height: 'auto' }} />
+            </div>
+        )}
+        <input 
+            type="file" 
+            id="gambarSejarah" 
+            name="gambarSejarah" 
+            accept="image/*" 
+            onChange={handleSejarahImageChange}
+        />
+        <br />
+        <button type="submit">Simpan</button>
+    </form>
+)}
+
       {showKeunggulanForm && (
         <form className="form-container">
           <label htmlFor="gambar">Upload Gambar</label>
