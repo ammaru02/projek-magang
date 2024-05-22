@@ -340,7 +340,7 @@ export default function AdminProdukDesa() {
       </div>
       <div className="admin-produk-desa">
         {!showAddForm && !showEditForm && (
-          <div className="toolbar">
+          <div className="toolbar-produk">
             <button className="add-button" onClick={handleAddButtonClick}>
               <i className="fas fa-plus"></i>
               <p>Tambah Produk</p>
@@ -518,7 +518,7 @@ export default function AdminProdukDesa() {
         )}
         {!showAddForm && !showEditForm && !showEditSuccess && (
           <div>
-            <table>
+            <table className="produk-table">
               <thead>
                 <tr>
                   <th>Kategori Produk</th>

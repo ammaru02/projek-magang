@@ -1,297 +1,295 @@
 .admin-produk-container {
-    flex: 6;
-    margin: 0 auto;
-    margin-left: 200px;
-    height: auto;
-    margin-top: 60px;
-    max-width: 100%;
-    overflow-x: auto;
+  flex: 6;
+  margin: 0 auto;
+  margin-left: 200px;
+  height: auto;
+  margin-top: 60px;
+  max-width: 100%;
+  overflow-x: auto;
+}
 
+.admin-produk-desa {
+  width: 70%;
+  margin: auto; /* Mengatur margin atas dan bawah menjadi auto dan membiarkan margin kiri kanan menjadi auto */
+}
+
+.title-admin-produk {
+  font-size: 16px;
+  margin-top: 20px;
+  margin-left: 10px;
+  padding: 5px;
+}
+
+ .toolbar-produk {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+  padding: 3px 20px;
+  box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 200px;
+}
+
+.add-button i {
+  margin-right: 5px;
+  font-size: 25px;
+  background-color: #8F9A93;
+}
+
+.add-button p {
+  font-size: 16px;
+  margin-left: 5px;
+  font-weight: 600;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search label {
+  font-size: 16px;
+  font-weight: 600;
+  display: none;
+}
+
+ .search i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+ .search input[type="text"] {
+  margin-left: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+ .action-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  border: none;
+}
+
+ .action-icons i {
+  padding: 5px;
+  cursor: pointer;
+}
+
+ .pagination-dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+ .pagination-dots .dot {
+  width: 10px;
+  height: 10px;
+  background-color: #bbb;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.pagination-dots .dot.active {
+  background-color: black;
+}
+
+ .produk-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+}
+
+ .produk-table thead {
+  text-align: center;
+  font-size: 20px;
+}
+
+.produk-table table,
+.produk-table th,
+.produk-table td {
+  border: 1px solid #000;
+  padding: 5px;
+}
+
+.admin-produk-container th {
+  background-color: #008DDA;
+  color: white;
+}
+
+.produk-table td {
+  text-align: center;
+}
+
+.produk-table img {
+  width: 50px; /* Ubah lebar gambar menjadi 50px */
+  height: 50px; /* Biarkan tinggi gambar menyesuaikan proporsi */
+}
+
+.admin-produk-container form {
+  margin-top: 20px;
+}
+
+.admin-produk-container form label {
+  font-weight: bold;
+}
+
+.admin-produk-container form input[type="text"],
+.admin-produk-container form input[type="file"],
+.admin-produk-container form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.admin-produk-container form textarea {
+  resize: vertical;
+}
+
+.admin-produk-container form button[type="submit"] {
+  background-color: #8F9A93;
+  color: #000;
+  border: none;
+  font-size: 16px;
+  padding: 8px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.admin-produk-container form button[type="submit"]:hover {
+  background-color: #8F9A93;
+}
+
+.admin-produk-container .form-tambah {
+  margin-top: 20px; /* Tambahkan margin atas */
+  margin-bottom: 20px;
+}
+
+.admin-produk-container .form-tambah h2 {
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.admin-produk-container .form-group {
+  margin-bottom: 5px; /* Tambahkan margin bawah antara setiap grup form */
+}
+
+.admin-produk-container .form-group select {
+  width: calc(100% - 16px); /* Mengatur lebar select agar sama dengan input */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.admin-produk-container .form-group label {
+  display: flex; /* Tampilkan label sebagai blok agar muncul satu per baris */
+  margin-bottom: 5px; /* Tambahkan margin bawah pada label */
+}
+
+.admin-produk-container .form-group input[type="text"],
+.admin-produk-container .form-group textarea,
+.admin-produk-container .form-group select {
+  width: 100%; /* Agar input lebar penuh */
+  padding: 10px; /* Tambahkan padding pada input */
+  border: 1px solid #ccc; /* Tambahkan border */
+  border-radius: 5px; /* Tambahkan border-radius */
+}
+
+.admin-produk-container .form-group textarea {
+  resize: none; /* Biarkan textarea dapat diresize secara vertikal */
+}
+
+.admin-produk-container .form-group select {
+  appearance: none; /* Sembunyikan default appearance untuk select */
+}
+
+.admin-produk-container button[type="submit"],
+.admin-produk-container button[type="button"] {
+  padding: 10px 20px; /* Tambahkan padding pada tombol */
+  margin-right: 10px; /* Tambahkan margin kanan pada tombol */
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .admin-produk-container {
+    flex: 1; /* Mengisi seluruh lebar halaman */
+    margin-left: 0; /* Menghapus margin kiri */
+    margin-top: 0; /* Menghapus margin atas */
+    border: none; /* Menghapus border */
+    padding: 5px; /* Menambah padding */
+    height: auto;
   }
-  
-  .admin-produk-desa {
-    width: 70%;
-    margin: auto; /* Mengatur margin atas dan bawah menjadi auto dan membiarkan margin kiri kanan menjadi auto */
-  }
-  
+
   .title-admin-produk {
-    font-size: 16px;
-    margin-top: 20px;
-    margin-left: 10px;
-    padding: 5px;
+    padding: 0;
+    margin-left: 0;
+    margin-top: 80px;
   }
-  
-  .toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    position: sticky;
-    top: 0;
-    background-color: white;
-    z-index: 1;
-    padding: 3px 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+  .admin-produk-desa {
+    width: 100%; /* Mengisi seluruh lebar konten */
+    overflow-x: auto; /* Membuat scroll horizontal jika konten melebihi lebar layar */
+  }
+
+  .produk-table table {
+    width: 100%;
+  }
+
+  .toolbar-produk {
+    position: sticky; /* Mengubah position menjadi fixed untuk layar kecil */
+    width: 100%; /* Atur lebar toolbar menjadi 100% */
+    left: 0; /* Letakkan toolbar di bagian kiri */
+    z-index: 5;
+  }
+
+  .add-button {
+    flex-shrink: 10; /* Tetapkan agar tombol tambah tidak mengecil saat layar kecil */
     margin-top: 10px;
   }
-  
-  .add-button {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    width: 200px;
-  }
-  
+
   .add-button i {
-    margin-right: 5px;
-    font-size: 25px;
-    background-color: #8F9A93;
-  }
-  .add-button p{
     font-size: 16px;
-    margin-left: 5px;
-    font-weight: 600;
-  }
-  
-  .search {
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
-  
-  .search label{
-    font-size: 16px;
-    font-weight: 600;
-    display: none;
   }
 
-  .search i {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-  }
-
-  .search input[type="text"] {
-    margin-left: 5px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-  }
-  
   .action-icons {
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin-top: 10px;
-    border: none;
-  }
-  
-  .action-icons i {
-    padding: 5px;
-    cursor: pointer;
-    
-  }
-
-  .pagination-dots {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .pagination-dots .dot {
-    width: 10px;
-    height: 10px;
-    background-color: #bbb;
-    border-radius: 50%;
-    margin: 0 5px;
-    cursor: pointer;
-  }
-  
-  .pagination-dots .dot.active {
-    background-color: black;
-  }
-    
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  thead{
-    text-align: center;
-    font-size: 20px;
-  }
-  
-  table,
-  th,
-  td {
-    border: 1px solid #000;
-    padding: 8px;
-  }
-  
-  th {
-    background-color: #008DDA;
-    color: white;
-  }
-  
-  td {
-    text-align: center;
-  }
-
-  img {
-    width: 50px; /* Ubah lebar gambar menjadi 50px */
-    height: 50px; /* Biarkan tinggi gambar menyesuaikan proporsi */
-  }
-  
-  form {
     margin-top: 20px;
-  }
-  
-  form label {
-    font-weight: bold;
-  }
-  
-  form input[type="text"],
-  form input[type="file"],
-  form textarea {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  form textarea {
-    resize: vertical;
-  }
-  
-  form button[type="submit"] {
-    background-color: #8F9A93;
-    color: #000;
-    border: none;
-    font-size: 16px;
-    padding: 8px 10px;
-    border-radius: 20px;
+    align-items: center;
     cursor: pointer;
   }
-  
-  form button[type="submit"]:hover {
-    background-color: #8F9A93;
+
+  .action-icons i {
+    margin-bottom: 0; /* Hapus margin bottom */
+    cursor: pointer;
   }
 
-  .form-tambah {
-    margin-top: 20px; /* Tambahkan margin atas */
-    margin-bottom: 20px;
+  .action-icons .icon {
+    margin-left: 10px; /* Menambah jarak antara ikon */
   }
 
-  .form-tambah h2{
-    margin-bottom: 10px;
-    font-size: 30px;
+  .pagination {
+    margin-top: 10px;
   }
-  
-  .form-group {
-    margin-bottom: 5px; /* Tambahkan margin bawah antara setiap grup form */
-  }
-
-  .form-group select {
-    width: calc(100% - 16px); /* Mengatur lebar select agar sama dengan input */
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .form-group label {
-    display: flex; /* Tampilkan label sebagai blok agar muncul satu per baris */
-    margin-bottom: 5px; /* Tambahkan margin bawah pada label */
-  }
-  
-  .form-group input[type="text"],
-  .form-group textarea,
-  .form-group select {
-    width: 100%; /* Agar input lebar penuh */
-    padding: 10px; /* Tambahkan padding pada input */
-    border: 1px solid #ccc; /* Tambahkan border */
-    border-radius: 5px; /* Tambahkan border-radius */
-  }
-  
-  .form-group textarea {
-    resize: none; /* Biarkan textarea dapat diresize secara vertikal */
-  }
-  
-  .form-group select {
-    appearance: none; /* Sembunyikan default appearance untuk select */
-  }
-  
-  button[type="submit"],
-  button[type="button"] {
-    padding: 10px 20px; /* Tambahkan padding pada tombol */
-    margin-right: 10px; /* Tambahkan margin kanan pada tombol */
-    margin-bottom: 20px;
-  }
-
-  
-  
-  @media screen and (max-width: 768px) {
-    .admin-produk-container {
-        flex: 1; /* Mengisi seluruh lebar halaman */
-        margin-left: 0; /* Menghapus margin kiri */
-        margin-top: 0; /* Menghapus margin atas */
-        border: none; /* Menghapus border */
-        padding: 5px; /* Menambah padding */
-        height: auto;
-    }
-
-    .title-admin-produk{
-     padding: 0;
-     margin-left: 0; 
-     margin-top: 80px;
-    }
-  
-    .admin-produk-desa {
-        width: 100%; /* Mengisi seluruh lebar konten */
-        overflow-x: auto; /* Membuat scroll horizontal jika konten melebihi lebar layar */
-    }
-  
-    table {
-        width: 100%;
-    }
-  
-    .toolbar {
-        position: sticky; /* Mengubah position menjadi fixed untuk layar kecil */
-        width: 100%; /* Atur lebar toolbar menjadi 100% */
-        left: 0; /* Letakkan toolbar di bagian kiri */
-        z-index: 5;
-    }
-  
-    .add-button {
-        flex-shrink: 10; /* Tetapkan agar tombol tambah tidak mengecil saat layar kecil */
-        margin-top: 10px;
-    }
-
-    .add-button i{
-      font-size: 16px;
-    }
-  
-    .action-icons{
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-        align-items: center;
-        cursor: pointer;
-    }
-    .action-icons i {
-      margin-bottom: 0; /* Hapus margin bottom */
-      cursor: pointer;
-    }
-
-    .action-icons .icon {
-      margin-left: 10px; /* Menambah jarak antara ikon */
-    }
-  
-    .pagination {
-        margin-top: 10px;
-    }
 }

@@ -19,6 +19,7 @@ export default function ArtikelAdmin() {
         deskripsi: "",
     });
     const [artikelId, setArtikelId] = useState(null);
+    // eslint-disable-next-line no-unused-vars
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -307,7 +308,7 @@ export default function ArtikelAdmin() {
             </div>
             <div className="admin-artikel-list">
                 {!showAddForm && !showEditForm && (
-                    <div className="toolbar">
+                    <div className="toolbar-artikel">
                         <button className="add-button" onClick={handleAddButtonClick}>
                             <i className="fas fa-plus"></i>
                             <p>Tambah Artikel</p>
@@ -448,7 +449,7 @@ export default function ArtikelAdmin() {
                 )}
                 {!showAddForm && !showEditForm && (
                     <div>
-                        <table>
+                        <table className="artikel-table">
                             <thead>
                                 <tr>
                                     <th>Judul</th>
