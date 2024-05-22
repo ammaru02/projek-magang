@@ -169,7 +169,28 @@ export default function AdminProfilDesa() {
           <button type="submit">Simpan</button>
         </form>
       )}
-      {/* Tambahkan form untuk Sejarah Desa dan Keunggulan Desa di sini */}
+      {showSejarahForm && (
+        <form className="form-container">
+          <label htmlFor="gambar">Upload Gambar</label>
+          <input type="file" id="gambar" name="gambar" accept="image/*" />
+          <br />
+          <label htmlFor="sejarah">Deskripsi</label>
+          <textarea id="sejarah" name="sejarah" rows="4" cols="50"></textarea>
+          <br />
+          <button type="submit">Simpan</button>
+        </form>
+      )}
+      {showKeunggulanForm && (
+        <form className="form-container">
+          <label htmlFor="gambar">Upload Gambar</label>
+          <input type="file" id="gambar" name="gambar" accept="image/*" />
+          <br />
+          <label htmlFor="keunggulan">Deskripsi</label>
+          <textarea id="keunggulan" name="keunggulan" rows="4" cols="50"></textarea>
+          <br />
+          <button type="submit">Simpan</button>
+        </form>
+      )}
     </div>
   );
 }
