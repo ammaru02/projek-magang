@@ -11,9 +11,9 @@ const Blog = () => {
       try {
         const response = await fetch('http://localhost:5000/artikel');
         const data = await response.json();
-        if (Array.isArray(data.data)) {
-          setMainNews(data.data[0]); // Set data utama dengan data pertama dari response
-          setSidebarNews(data.data.slice(1)); // Set data sidebar dengan sisa data dari response
+        if (Array.isArray(data)) {
+          setMainNews(data[0]); // Set data utama dengan data pertama dari response
+          setSidebarNews(data.slice(1)); // Set data sidebar dengan sisa data dari response
         } else {
           console.error('Data is not an array:', data);
         }
@@ -21,9 +21,9 @@ const Blog = () => {
         console.error('Error fetching news data:', error);
       }
     };
-
+  
     fetchNewsData();
-  }, []);
+  }, []);  
 
   const handleSidebarItemClick = (news) => {
     const clickedNewsIndex = sidebarNews.findIndex(item => item === news);

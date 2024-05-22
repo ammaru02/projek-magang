@@ -7,29 +7,29 @@ const VisimisiStruktu = () => {
     const [strukturImage, setStrukturImage] = useState(""); // State untuk menyimpan URL gambar
 
     useEffect(() => {
-        fetch('http://localhost:5000/visi') // Ganti dengan endpoint yang sesuai untuk mengambil data Visi
+        fetch('http://localhost:5000/visi') 
             .then(response => response.json())
             .then(data => {
                 console.log('Data Visi:', data);
-                if (data.data && data.data.length > 0) {
-                    setVisi(data.data[0].visi);
-                    setStrukturImage(data.data[0].foto); // Ambil URL gambar dari data
+                if (Array.isArray(data) && data.length > 0) {
+                    setVisi(data[0].visi);
+                    setStrukturImage(data[0].foto); // Ambil URL gambar dari data
                 }
             })
             .catch(error => console.error('Error:', error));
     }, []);
-
+    
     useEffect(() => {
-        fetch('http://localhost:5000/misi') // Ganti dengan endpoint yang sesuai untuk mengambil data Misi
+        fetch('http://localhost:5000/misi') 
             .then(response => response.json())
             .then(data => {
                 console.log('Data Misi:', data);
-                if (data.data && data.data.length > 0) {
-                    setMisi(data.data);
+                if (Array.isArray(data) && data.length > 0) {
+                    setMisi(data);
                 }
             })
             .catch(error => console.error('Error:', error));
-    }, []);
+    }, []);    
 
     return (
         <div className="container-sm">
