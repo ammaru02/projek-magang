@@ -1,10 +1,17 @@
 from app import db
-from app.model.visi import Visi
 
 class Misi(db.Model):
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     misi = db.Column(db.String(250), nullable=False)
-    visiId =db.Column(db.BigInteger, db.ForeignKey(Visi.id))
-    
+    visiId = db.Column(db.BigInteger, db.ForeignKey('visi.id'))
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'misi': self.misi,
+            'visiId': self.visiId
+            # Tambahkan atribut lain jika diperlukan
+        }
+
     def __repr__(self):
         return '<Misi {}>'.format(self.name)

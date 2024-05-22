@@ -2,6 +2,8 @@ from flask import jsonify, request
 from flask_cors import cross_origin
 from app.model.produk import Produk
 from app.model.artikel import Artikel
+from app.model.visi import Visi
+from app.model.misi import Misi
 from app import app, db
 from app.controller import DesaController, VisiController, WargaController, AdminController, ArtikelController, KategoriController, ProdukController, SejarahController, StrukturController, MisiController, KeunggulanController
 from app.model.banner import Banner  
@@ -233,22 +235,58 @@ def strukturs():
     else:
         return StrukturController.index()
 
-@app.route('/visi', methods=['GET', 'POST'])
-def visis():
-    if request.method == 'POST':
-        return VisiController.create(request)
-    elif request.method == 'GET':
-        return VisiController.index()
-    else:
-        return jsonify({'message': 'Method not allowed'}), 405
+@app.route('/visi', methods=['GET', 'PUT'])
+def get_update_visi():
+    if request.method == 'GET':
+        try:
+            visi = Visi.query.all()
+            return jsonify([v.serialize() for v in visi]), 200
+        except Exception as e:
+            return jsonify({'message': str(e)}), 500
+    elif request.method == 'PUT':
+        try:
+            data = request.json
+            visi = Visi.query.first()  # Ambil visi pertama untuk diperbarui (atau Anda bisa sesuaikan sesuai kebutuhan)
+            if not visi:
+                return jsonify({'message': 'No visi found'}), 404
+            
+            if 'visi' in data:
+                visi.visi = data['visi']
+            if 'foto' in data:
+                visi.foto = data['foto']
 
-@app.route('/misi', methods=['GET', 'POST'])
-def misis():
-    if request.method == 'POST':
-        return MisiController.create()
-    else:
-        return MisiController.index()
-    
+            db.session.commit()
+            return jsonify({'message': 'Visi updated successfully'}), 200
+        except Exception as e:
+            db.session.rollback()  # Rollback perubahan jika terjadi kesalahan
+            return jsonify({'message': str(e)}), 500
+
+@app.route('/misi', methods=['GET', 'PUT'])
+def get_update_misi():
+    if request.method == 'GET':
+        try:
+            misi = Misi.query.all()
+            return jsonify([m.serialize() for m in misi]), 200
+        except Exception as e:
+            return jsonify({'message': str(e)}), 500
+    elif request.method == 'PUT':
+        try:
+            data = request.json
+            misi = Misi.query.first()  # Ambil misi pertama untuk diperbarui (atau Anda bisa sesuaikan sesuai kebutuhan)
+            if not misi:
+                return jsonify({'message': 'No misi found'}), 404
+            
+            if 'misi' in data:
+                misi.misi = data['misi']
+            if 'visi_id' in data:
+                misi.visi_id = data['visi_id']
+
+            db.session.commit()
+            return jsonify({'message': 'Misi updated successfully'}), 200
+        except Exception as e:
+            db.session.rollback()  # Rollback perubahan jika terjadi kesalahan
+            return jsonify({'message': str(e)}), 500
+
 @app.route('/keunggulan', methods=['GET', 'POST'])
 def keunggulans():
     if request.method == 'POST':
