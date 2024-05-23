@@ -10,10 +10,32 @@ export default function AdminProfilDesa() {
   const [misi, setMisi] = useState("");
   const [strukturDesaImageUrl, setStrukturDesaImageUrl] = useState("");
   const [selectedImageFile, setSelectedImageFile] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     fetchVisiMisi();
   }, []);
+
+  const handleAddButtonClick = () => {
+    setShowAddForm(true);
+    setShowEditForm(false); // Tambahkan baris ini
+  }
+
+  const handleEditButtonClick = () => {
+    setShowEditForm(true);
+    setShowAddForm(false); // Tambahkan baris ini
+  }
+
+  const handleCancelClick = () => {
+    setShowAddForm(false);
+    setShowEditForm(false);
+  }
+
+  const handleInputChange = (e) => {
+    setSearchInput(e.target.value);
+  };
 
   const fetchVisiMisi = async () => {
     try {
@@ -125,7 +147,7 @@ export default function AdminProfilDesa() {
   
   return (
     <div className='profildesa-container'>
-<div className="buttons-container">
+      <div className="buttons-container">
         <button onClick={handleVisiMisiClick}>Visi Misi dan Struktur Desa</button>
         <button onClick={handleSejarahDesaClick}>Sejarah Desa</button>
         <button onClick={handleKeunggulanDesaClick}>Keunggulan Desa</button>
@@ -181,15 +203,98 @@ export default function AdminProfilDesa() {
         </form>
       )}
       {showKeunggulanForm && (
-        <form className="form-container">
-          <label htmlFor="gambar">Upload Gambar</label>
-          <input type="file" id="gambar" name="gambar" accept="image/*" />
-          <br />
-          <label htmlFor="keunggulan">Deskripsi</label>
-          <textarea id="keunggulan" name="keunggulan" rows="4" cols="50"></textarea>
-          <br />
-          <button type="submit">Simpan</button>
-        </form>
+        <div>
+          {!showAddForm && !showEditForm && (
+            <>
+              <div className="toolbar-profil">
+                <button className="add-button" onClick={handleAddButtonClick}>
+                  <i className="fas fa-plus"></i>
+                  <p>Tambah Keunggulan</p>
+                </button>
+                <div className='search'>
+                  <input
+                    type='text'
+                    placeholder='Cari Produk..'
+                    value={searchInput}
+                    onChange={handleInputChange}
+                  />
+                  <i className='fas fa-search'></i>
+                </div>
+              </div>
+              <div className='table-container'>
+              <table className='profil-table'>
+                <thead>
+                  <tr>
+                    <th>Gambar</th>
+                    <th>Deskripsi</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Isi tabel dengan data keunggulan */}
+                  <tr>
+                    <td><img src="path/to/image.jpg" alt="Gambar Keunggulan" style={{ width: '100px', height: 'auto' }} /></td>
+                    <td>Deskripsi keunggulan</td>
+                    <td>
+                      <div style={{ display: "flex" }}>
+                        <i
+                          className="fas fa-times"
+                          style={{
+                            backgroundColor: "red",
+                            color: "white",
+                            fontSize: "15px",
+                            borderRadius: "10px",
+                            cursor: "pointer",
+                            padding: "3px",
+                            marginRight: "5px",
+                          }}                              
+                          ></i>
+                          <i
+                            className="fas fa-edit"
+                            style={{
+                            color: "#000",
+                            fontSize: "20px",
+                            borderRadius: "3px",
+                            cursor: "pointer",
+                            marginRight: "5px",
+                            padding: "0",
+                            }}
+                            onClick={() => handleEditButtonClick()}
+                            ></i>
+                      </div>
+                    </td>
+                  </tr>
+                  {/* Tambahkan baris lain jika diperlukan */}
+                </tbody>
+              </table>
+              </div>
+            </>
+          )}
+          {showAddForm && (
+            <form className="form-container">
+              <label htmlFor="gambar">Upload Gambar</label>
+              <input type="file" id="gambar" name="gambar" accept="image/*" />
+              <br />
+              <label htmlFor="keunggulan">Deskripsi</label>
+              <textarea id="keunggulan" name="keunggulan" rows="4" cols="50"></textarea>
+              <br />
+              <button type="submit">Simpan</button>
+              <button type="button" onClick={handleCancelClick}>Batal</button>
+            </form>
+          )}
+          {showEditForm && (
+            <form className="form-container">
+              <label htmlFor="gambar">Upload Gambar</label>
+              <input type="file" id="gambar" name="gambar" accept="image/*" />
+              <br />
+              <label htmlFor="keunggulan">Deskripsi</label>
+              <textarea id="keunggulan" name="keunggulan" rows="4" cols="50"></textarea>
+              <br />
+              <button type="submit">Simpan</button>
+              <button type="button" onClick={handleCancelClick}>Batal</button>
+            </form>
+          )}
+        </div>
       )}
     </div>
   );

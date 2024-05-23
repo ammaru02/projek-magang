@@ -20,7 +20,7 @@
   padding: 5px;
 }
 
-.toolbar {
+.toolbar-artikel {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -80,7 +80,8 @@
   border-radius: 10px;
 }
 
-.form-tambah, .form-edit {
+.form-tambah,
+.form-edit {
   margin-top: 20px;
   margin-bottom: 20px;
   background-color: #f9f9f9;
@@ -88,7 +89,8 @@
   border-radius: 5px;
 }
 
-.form-tambah h2, .form-edit h2 {
+.form-tambah h2,
+.form-edit h2 {
   margin-bottom: 10px;
   font-size: 30px;
 }
@@ -102,7 +104,8 @@
   margin-bottom: 5px;
 }
 
-.form-group input, .form-group textarea {
+.form-group input,
+.form-group textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -115,15 +118,6 @@
   margin-bottom: 20px;
 }
 
-.artikel-table th, .artikel-table td {
-  text-align: left;
-  padding: 10px;
-  border: 1px solid #ddd;
-}
-
-.artikel-table th {
-  background-color: #f2f2f2;
-}
 
 .artikel-table td img.image-artikel {
   max-width: 100px;
@@ -132,6 +126,133 @@
   margin: 0 auto;
 }
 
-.form-tambah button, .form-edit button {
+.form-tambah button,
+.form-edit button {
   margin-right: 10px;
+}
+
+/* Tambahkan kelas khusus untuk tabel artikel */
+.artikel-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.artikel-table th,
+.artikel-table td {
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #000;
+}
+
+.artikel-table th {
+  background-color: #008DDA;
+  color: #f9f9f9;
+}
+
+@media screen and (max-width: 768px) {
+  .admin-artikel-container {
+    flex: 1; /* Mengisi seluruh lebar halaman */
+    margin-left: 0; /* Menghapus margin kiri */
+    margin-top: 50px; /* Menghapus margin atas */
+    border: none; /* Menghapus border */
+    padding: 5px; /* Menambah padding */
+    height: auto;
+  }
+
+  .admin-artikel-list {
+    width: 100%; /* Mengisi seluruh lebar konten */
+    overflow-x: auto; /* Membuat scroll horizontal jika konten melebihi lebar layar */
+  }
+
+  .artikel-table {
+    width: 100%;
+  }
+
+  .toolbar-artikel {
+    position: sticky; /* Mengubah position menjadi fixed untuk layar kecil */
+    width: 100%; /* Atur lebar toolbar menjadi 100% */
+    left: 0; /* Letakkan toolbar di bagian kiri */
+    z-index: 5;
+  }
+
+  .add-button {
+    flex-shrink: 10; /* Tetapkan agar tombol tambah tidak mengecil saat layar kecil */
+    margin-top: 10px;
+  }
+
+  .add-button i {
+    font-size: 16px;
+  }
+
+  .action-icons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .action-icons i {
+    margin-bottom: 0; /* Hapus margin bottom */
+    cursor: pointer;
+  }
+
+  .action-icons .icon {
+    margin-left: 10px; /* Menambah jarak antara ikon */
+  }
+
+  .pagination {
+    margin-top: 10px;
+  }
+
+  .form-tambah,
+  .form-edit {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+  }
+
+  .form-tambah h2,
+  .form-edit h2 {
+    margin-bottom: 10px;
+    font-size: 30px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .artikel-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  .artikel-table th,
+  .artikel-table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #000;
+  }
+
+  .artikel-table th {
+    background-color: #008DDA;
+    color: #f9f9f9;
+  }
 }
