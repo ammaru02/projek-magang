@@ -195,14 +195,11 @@ export default function AdminProfilDesa() {
   const handleVisiMisiSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Ambil nilai visiDesa dari input form (misalnya, dengan menggunakan state jika menggunakan React)
-      const visiDesa = visi; // Menggunakan nilai dari state visi
-      
       let fotoFilename = 'default.jpg';
       if (selectedImageFile) {
         const storageRef = ref(storage, `images/struktur/${selectedImageFile.name}`);
         const uploadTask = uploadBytesResumable(storageRef, selectedImageFile);
-  
+
         await new Promise((resolve, reject) => {
           uploadTask.on(
             'state_changed',
@@ -215,33 +212,26 @@ export default function AdminProfilDesa() {
               reject(error);
             },
             async () => {
-              try {
-                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                console.log('Firebase download URL:', downloadURL);
-                setStrukturDesaImageUrl(downloadURL);
-                fotoFilename = downloadURL;
-                resolve();
-              } catch (error) {
-                console.error('Error getting download URL:', error);
-                reject(error);
-              }
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              console.log('Firebase download URL:', downloadURL);
+              setStrukturDesaImageUrl(downloadURL);
+              fotoFilename = downloadURL;
+              resolve();
             }
           );
         });
       }
-  
-      // Kirim data visi ke server
+
       const visiResponse = await fetch('http://127.0.0.1:5000/visi', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ visi: visiDesa, foto: fotoFilename })
+        body: JSON.stringify({ visi, foto: fotoFilename })
       });
       const visiData = await visiResponse.json();
       console.log('Visi response:', visiData);
-  
-      // Kirim data misi ke server
+
       const misiResponse = await fetch('http://127.0.0.1:5000/misi', {
         method: 'PUT',
         headers: {
@@ -249,17 +239,16 @@ export default function AdminProfilDesa() {
         },
         body: JSON.stringify({ misi })
       });
-  
+
       const misiData = await misiResponse.json();
       console.log('Misi response:', misiData);
-  
+
       fetchVisiMisi();
       alert('Data visi dan misi berhasil disimpan');
     } catch (error) {
       console.error('Error creating visi/misi:', error);
     }
   };
-  
 
   const handleKeunggulanSubmit = async (e) => {
     e.preventDefault();
@@ -369,6 +358,7 @@ const handleKeunggulanEditSubmit = async (e) => {
     console.error('Error editing keunggulan:', error);
   }
 };
+
 
   const handleDeleteButtonClick = async (id) => {
     try {
