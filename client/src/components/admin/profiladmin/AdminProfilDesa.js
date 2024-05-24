@@ -4,6 +4,7 @@ import { storage, ref, uploadBytesResumable, getDownloadURL } from "./txtImgConf
 
 export default function AdminProfilDesa() {
   const [showVisiMisiForm, setShowVisiMisiForm] = useState(true);
+  const [showStrukturDesa, setShowStrukturDesa] = useState(false);
   const [showSejarahForm, setShowSejarahForm] = useState(false);
   const [sejarahDesa, setSejarahDesa] = useState("");
   const [sejarahImageUrl, setSejarahImageUrl] = useState("");
@@ -14,6 +15,8 @@ export default function AdminProfilDesa() {
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [showAddStrukturForm, setShowAddStrukturForm] = useState(false);
+  const [showEditStrukturForm, setShowEditStrukturForm] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [keunggulan, setKeunggulan] = useState([]);
   const [keunggulanImage, setKeunggulanImage] = useState(null);
@@ -28,6 +31,15 @@ export default function AdminProfilDesa() {
   const handleAddButtonClick = () => {
     setShowAddForm(true);
     setShowEditForm(false);
+    setShowAddStrukturForm(true);
+    setShowEditStrukturForm(false);
+  };
+
+  const handleStrukturDesaClick = () => {
+    setShowVisiMisiForm(false);
+    setShowSejarahForm(false);
+    setShowKeunggulanForm(false);
+    setShowStrukturDesa(true);
   };
 
   const handleEditButtonClick = (id) => {
@@ -35,11 +47,15 @@ export default function AdminProfilDesa() {
     setKeunggulanToEdit(selectedKeunggulan);
     setShowEditForm(true);
     setShowAddForm(false);
+    setShowAddStrukturForm(false);
+    setShowEditStrukturForm(true);
   };  
 
   const handleCancelClick = () => {
     setShowAddForm(false);
     setShowEditForm(false);
+    setShowAddStrukturForm(false);
+    setShowEditStrukturForm(false);
   };
 
   const handleInputChange = (e) => {
@@ -86,18 +102,21 @@ export default function AdminProfilDesa() {
     setShowVisiMisiForm(true);
     setShowSejarahForm(false);
     setShowKeunggulanForm(false);
+    setShowStrukturDesa(false)
   };
 
   const handleSejarahDesaClick = () => {
     setShowVisiMisiForm(false);
     setShowSejarahForm(true);
     setShowKeunggulanForm(false);
+    setShowStrukturDesa(false)
   };
 
   const handleKeunggulanDesaClick = () => {
     setShowVisiMisiForm(false);
     setShowSejarahForm(false);
     setShowKeunggulanForm(true);
+    setShowStrukturDesa(false)
   };
 
   const handleSejarahChange = (e) => {
@@ -249,6 +268,14 @@ export default function AdminProfilDesa() {
       console.error('Error creating visi/misi:', error);
     }
   };
+  
+  const handleAddSubmit = async (e) => {
+
+  }
+
+  const handleEditSubmit = async (e) =>{
+
+  }
 
   const handleKeunggulanSubmit = async (e) => {
     e.preventDefault();
@@ -418,7 +445,114 @@ const handleKeunggulanEditSubmit = async (e) => {
           />
           <br />
           <button type="submit">Simpan</button>
+          <button onClick={handleStrukturDesaClick} className='btn-struktur'>Lihat Data Struktur Desa</button>
         </form>
+      )}
+       {showStrukturDesa && (
+        <div>
+        <div className='struktur-table-container'>
+          <h2 className='judul-struktur'>Data Struktur Desa</h2>
+          {!showAddStrukturForm && !showEditStrukturForm && (
+          <>
+          <div className="toolbar-profil">
+                <button className="add-button" onClick={handleAddButtonClick}>
+                  <i className="fas fa-plus"></i>
+                  <p>Tambah Struktur</p>
+                </button>
+                <div className='search'>
+                  <input
+                    type='text'
+                    placeholder='Cari Produk..'
+                    value={searchInput}
+                    onChange={handleInputChange}
+                  />
+                  <i className='fas fa-search'></i>
+                </div>
+          </div>
+          <div className='table-container'>
+          <table>
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Jabatan</th>
+                <th>Foto</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Isi tabel dengan data struktur desa */}
+              <tr>
+                <td>Nama Anggota 1</td>
+                <td>Jabatan Anggota 1</td>
+                <td><img src='#' alt='gambar'/></td>
+                <td>
+                  <div style={{ display: "flex" }}>
+                    <i
+                      className="fas fa-times"
+                      style={{
+                      backgroundColor: "red",
+                      color: "white",
+                      fontSize: "15px",
+                      borderRadius: "10px",
+                      cursor: "pointer",
+                      padding: "3px",
+                      marginRight: "5px",
+                      }}
+                      onClick={() => handleDeleteButtonClick()}
+                    ></i>
+                    <i
+                      className="fas fa-edit"
+                      style={{
+                      color: "#000",
+                      fontSize: "20px",
+                      borderRadius: "3px",
+                      cursor: "pointer",
+                      marginRight: "5px",
+                      padding: "0",
+                      }}
+                      onClick={() => handleEditButtonClick()}
+                    ></i>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+          </>
+          )}
+        </div>
+        {showAddStrukturForm && (
+          <form className="form-container" onSubmit={handleAddSubmit}>
+            <label htmlFor="nama">Nama Anggota</label>
+            <input type="text" id="nama" name="nama" />
+            <br />
+            <label htmlFor="jabatan">Jabatan</label>
+            <input type="text" id="jabatan" name="jabatan" />
+            <br />
+            <label htmlFor="gambar">Gambar</label>
+            <input type="file" id="gambar" name="gambar" accept="image/*" />
+            <br />
+            <button type="submit">Simpan</button>
+            <button type="button" onClick={handleCancelClick}>Batal</button>
+          </form>
+        )}
+
+        {showEditStrukturForm &&  (
+          <form className="form-container" onSubmit={handleEditSubmit}>
+            <label htmlFor="nama">Nama Anggota</label>
+            <input type="text" id="nama" name="nama" />
+            <br />
+            <label htmlFor="jabatan">Jabatan</label>
+            <input type="text" id="jabatan" name="jabatan" />
+            <br />
+            <label htmlFor="gambar">Gambar</label>
+            <input type="file" id="gambar" name="gambar" accept="image/*"  />
+            <br />
+            <button type="submit">Simpan</button>
+            <button type="button" onClick={handleCancelClick}>Batal</button>
+          </form>
+        )}
+        </div>
       )}
       {showSejarahForm && (
         <form className="form-container" onSubmit={handleSejarahSubmit}>
@@ -482,36 +616,35 @@ const handleKeunggulanEditSubmit = async (e) => {
                       <tr key={index}>
                         <td><img src={item.foto} alt="Gambar Keunggulan" style={{ width: '100px', height: 'auto' }} /></td>
                         <td>{item.deskripsi}</td>
-<td>
-  <div style={{ display: "flex" }}>
-    <i
-      className="fas fa-times"
-      style={{
-        backgroundColor: "red",
-        color: "white",
-        fontSize: "15px",
-        borderRadius: "10px",
-        cursor: "pointer",
-        padding: "3px",
-        marginRight: "5px",
-      }}
-      onClick={() => handleDeleteButtonClick(item.id)}
-    ></i>
-    <i
-      className="fas fa-edit"
-      style={{
-        color: "#000",
-        fontSize: "20px",
-        borderRadius: "3px",
-        cursor: "pointer",
-        marginRight: "5px",
-        padding: "0",
-      }}
-      onClick={() => handleEditButtonClick(item.id)}
-    ></i>
-  </div>
-</td>
-
+                      <td>
+                        <div style={{ display: "flex" }}>
+                          <i
+                            className="fas fa-times"
+                            style={{
+                              backgroundColor: "red",
+                              color: "white",
+                              fontSize: "15px",
+                              borderRadius: "10px",
+                              cursor: "pointer",
+                              padding: "3px",
+                              marginRight: "5px",
+                            }}
+                            onClick={() => handleDeleteButtonClick(item.id)}
+                          ></i>
+                          <i
+                            className="fas fa-edit"
+                            style={{
+                              color: "#000",
+                              fontSize: "20px",
+                              borderRadius: "3px",
+                              cursor: "pointer",
+                              marginRight: "5px",
+                              padding: "0",
+                            }}
+                            onClick={() => handleEditButtonClick(item.id)}
+                          ></i>
+                        </div>
+                      </td>
                       </tr>
                     ))}
                   </tbody>
@@ -520,22 +653,22 @@ const handleKeunggulanEditSubmit = async (e) => {
             </>
           )}
           {showEditForm && keunggulanToEdit && (
-  <form className="form-container" onSubmit={handleKeunggulanEditSubmit}>
-    <label htmlFor="gambar">Upload Gambar</label>
-    <input type="file" id="gambar" name="gambar" accept="image/*" onChange={handleKeunggulanImageChange} />
-    {keunggulanToEdit.foto && (
-      <div>
-        <img src={keunggulanToEdit.foto} alt="Gambar Keunggulan" style={{ width: '200px', height: 'auto' }} />
-      </div>
-    )}
-    <br />
-    <label htmlFor="keunggulan">Deskripsi</label>
-    <textarea id="keunggulan" name="keunggulan" rows="4" cols="50" value={keunggulanToEdit.deskripsi} onChange={handleKeunggulanDescriptionChange}></textarea>
-    <br />
-    <button type="submit">Simpan</button>
-    <button type="button" onClick={handleCancelClick}>Batal</button>
-  </form>
-)}
+          <form className="form-container" onSubmit={handleKeunggulanEditSubmit}>
+            <label htmlFor="gambar">Upload Gambar</label>
+            <input type="file" id="gambar" name="gambar" accept="image/*" onChange={handleKeunggulanImageChange} />
+            {keunggulanToEdit.foto && (
+              <div>
+                <img src={keunggulanToEdit.foto} alt="Gambar Keunggulan" style={{ width: '200px', height: 'auto' }} />
+              </div>
+            )}
+            <br />
+            <label htmlFor="keunggulan">Deskripsi</label>
+            <textarea id="keunggulan" name="keunggulan" rows="4" cols="50" value={keunggulanToEdit.deskripsi} onChange={handleKeunggulanDescriptionChange}></textarea>
+            <br />
+            <button type="submit">Simpan</button>
+            <button type="button" onClick={handleCancelClick}>Batal</button>
+          </form>
+        )}
           {showAddForm && (
             <form className="form-container" onSubmit={handleKeunggulanSubmit}>
               <label htmlFor="gambar">Upload Gambar</label>

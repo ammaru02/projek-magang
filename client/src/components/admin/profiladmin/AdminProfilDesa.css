@@ -83,6 +83,7 @@
   cursor: pointer;
   font-size: 16px;
   font-weight: 800;
+  margin-bottom: 20px;
 }
 
 .form-container button[type="submit"]:hover {
@@ -148,6 +149,44 @@
   font-weight: bold;
 }
 
+.struktur-table-container {
+  text-align: center; /* Posisikan teks di tengah */
+}
+
+.struktur-table {
+  width: 100%;
+  border-collapse: collapse;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.struktur-table th,
+.struktur-table td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: left;
+}
+
+.struktur-table th {
+  background-color: #008DDA;
+}
+.judul-struktur{
+  margin-left: 150px;
+}
+.btn-struktur{
+  margin-top: 10px;
+  margin-left: 5px;
+  background-color: #D3D5D6;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  width: 250px;
+}
+
 @media screen and (max-width: 768px) {
   .profildesa-container {
     max-width: 100%; /* Mengatur lebar maksimal container untuk layar kecil */
@@ -177,4 +216,9 @@
     width: 50%; /* Mengatur lebar tombol agar mengisi hampir seluruh lebar container */
     margin: 15px 10px; /* Menengahkan secara horizontal */
   }
+
+  .judul-struktur{
+    margin-left: 0;
+  }
+
 }
