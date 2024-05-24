@@ -1,56 +1,73 @@
-from flask import request
+from flask import jsonify, request
 from app import response
 from app.model.artikel import Artikel
 from app import db
 
 def index():
     try:
-        artikel = Artikel.query.all()
-        data = formatarray(artikel)
-        return response.success(data, "success")
+        artikels = Artikel.query.all()
+        artikel_list = [artikel.serialize() for artikel in artikels]
+        return jsonify(artikel_list), 200
     except Exception as e:
-        return response.error([], str(e))
+        return jsonify({'message': str(e)}), 500
 
-def create(request):
+def get(id):
+    artikel = Artikel.query.get(id)
+    if not artikel:
+        return jsonify({'message': 'Article not found'}), 404
+
+def create():
     try:
-        # Pastikan bidang-bidang yang diperlukan ada dalam permintaan dari klien
-        judul = request.json['judul']
-        tanggal = request.json['tanggal']
-        foto = request.json['foto'] if 'foto' in request.json else None  # pastikan foto ada dalam request
-        deskripsi = request.json['deskripsi']
-        desa_id = request.json['desaId']
+        data = request.json
+        judul = data.get('judul')
+        tanggal = data.get('tanggal')
+        foto = data.get('foto')
+        deskripsi = data.get('deskripsi')
 
-        # Buat objek Artikel baru dan simpan ke basis data
-        artikel = Artikel(judul=judul, tanggal=tanggal, foto=foto, deskripsi=deskripsi, desaId=desa_id)
-        db.session.add(artikel)
+        if not (judul and tanggal and foto and deskripsi):
+            return jsonify({'message': 'Incomplete data provided'}), 400
+
+        new_artikel = Artikel(
+            judul=judul,
+            tanggal=tanggal,
+            foto=foto,
+            deskripsi=deskripsi
+        )
+        db.session.add(new_artikel)
         db.session.commit()
-
-        return response.success('', 'Artikel berhasil ditambahkan.')
+        return jsonify({'message': 'Article added successfully'}), 201
     except Exception as e:
-        return response.error([], str(e))
+        return jsonify({'message': str(e)}), 500
 
-def update(id, request):
+def update(id):
+    artikel = Artikel.query.get(id)
     try:
-        # Temukan artikel dengan ID yang sesuai dalam basis data
-        artikel = Artikel.query.filter_by(id=id).first()
-
-        if not artikel:
-            return response.error([], 'Artikel tidak ditemukan.')
-
-        # Update bidang-bidang artikel sesuai dengan data yang dikirimkan dari klien
-        artikel.judul = request.json['judul']
-        artikel.tanggal = request.json['tanggal']
-        artikel.foto = request.json['foto'] if 'foto' in request.json else None  # pastikan foto ada dalam request
-        artikel.deskripsi = request.json['deskripsi']
-        artikel.desaId = request.json['desaId']
-
-        # Simpan perubahan ke basis data
+        data = request.json
+        if 'judul' in data:
+            artikel.judul = data['judul']
+        if 'tanggal' in data:
+            artikel.tanggal = data['tanggal']
+        if 'foto' in data:
+            artikel.foto = data['foto']
+        if 'deskripsi' in data:
+            artikel.deskripsi = data['deskripsi']
         db.session.commit()
-
-        return response.success('', 'Artikel berhasil diperbarui.')
+        return jsonify({'message': 'Article updated successfully'}), 200
     except Exception as e:
-        return response.error([], str(e))
+        return jsonify({'message': str(e)}), 500
 
+def delete(id):
+    artikel = Artikel.query.get(id)
+    if not artikel:
+        return jsonify({'message': 'Artikel not found'}), 404
+    
+    try:
+        db.session.delete(artikel)
+        db.session.commit()
+        return jsonify({'message': 'Artikel deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+    
 def formatarray(datas):
     array = []
     for i in datas:
@@ -67,3 +84,4 @@ def singleObject(artikel):
         'desaId' : artikel.desaId
     }
     return artikel
+

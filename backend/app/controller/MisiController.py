@@ -1,31 +1,31 @@
 from app.model.misi import Misi
 from app import response
-from flask import request
+from flask import request, jsonify
 from app import db
 
 def index():
     try:
         misi = Misi.query.all()
-        data = formatarray(misi)
-        return response.success(data, "success")
+        return jsonify([m.serialize() for m in misi]), 200
     except Exception as e:
-        return response.error([], str(e))
+        return jsonify({'message': str(e)}), 500
 
-def update(id, request):
+def update():
     try:
-        misi = Misi.query.filter_by(id=id).first()
-
+        data = request.json
+        misi = Misi.query.first()  # Ambil misi pertama untuk diperbarui (atau Anda bisa sesuaikan sesuai kebutuhan)
         if not misi:
-            return response.error([], 'Misi tidak ditemukan.')
-
-        misi.misi = request.json['misi']
-        misi.visiId = request.json['visiId']
-
+            return jsonify({'message': 'No misi found'}), 404
+            
+        if 'misi' in data:
+            misi.misi = data['misi']
+        if 'visi_id' in data:
+            misi.visi_id = data['visi_id']
         db.session.commit()
-
-        return response.success('', 'Misi berhasil diperbarui.')
+        return jsonify({'message': 'Misi updated successfully'}), 200
     except Exception as e:
-        return response.error([], str(e))
+        db.session.rollback()  # Rollback perubahan jika terjadi kesalahan
+        return jsonify({'message': str(e)}), 500
 
 def formatarray(datas):
     array = []

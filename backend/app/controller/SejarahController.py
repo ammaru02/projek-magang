@@ -1,32 +1,30 @@
 from app.model.sejarah import Sejarah
 from app import response, db
-from flask import request
+from flask import request, jsonify
 
 def index():
     try:
         sejarah = Sejarah.query.all()
-        data = format_array(sejarah)
-        return response.success(data, "success")
+        return jsonify([s.serialize() for s in sejarah]), 200
     except Exception as e:
-        return response.error([], str(e))
+        return jsonify({'message': str(e)}), 500
 
-def update(id):
+def update():
     try:
-        sejarah = Sejarah.query.filter_by(id=id).first()
-
+        data = request.json
+        sejarah = Sejarah.query.first()  # Ambil sejarah pertama untuk diperbarui (atau disesuaikan sesuai kebutuhan)
         if not sejarah:
-            return response.error([], 'Sejarah tidak ditemukan.')
-
-        sejarah.name = request.json['name']
-        sejarah.foto = request.json['foto']
-        sejarah.deskripsi = request.json['deskripsi']
-        sejarah.desa_id = request.json['desa_id']
-
+            return jsonify({'message': 'Tidak ada sejarah ditemukan'}), 404
+            
+        if 'deskripsi' in data:
+            sejarah.deskripsi = data['deskripsi']
+        if 'foto' in data:  # Perbarui foto jika ada di data yang dikirimkan
+            sejarah.foto = data['foto']     
         db.session.commit()
-
-        return response.success('', 'Sejarah berhasil diperbarui.')
+        return jsonify({'message': 'Sejarah berhasil diperbarui'}), 200
     except Exception as e:
-        return response.error([], str(e))
+        db.session.rollback()  # Rollback perubahan jika terjadi kesalahan
+        return jsonify({'message': str(e)}), 500
 
 def format_array(datas):
     return [single_object(data) for data in datas]

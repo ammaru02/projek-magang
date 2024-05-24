@@ -1,42 +1,41 @@
 from app.model.visi import Visi
 from app import response
-from flask import request
+from flask import request, jsonify
 from app import db
 
 def index():
     try:
         visi = Visi.query.all()
-        data = formatarray(visi)
-        return response.success(data, "success")
+        return jsonify([v.serialize() for v in visi]), 200
     except Exception as e:
-        return response.error([], str(e))
+        return jsonify({'message': str(e)}), 500
 
-def update(id, request):
+def update():
     try:
-        visi = Visi.query.filter_by(id=id).first()
-
+        data = request.json
+        visi = Visi.query.first()
         if not visi:
-            return response.error([], 'Visi tidak ditemukan.')
-
-        visi.visi = request.json['visi']
-        visi.foto = request.json['foto'] if 'foto' in request.json else None
-
-        db.session.commit()
-
-        return response.success('', 'Visi berhasil diperbarui.')
-    except Exception as e:
-        return response.error([], str(e))
-
-def formatarray(datas):
-    array = []
-    for i in datas:
-        array.append(singleObject(i))
-    return array
+            return jsonify({'message': 'No visi found'}), 404
         
-def singleObject(visi):
-    visi = {
-        'id' : visi.id,
-        'visi' : visi.visi,
-        'foto' : visi.foto,
+        if 'visi' in data:
+            visi.visi = data['visi']
+        
+        # Periksa apakah foto ada dalam data dan apakah ada foto baru yang disertakan dalam permintaan
+        if 'foto' in data and data['foto'] != visi.foto:
+            visi.foto = data['foto']
+        
+        db.session.commit()
+        return jsonify({'message': 'Visi updated successfully'}), 200
+    except Exception as e:
+        db.session.rollback()  
+        return jsonify({'message': str(e)}), 500
+
+def format_array(datas):
+    return [single_object(data) for data in datas]
+        
+def single_object(visi):
+    return {
+        'id': visi.id,
+        'visi': visi.visi,
+        'foto': visi.foto,
     }
-    return visi

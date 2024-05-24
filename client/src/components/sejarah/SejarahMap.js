@@ -25,14 +25,26 @@ function SejarahMap() {
   useEffect(() => {
     fetch('http://localhost:5000/sejarah')
       .then(response => response.json())
-      .then(data => setSejarah(data.data.map(item => item.deskripsi).join(' '))); // menggabungkan deskripsi dari semua item menjadi satu string
+      .then(data => {
+        if (data && data.length > 0) {
+          setSejarah(data.map(item => item.deskripsi).join(' ')); // menggabungkan deskripsi dari semua item menjadi satu string
+        }
+      })
+      .catch(error => console.error('Error:', error));
   }, []);
 
   return (
     <div className="card-sejarah">
       <div className="card-content">
         <div className="card-map">
-          <iframe title='peta' src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19861.51728417338!2d119.53196943299139!3d-5.671034117847816!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dca1fb4b9f0fbdd%3A0xc6cd728d6349d499!2sKassi%2C%20Rumbia%2C%20Jeneponto%2C%20South%20Sulawesi!5e0!3m2!1sen!2sid!4v1631988141441!5m" width="600" height="450"  allowFullScreen="" loading="lazy"></iframe>
+          <iframe 
+            title='peta' 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19861.51728417338!2d119.53196943299139!3d-5.671034117847816!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dca1fb4b9f0fbdd%3A0xc6cd728d6349d499!2sKassi%2C%20Rumbia%2C%20Jeneponto%2C%20South%20Sulawesi!5e0!3m2!1sen!2sid!4v1631988141441!5m" 
+            width="600" 
+            height="450"  
+            allowFullScreen="" 
+            loading="lazy">
+          </iframe>
         </div>
         <div className="card-title-sejarah">
           <h1>Sejarah Desa</h1>
@@ -49,3 +61,59 @@ function SejarahMap() {
 }
 
 export default SejarahMap;
+
+
+const handleSejarahSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    if (selectedImageFile) {
+      const storageRef = ref(storage, `images/sejarah/${selectedImageFile.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, selectedImageFile);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload progress:', progress);
+        },
+        (error) => {
+          console.error('Error uploading image:', error);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log('Firebase download URL:', downloadURL);
+            
+            setSejarahImageUrl(downloadURL);
+
+            const response = await fetch('http://127.0.0.1:5000/sejarah', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ deskripsi: sejarahDesa, foto: downloadURL })
+            });
+            const data = await response.json();
+            console.log('Sejarah response:', data);
+            alert('Data sejarah berhasil disimpan');
+          } catch (error) {
+            console.error('Error sending sejarah data:', error);
+          }
+        }
+      );
+    } else {
+      const response = await fetch('http://127.0.0.1:5000/sejarah', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ deskripsi: sejarahDesa })
+      });
+      const data = await response.json();
+      console.log('Sejarah response:', data);
+      alert('Data sejarah berhasil disimpan');
+    }
+  } catch (error) {
+    console.error('Error updating sejarah:', error);
+  }
+};
