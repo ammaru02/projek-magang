@@ -115,8 +115,18 @@ def get_update_sejarah():
 def strukturs():
     if request.method == 'POST':
         return StrukturController.create()
-    else:
+    elif request.method == 'GET':
         return StrukturController.index()
+
+@app.route('/struktur/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def get_update_or_delete_struktur(id):
+    if request.method == 'GET':
+        return StrukturController.get(id)
+    elif request.method == 'PUT':
+        return StrukturController.update(id)
+    elif request.method == 'DELETE':
+        return StrukturController.delete(id)
+
 
 @app.route('/visi', methods=['GET', 'PUT'])
 def get_update_visi():

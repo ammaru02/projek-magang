@@ -14,4 +14,4 @@ class Misi(db.Model):
         }
 
     def __repr__(self):
-        return '<Misi {}>'.format(self.name)
+        return '<Misi {}>'.format(self.misi)
