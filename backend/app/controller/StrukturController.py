@@ -46,28 +46,24 @@ def get(id):
 
 def create():
     try:
-        data = request.form
-        foto_file = request.files['foto']  # Ubah ini menjadi 'foto'
-        foto_data = foto_file.read()  # Baca data biner dari file
-        foto_url = upload_to_firebase_storage(foto_file.filename, foto_data)
+        data = request.get_json()
+        name = data.get('name')
+        jabatan = data.get('jabatan')
+        foto_url = data.get('foto')
         
         struktur = Struktur(
-            name=data.get('name'),
-            jabatan=data.get('jabatan'),
+            name=name,
+            jabatan=jabatan,
             foto=foto_url,
-            desaId=data.get('desaId')
+            desaId=1 
         )
         db.session.add(struktur)
         db.session.commit()
 
         return jsonify({'message': 'Struktur added successfully'}), 201
-    except KeyError:
-        # Jika kunci 'foto' tidak ditemukan pada request.files
-        return jsonify({'error': 'No file provided in the request'}), 400
     except Exception as e:
-        # Tangkap kesalahan umum dan kembalikan pesan kesalahan yang lebih deskriptif
         return jsonify({'error': 'Failed to add struktur', 'message': str(e)}), 500
-
+    
 def update(id):
     struktur = Struktur.query.get(id)
     if not struktur:
