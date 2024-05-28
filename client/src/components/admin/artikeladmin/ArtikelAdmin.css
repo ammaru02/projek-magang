@@ -131,12 +131,7 @@
   margin-right: 10px;
 }
 
-/* Tambahkan kelas khusus untuk tabel artikel */
-.artikel-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
+
 
 .artikel-table th,
 .artikel-table td {
