@@ -1,0 +1,73 @@
+.dataadmin-container {
+    flex: 6;
+    margin: 0 auto;
+    margin-left: 200px;
+    height: auto;
+    margin-top: 60px;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.title-dataadmin {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-left: 10px;
+    padding: 5px;
+}
+
+.edit-form {
+    max-width: 700px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.edit-form h2 {
+    margin-bottom: 10px;
+    font-size: 30px;
+}
+
+.edit-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.edit-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.edit-form select {
+    width: 50%; /* Set a smaller width for the select box */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: block; /* Ensure it stays below the label */
+}
+
+.password-fields {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+.password-field {
+    flex: 1;
+    margin-right: 5px;
+}
+
+.password-field:last-child {
+    margin-right: 0;
+}
+
+.password-field input {
+    width: calc(90% - 10px); /* Adjusted for consistent spacing */
+    margin-top: 0; /* Removed top margin for consistency */
+}
