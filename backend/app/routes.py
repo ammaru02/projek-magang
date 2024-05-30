@@ -1,4 +1,5 @@
 from flask import jsonify, request
+from flask import Blueprint
 from flask_cors import cross_origin
 from app import app, db
 from app.controller import DesaController, WargaController, ArtikelController, SejarahController, MisiController, VisiController, ProdukController, AdminController, KategoriController, StrukturController, KeunggulanController
@@ -56,12 +57,29 @@ def save_image():
     db.session.add(new_banner)
     db.session.commit()
 
-@app.route('/admin', methods=['GET', 'POST'])
-def admins():
-    if request.method == 'POST':
-        return AdminController.create()
-    else:
-        return AdminController.index()
+def register_routes(app):
+    @app.route('/admin', methods=['GET', 'POST'])
+    def admin():
+        if request.method == 'GET':
+            return AdminController.index()
+        elif request.method == 'POST':
+            return AdminController.create()
+
+    @app.route('/admin/<int:id>', methods=['GET'])
+    def get_admin(id):
+        return AdminController.get(id)
+
+    @app.route('/admin/<int:id>/password', methods=['PUT'])
+    def update_admin_password(id):
+        return AdminController.update_password(id)
+
+    @app.route('/request-admin-password-reset', methods=['POST'])
+    def request_admin_password_reset():
+        return AdminController.request_password_reset()
+
+    @app.route('/reset-password', methods=['POST'])
+    def reset_password():
+        return AdminController.reset_password()
 
 @app.route('/artikel', methods=['GET', 'POST'])
 def artikels():
