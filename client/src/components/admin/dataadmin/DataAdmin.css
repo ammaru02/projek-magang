@@ -1,4 +1,4 @@
-.dataadmin-container {
+.admin-panel-container {
     flex: 6;
     margin: 0 auto;
     margin-left: 200px;
@@ -55,8 +55,6 @@
     display: flex;
     justify-content: space-between;
 }
-
-
 
 .password-field {
     flex: 1;

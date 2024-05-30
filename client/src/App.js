@@ -13,6 +13,7 @@ import ProfilDesaAdmin from './components/admin/pagesadmin/ProfilDesaAdmin';
 import ProdukDesaAdmin from './components/admin/pagesadmin/ProdukDesaAdmin';
 import AdminArtikel from './components/admin/pagesadmin/AdminArtikel';
 import AdminData from './components/admin/pagesadmin/AdminData';
+import LoginAdmin from './components/admin/pagesadmin/LoginAdmin';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/produkdesaadmin" element={<ProdukDesaAdmin />} />
         <Route path="/artikeladmin" element={<AdminArtikel />} />
         <Route path="/akunadmin" element={<AdminData />} />
+        <Route path="/login" element={<LoginAdmin />} />
       </Routes>
     </Router>
   );

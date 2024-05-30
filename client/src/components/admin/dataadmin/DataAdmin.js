@@ -114,7 +114,7 @@ export default function AdminPanel() {
 
     return (
         <div className='admin-panel-container'>
-            <div className='title'>
+            <div className='title-dataadmin'>
                 <h1>{view === 'edit' ? 'Edit Admin Data' : 'Add Admin'}</h1>
             </div>
             <div className='edit-form'>
