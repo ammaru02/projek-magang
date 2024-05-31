@@ -80,6 +80,19 @@ def register_routes(app):
     @app.route('/reset-password', methods=['POST'])
     def reset_password():
         return AdminController.reset_password()
+    
+    @app.route('/login', methods=['POST'])
+    def login():
+        return AdminController.login()
+
+    @app.route('/admin/profile', methods=['GET'])
+    @cross_origin()
+    def admin_profile():
+        return AdminController.get_profile()
+
+    @app.route('/admin/profile', methods=['OPTIONS'])
+    def handle_admin_profile_options():
+        return '', 200 
 
 @app.route('/artikel', methods=['GET', 'POST'])
 def artikels():

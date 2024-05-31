@@ -1,10 +1,12 @@
 from flask import request, jsonify
 from app.model.admin import Admin
-from app import db
+from app import app, db
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
 import string
 import logging
+import jwt
+import datetime
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -17,7 +19,32 @@ def index():
     except Exception as e:
         logger.error(f"Error fetching admins: {str(e)}")
         return jsonify({'message': 'Error fetching admins'}), 500
+    
+def get_profile():
+    token = request.headers.get('Authorization')
+    if not token:
+        return jsonify({"error": "Unauthorized"}), 401
 
+    token = token.split(" ")[1]  # Menghapus bagian 'Bearer'
+    try:
+        data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        admin_id = data['admin_id']
+        admin = Admin.query.get(admin_id)  # Pastikan Anda memiliki model Admin yang sesuai
+        if not admin:
+            return jsonify({"error": "Admin not found"}), 404
+
+        admin_data = {
+            'level': admin.level,
+            'name': admin.name,
+            'username': admin.username,
+            'email': admin.email
+        }
+        return jsonify(admin_data)
+    except jwt.ExpiredSignatureError:
+        return jsonify({"error": "Token has expired"}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({"error": "Invalid token"}), 401
+    
 def get(id):
     try:
         admin = Admin.query.get_or_404(id)
@@ -131,3 +158,28 @@ def request_password_reset():
     except Exception as e:
         logger.error(f"Error requesting password reset for email {email}: {str(e)}")
         return jsonify({'error': 'Error requesting password reset'}), 500
+
+def login():
+    try:
+        auth_data = request.get_json()
+        print(f"Auth data received: {auth_data}")  # Tambahkan log ini
+        username = auth_data.get('username')
+        password = auth_data.get('password')
+
+        admin = Admin.query.filter_by(username=username).first()
+        if admin:
+            print(f"Admin found: {admin}")  # Tambahkan log ini
+        else:
+            print("Admin not found")  # Tambahkan log ini
+
+        if admin and check_password_hash(admin.password, password):  # Verifikasi password
+            token = jwt.encode({
+                'admin_id': admin.id,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+            }, app.config['SECRET_KEY'], algorithm="HS256")
+            return jsonify({"success": True, "token": token})
+
+        return jsonify({"success": False, "message": "Invalid username or password"}), 401
+    except Exception as e:
+        print(f"Error during login: {e}")  # Tambahkan log ini
+        return jsonify({"success": False, "message": "Internal Server Error"}), 500

@@ -32,7 +32,17 @@ export default function AdminPanel() {
 
     const fetchAdminData = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/admin/1');
+            const token = localStorage.getItem('token'); // Mendapatkan token autentikasi dari penyimpanan lokal
+            if (!token) {
+                setMessage('No token found. Please log in.');
+                setLoading(false);
+                return;
+            }
+            const response = await axios.get('http://localhost:5000/admin/profile', {
+                headers: {
+                    Authorization: `Bearer ${token}` // Menambahkan token autentikasi ke header permintaan
+                }
+            });
             const adminData = response.data;
             setFormData({
                 level: adminData.level,
@@ -69,16 +79,21 @@ export default function AdminPanel() {
         e.preventDefault();
         if (view === 'edit') {
             if (formData.oldPassword === '' || formData.newPassword === '') {
-                setMessage('Password fields cannot be empty');
+                setMessage('Old Password and New Password fields cannot be empty');
                 return;
             }
 
             try {
+                const token = localStorage.getItem('token'); // Mendapatkan token autentikasi dari penyimpanan lokal
                 const dataToSend = {
                     oldPassword: formData.oldPassword,
                     newPassword: formData.newPassword
                 };
-                const response = await axios.put(`http://localhost:5000/admin/1/password`, dataToSend);
+                const response = await axios.put('http://localhost:5000/admin/profile/password', dataToSend, {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Menambahkan token autentikasi ke header permintaan
+                    }
+                });
                 setMessage(response.data.message);
             } catch (error) {
                 if (error.response && error.response.status === 400) {
