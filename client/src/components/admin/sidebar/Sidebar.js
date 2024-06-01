@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import "./Sidebar.css";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt, faBars } from '@fortawesome/free-solid-svg-icons';
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate(); // Initialize navigate hook
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
@@ -15,6 +16,11 @@ export default function Sidebar() {
         if (window.innerWidth <= 768) {
             setIsOpen(false); // Menutup sidebar saat item menu diklik di ukuran layar mobile
         }
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Hapus token dari localStorage
+        navigate('/login'); // Arahkan pengguna ke halaman login
     }
 
     return (
@@ -50,10 +56,8 @@ export default function Sidebar() {
                                 </Link>
                             </li>
                         </ul>
-                        <div className='sidebarLogout'>
-                            <Link to='/logout' className='sidebarLogoutLink'>
-                                <FontAwesomeIcon icon={faSignOutAlt} />
-                            </Link>
+                        <div className='sidebarLogout' onClick={handleLogout}>
+                            <FontAwesomeIcon icon={faSignOutAlt} />
                         </div>
                     </div>
                 </div>

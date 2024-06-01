@@ -1,9 +1,11 @@
 from flask import jsonify, request
 from flask import Blueprint
 from flask_cors import cross_origin
+from app.model.admin import Admin
 from app import app, db
 from app.controller import DesaController, WargaController, ArtikelController, SejarahController, MisiController, VisiController, ProdukController, AdminController, KategoriController, StrukturController, KeunggulanController
 from app.model.banner import Banner  
+from app.controller.AdminController import token_required
 
 @app.route('/')
 def index():
@@ -62,8 +64,7 @@ def register_routes(app):
     def admin():
         if request.method == 'GET':
             return AdminController.index()
-        elif request.method == 'POST':
-            return AdminController.create()
+        return AdminController.create()
 
     @app.route('/admin/<int:id>', methods=['GET'])
     def get_admin(id):
@@ -80,19 +81,23 @@ def register_routes(app):
     @app.route('/reset-password', methods=['POST'])
     def reset_password():
         return AdminController.reset_password()
-    
+
     @app.route('/login', methods=['POST'])
     def login():
         return AdminController.login()
-
+    
     @app.route('/admin/profile', methods=['GET'])
-    @cross_origin()
-    def admin_profile():
-        return AdminController.get_profile()
+    @token_required
+    def adminProfile(current_user):
+        return AdminController.get_admin_profile(current_user)
 
     @app.route('/admin/profile', methods=['OPTIONS'])
     def handle_admin_profile_options():
-        return '', 200 
+        return '', 200
+    
+    @app.route('/forgot-password', methods=['POST'])
+    def forgot_password():
+        return AdminController.forgot_password()
 
 @app.route('/artikel', methods=['GET', 'POST'])
 def artikels():

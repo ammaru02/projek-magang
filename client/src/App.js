@@ -14,6 +14,7 @@ import ProdukDesaAdmin from './components/admin/pagesadmin/ProdukDesaAdmin';
 import AdminArtikel from './components/admin/pagesadmin/AdminArtikel';
 import AdminData from './components/admin/pagesadmin/AdminData';
 import LoginAdmin from './components/admin/pagesadmin/LoginAdmin';
+import ForgotPassword from './components/admin/pagesadmin/ForgotPassword';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/artikeladmin" element={<AdminArtikel />} />
         <Route path="/akunadmin" element={<AdminData />} />
         <Route path="/login" element={<LoginAdmin />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
       </Routes>
     </Router>
   );
