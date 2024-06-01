@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import "./DataAdmin.css";
 
 export default function AdminPanel() {
@@ -20,27 +21,29 @@ export default function AdminPanel() {
     });
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(true);
-    const [view, setView] = useState('edit'); // 'edit' or 'input'
+    const [view, setView] = useState('edit');
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (view === 'edit') {
             fetchAdminData();
         } else {
-            setLoading(false); // Stop loading when switching to input view
+            setLoading(false);
         }
     }, [view]);
 
     const fetchAdminData = async () => {
         try {
-            const token = localStorage.getItem('token'); // Mendapatkan token autentikasi dari penyimpanan lokal
+            const token = localStorage.getItem('token');
             if (!token) {
                 setMessage('No token found. Please log in.');
                 setLoading(false);
+                navigate('/login');
                 return;
             }
             const response = await axios.get('http://localhost:5000/admin/profile', {
                 headers: {
-                    Authorization: `Bearer ${token}` // Menambahkan token autentikasi ke header permintaan
+                    Authorization: `Bearer ${token}`
                 }
             });
             const adminData = response.data;
@@ -55,6 +58,9 @@ export default function AdminPanel() {
         } catch (error) {
             console.error('Error fetching admin data:', error);
             setMessage('Error fetching admin data.');
+            if (error.response && error.response.status === 401) {
+                navigate('/login');
+            }
         } finally {
             setLoading(false);
         }
@@ -84,14 +90,21 @@ export default function AdminPanel() {
             }
 
             try {
-                const token = localStorage.getItem('token'); // Mendapatkan token autentikasi dari penyimpanan lokal
+                const token = localStorage.getItem('token');
                 const dataToSend = {
                     oldPassword: formData.oldPassword,
                     newPassword: formData.newPassword
                 };
+
+                await axios.options('http://localhost:5000/admin/profile/password', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
                 const response = await axios.put('http://localhost:5000/admin/profile/password', dataToSend, {
                     headers: {
-                        Authorization: `Bearer ${token}` // Menambahkan token autentikasi ke header permintaan
+                        Authorization: `Bearer ${token}`
                     }
                 });
                 setMessage(response.data.message);
@@ -122,7 +135,7 @@ export default function AdminPanel() {
             }
         }
     };
-
+    
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -168,7 +181,7 @@ export default function AdminPanel() {
                             </div>
                             <div className="button-group">
                                 <button type="submit">Change Password</button>
-                                <button type="button" onClick={() => setView('input')}>Input Data</button>
+                                {(formData.level === 'super admin') && <button type="button" onClick={() => setView('input')}>Input Data</button>}
                             </div>
                         </>
                     ) : (

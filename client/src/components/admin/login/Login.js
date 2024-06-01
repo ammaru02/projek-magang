@@ -1,3 +1,4 @@
+// Login.js
 import React, { useState } from 'react';
 import './Login.css';
 import axios from 'axios';
@@ -14,15 +15,15 @@ export default function Login() {
     try {
       const response = await axios.post('http://localhost:5000/login', {
         username,
-        password
+        password,
       });
 
-      if (response.data.success) {
-        const token = response.data.token; // Ambil token dari respons
-        localStorage.setItem('token', token); // Simpan token di localStorage
+      if (response.status === 200 && response.data.success) {
+        const token = response.data.token;
+        localStorage.setItem('token', token);
         navigate('/homeadmin');
       } else {
-        setMessage('Invalid username or password');
+        setMessage(response.data.message || 'Login failed');
       }
     } catch (error) {
       setMessage('Error logging in');
