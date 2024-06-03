@@ -98,6 +98,58 @@ def register_routes(app):
     @app.route('/forgot-password', methods=['POST'])
     def forgot_password():
         return AdminController.forgot_password()
+    
+    @app.route('/generate-token', methods=['POST'])
+    def generate_token():
+        return AdminController.generate_token()
+def register_routes(app):
+    @app.route('/admin', methods=['GET', 'POST'])
+    def admin():
+        if request.method == 'GET':
+            return AdminController.index()
+        return AdminController.create()
+
+    @app.route('/admin/<int:id>', methods=['GET'])
+    def get_admin(id):
+        return AdminController.get(id)
+
+    @app.route('/admin/<int:id>/password', methods=['PUT'])
+    def update_admin_password(id):
+        return AdminController.update_password(id)
+
+    @app.route('/request-admin-password-reset', methods=['POST'])
+    def request_admin_password_reset():
+        return AdminController.request_password_reset()
+
+    @app.route('/reset-password', methods=['POST'])
+    def reset_password():
+        return AdminController.reset_password()
+
+    @app.route('/login', methods=['POST'])
+    def login():
+        return AdminController.login()
+    
+    @app.route('/admin/profile', methods=['GET'])
+    @token_required
+    def adminProfile(current_user):
+        return AdminController.get_admin_profile(current_user)
+    
+    @app.route('/admin/profile/password', methods=['PUT'])
+    @token_required
+    def adminProfilePassword(current_user):
+        return AdminController.change_password(current_user)
+
+    @app.route('/admin/profile', methods=['OPTIONS'])
+    def handle_admin_profile_options():
+        return '', 200
+    
+    @app.route('/forgot-password', methods=['POST'])
+    def forgot_password():
+        return AdminController.forgot_password()
+    
+    @app.route('/generate-token', methods=['POST'])
+    def generate_token():
+        return AdminController.generate_token()
 
 @app.route('/artikel', methods=['GET', 'POST'])
 def artikels():

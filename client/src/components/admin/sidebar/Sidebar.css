@@ -52,9 +52,11 @@
 .sidebarLogout {
     padding: 5px;
     margin-top: 200px;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     text-align: center;
+    font-size: 30px;
 }
 
 .sidebarLogoutLink {
@@ -62,9 +64,6 @@
     margin-top: 5px;
 }
 
-.sidebarLogoutLink svg {
-    font-size: 24px; /* Mengatur ukuran ikon logout */
-}
 
 .burger {
     display: none; /* Sembunyikan burger menu di desktop */
