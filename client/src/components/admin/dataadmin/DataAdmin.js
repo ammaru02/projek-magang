@@ -30,6 +30,7 @@ export default function AdminPanel() {
         } else {
             setLoading(false);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [view]);
 
     const fetchAdminData = async () => {
@@ -96,12 +97,6 @@ export default function AdminPanel() {
                     newPassword: formData.newPassword
                 };
 
-                await axios.options('http://localhost:5000/admin/profile/password', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
                 const response = await axios.put('http://localhost:5000/admin/profile/password', dataToSend, {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -135,7 +130,7 @@ export default function AdminPanel() {
             }
         }
     };
-    
+
     if (loading) {
         return <div>Loading...</div>;
     }

@@ -12,7 +12,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
 
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -31,7 +30,9 @@ def token_required(f):
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
             current_user = Admin.query.filter_by(id=data['id']).first()
-        except:
+        except jwt.ExpiredSignatureError:
+            return jsonify({'message': 'Token has expired!'}), 401
+        except jwt.InvalidTokenError:
             return jsonify({'message': 'Token is invalid!'}), 401
 
         return f(current_user, *args, **kwargs)
@@ -49,7 +50,6 @@ def get_admin_profile(current_user):
     }
     return jsonify(admin_data)
 
-# Fungsi login yang diperbarui
 def login():
     data = request.get_json()
 
@@ -74,23 +74,129 @@ def login():
 def forgot_password():
     data = request.get_json()
     email = data.get('email')
+    
+    # Logging the received email
+    logger.info(f"Received forgot password request for email: {email}")
+    
     if not email:
         return jsonify({'message': 'Email is required'}), 400
 
-    # Generate token
-    token = s.dumps(email, salt='email-confirm-salt')
+    admin = Admin.query.filter_by(email=email).first()
+    if not admin:
+        return jsonify({'message': 'Admin with this email does not exist'}), 404
 
-    # Create reset URL
-    reset_url = f'http://localhost:3000/reset-password/{token}'
-
-    # Send email
     try:
-        send_email(email, reset_url)
-        return jsonify({'message': 'Password reset link has been sent to your email'}), 200
+        # Generate token (OTP)
+        token = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        logger.info(f"Generated token for email: {email}")
+
+        # Save token to the database
+        admin.reset_token = token
+        db.session.commit()
+
+        # Send token via email
+        send_token_email(email, token)
+        logger.info(f"Token sent to email: {email}")
+        
+        return jsonify({'message': 'Token has been sent to your email'}), 200
     except Exception as e:
+        logger.error(f"Failed to send email: {str(e)}", exc_info=True)
         return jsonify({'message': 'Failed to send email'}), 500
 
-def send_email(to, reset_url):
-    msg = Message('Password Reset Request', sender='your_email@gmail.com', recipients=[to])
-    msg.body = f'Your password reset link is {reset_url}. If you did not request a password reset, please ignore this email.'
-    mail.send(msg)
+def send_token_email(to, token):
+    try:
+        msg = Message('Password Reset Token', sender=app.config['MAIL_USERNAME'], recipients=[to])
+        msg.body = f'Your password reset token is: {token}.'
+        mail.send(msg)
+    except Exception as e:
+        logger.error(f"Failed to send email: {str(e)}", exc_info=True)
+        raise
+
+def reset_password():
+    data = request.get_json()
+    email = data.get('email')
+    token = data.get('token')
+    new_password = data.get('new_password')
+
+    # Log data received
+    logger.info(f"Received reset password request for email: {email}, token: {token}")
+
+    if not email:
+        logger.error('Email is required')
+        return jsonify({'message': 'Email is required'}), 400
+
+    if not token:
+        logger.error('Token is required')
+        return jsonify({'message': 'Token is required'}), 400
+
+    if not new_password:
+        logger.error('New password is required')
+        return jsonify({'message': 'New password is required'}), 400
+
+    admin = Admin.query.filter_by(email=email).first()
+    if not admin:
+        logger.error(f'Admin with email {email} does not exist')
+        return jsonify({'message': 'Admin with this email does not exist'}), 404
+
+    # Verify token
+    if token != admin.reset_token:
+        logger.error(f'Invalid token for email {email}')
+        return jsonify({'message': 'Invalid token'}), 401
+
+    try:
+        # Update password
+        admin.password = generate_password_hash(new_password)
+        admin.reset_token = None
+        db.session.commit()
+        logger.info(f"Password reset successfully for email: {email}")
+        return jsonify({'message': 'Password reset successfully'}), 200
+    except Exception as e:
+        logger.error(f"Failed to reset password: {str(e)}", exc_info=True)
+        return jsonify({'message': 'Failed to reset password'}), 500
+
+def generate_token():
+    data = request.get_json()
+    email = data.get('email')
+
+    if not email:
+        return jsonify({'message': 'Email is required'}), 400
+
+    try:
+        # Generate token (OTP)
+        token = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        logger.info(f"Generated token for email: {email}")
+
+        # Kirim token via email
+        subject = 'Password Reset Token'
+        body = f'Your password reset token is: {token}.'
+        send_email(email, subject, body)
+        logger.info(f"Token sent to email: {email}")
+
+        return jsonify({'message': 'Token has been sent to your email'}), 200
+    except Exception as e:
+        logger.error(f"Failed to send token: {str(e)}", exc_info=True)
+        return jsonify({'message': 'Failed to send token'}), 500
+
+def send_email(to, subject, body):
+    try:
+        msg = Message(subject, sender=app.config['MAIL_USERNAME'], recipients=[to])
+        msg.body = body
+        mail.send(msg)
+    except Exception as e:
+        logger.error(f"Failed to send email: {str(e)}", exc_info=True)
+        raise
+
+def change_password(current_user):
+    data = request.get_json()
+    old_password = data.get('oldPassword')
+    new_password = data.get('newPassword')
+
+    if not old_password or not new_password:
+        return jsonify({'message': 'Old Password and New Password fields cannot be empty'}), 400
+
+    if not check_password_hash(current_user.password, old_password):
+        return jsonify({'message': 'Old password is incorrect'}), 401
+
+    current_user.password = generate_password_hash(new_password)
+    db.session.commit()
+    return jsonify({'message': 'Password updated successfully'}), 200
