@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './AdminProfilDesa.css';
 import { storage, ref, uploadBytesResumable, getDownloadURL } from "./txtImgConfig";
 
@@ -24,9 +25,11 @@ export default function AdminProfilDesa() {
   const [showAddStrukturForm, setShowAddStrukturForm] = useState(false);
   const [showEditStrukturForm, setShowEditStrukturForm] = useState(false);
   const [strukturToEdit, setStrukturToEdit] = useState(null);
+  const [adminData, setAdminData] = useState(null); 
 
   useEffect(() => {
     fetchInitialData();
+    fetchAdminData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -41,6 +44,21 @@ export default function AdminProfilDesa() {
       console.error('Error fetching initial data:', error);
     }
   };
+
+  const fetchAdminData = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:5000/admin/profile', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const adminData = response.data;
+        setAdminData(adminData); // Tambahkan ini
+    } catch (error) {
+        console.error("Error fetching admin data:", error);
+    }
+};
 
   const fetchStrukturData = async () => {
     try {
@@ -642,16 +660,20 @@ const handleKeunggulanEditSubmit = async (e) => {
               <img src={strukturDesaImageUrl} alt="Struktur Desa" style={{ width: '200px', height: 'auto' }} />
             </div>
           )}
+          {adminData && adminData.level !== 'kepala desa' && (
           <input 
             type="file" 
             id="gambar" 
             name="gambar" 
             accept="image/*" 
             onChange={handleImageChange}
-          />
+          />)}
           <br />
+          {adminData && adminData.level !== 'kepala desa' && (
+            <div>
           <button type="submit">Simpan</button>
           <button onClick={handleStrukturDesaClick} className='btn-struktur'>Lihat Data Struktur Desa</button>
+          </div>)}
         </form>
       )}
 {showStrukturDesa && (
@@ -744,9 +766,11 @@ const handleKeunggulanEditSubmit = async (e) => {
             <img src={strukturToEdit.foto} alt="Gambar Struktur" style={{ width: '200px', height: 'auto' }} />
           </div>
         )}
-        <br />
+        <br />{adminData && adminData.level !== 'kepala desa' && (
+        <div>
         <button type="submit">Simpan</button>
         <button type="button" onClick={handleCancelClick}>Batal</button>
+        </div>)}
       </form>
     )}
 {showAddStrukturForm && (
@@ -760,8 +784,11 @@ const handleKeunggulanEditSubmit = async (e) => {
     <label htmlFor="gambar">Gambar</label>
     <input type="file" id="gambar" name="strukturImage" accept="image/*" onChange={handleStrukturImageChange} />
     <br />
+    {adminData && adminData.level !== 'kepala desa' && (
+      <div>
     <button type="submit">Simpan</button>
     <button type="button" onClick={handleCancelClick}>Batal</button>
+    </div>)}
   </form>
 )}
 
@@ -788,15 +815,17 @@ const handleKeunggulanEditSubmit = async (e) => {
               <img src={sejarahImageUrl} alt="Sejarah Desa" style={{ width: '200px', height: 'auto' }} />
             </div>
           )}
+          {adminData && adminData.level !== 'kepala desa' && (
           <input 
             type="file" 
             id="gambarSejarah" 
             name="gambarSejarah" 
             accept="image/*" 
             onChange={handleSejarahImageChange}
-          />
+          />)}
           <br />
-          <button type="submit">Simpan</button>
+          {adminData && adminData.level !== 'kepala desa' && (
+          <button type="submit">Simpan</button>)}
         </form>
       )}
       {showKeunggulanForm && (
@@ -804,10 +833,11 @@ const handleKeunggulanEditSubmit = async (e) => {
           {!showAddForm && !showEditForm && (
             <>
               <div className="toolbar-profil">
+              {adminData && adminData.level !== 'kepala desa' && (
                 <button className="add-button" onClick={handleAddButtonClick}>
                   <i className="fas fa-plus"></i>
                   <p>Tambah Keunggulan</p>
-                </button>
+                </button>)}
                 <div className='search'>
                   <input
                     type='text'
@@ -824,7 +854,8 @@ const handleKeunggulanEditSubmit = async (e) => {
                     <tr>
                       <th>Gambar</th>
                       <th>Deskripsi</th>
-                      <th>Aksi</th>
+                      {adminData && adminData.level !== 'kepala desa' && (
+                      <th>Aksi</th>)}
                     </tr>
                   </thead>
                   <tbody>
@@ -832,6 +863,7 @@ const handleKeunggulanEditSubmit = async (e) => {
                       <tr key={index}>
                         <td><img src={item.foto} alt="Gambar Keunggulan" style={{ width: '100px', height: 'auto' }} /></td>
                         <td>{item.deskripsi}</td>
+                      {adminData && adminData.level !== 'kepala desa' && (
                       <td>
                         <div style={{ display: "flex" }}>
                           <i
@@ -860,7 +892,7 @@ const handleKeunggulanEditSubmit = async (e) => {
                             onClick={() => handleEditKeunggulanButtonClick(item.id)}
                           ></i>
                         </div>
-                      </td>
+                      </td>)}
                       </tr>
                     ))}
                   </tbody>

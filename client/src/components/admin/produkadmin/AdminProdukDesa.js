@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import "./AdminProdukDesa.css";
 import {
   storage,
@@ -14,6 +15,7 @@ export default function AdminProdukDesa() {
   const [newProductFoto, setNewProductFoto] = useState(null);
   const [produkList, setProdukList] = useState([]);
   const [kategoriList, setKategoriList] = useState([]);
+  const [adminData, setAdminData] = useState(null); 
   const [newProduk, setNewProduk] = useState({
     kategori_id: "",
     name: "",
@@ -33,6 +35,7 @@ export default function AdminProdukDesa() {
     fetchProdukList();
     fetchKategoriList();
     createPaginationDots();
+    fetchAdminData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -75,10 +78,6 @@ export default function AdminProdukDesa() {
     }
   };
   
-  
-  
-
-
   const fetchProdukList = async () => {
     try {
       const response = await fetch("http://127.0.0.1:5000/produk");
@@ -96,6 +95,20 @@ export default function AdminProdukDesa() {
       console.error("Error fetching produk:", error);
     }
   };
+  const fetchAdminData = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:5000/admin/profile', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const adminData = response.data;
+        setAdminData(adminData); // Tambahkan ini
+    } catch (error) {
+        console.error("Error fetching admin data:", error);
+    }
+};
 
   const fetchKategoriList = async () => {
     try {
@@ -341,10 +354,11 @@ export default function AdminProdukDesa() {
       <div className="admin-produk-desa">
         {!showAddForm && !showEditForm && (
           <div className="toolbar-produk">
+            {adminData && adminData.level !== 'kepala desa' && (
             <button className="add-button" onClick={handleAddButtonClick}>
               <i className="fas fa-plus"></i>
               <p>Tambah Produk</p>
-            </button>
+            </button>)}
             <div className="search">
               <input
                 type="text"
@@ -526,7 +540,9 @@ export default function AdminProdukDesa() {
                   <th>Harga</th>
                   <th>Gambar</th>
                   <th>Deskripsi</th>
-                  <th>Aksi</th>
+                  {adminData && adminData.level !== 'kepala desa' && (
+    <th>Aksi</th>
+)}
                 </tr>
               </thead>
               <tbody>
@@ -555,6 +571,7 @@ export default function AdminProdukDesa() {
                         <img src={produk.foto} alt={produk.name} />
                       </td>
                       <td>{produk.deskripsi}</td>
+                      {adminData && adminData.level !== 'kepala desa' && (
                       <td>
                         <div style={{ display: "flex" }}>
                           <i
@@ -583,7 +600,7 @@ export default function AdminProdukDesa() {
                             onClick={() => handleEditClick(produk)}
                           ></i>
                         </div>
-                      </td>
+                      </td>)}
                     </tr>
                   ))}
               </tbody>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import "./ArtikelAdmin.css";
 import {
     storage,
@@ -11,6 +12,7 @@ export default function ArtikelAdmin() {
     const [showAddForm, setShowAddForm] = useState(false);
     const [showEditForm, setShowEditForm] = useState(false);
     const [searchInput, setSearchInput] = useState("");
+    const [adminData, setAdminData] = useState(null); 
     const [artikels, setArtikels] = useState([]);
     const [formData, setFormData] = useState({
         judul: "",
@@ -24,8 +26,22 @@ export default function ArtikelAdmin() {
 
     useEffect(() => {
         fetchArtikels();
+        fetchAdminData();
     }, []);
-
+    const fetchAdminData = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://localhost:5000/admin/profile', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const adminData = response.data;
+            setAdminData(adminData); // Tambahkan ini
+        } catch (error) {
+            console.error("Error fetching admin data:", error);
+        }
+    };
     const fetchArtikels = async () => {
         try {
             const response = await fetch("http://127.0.0.1:5000/artikel");
@@ -309,10 +325,11 @@ export default function ArtikelAdmin() {
             <div className="admin-artikel-list">
                 {!showAddForm && !showEditForm && (
                     <div className="toolbar-artikel">
+                        {adminData && adminData.level !== 'kepala desa' && (
                         <button className="add-button" onClick={handleAddButtonClick}>
                             <i className="fas fa-plus"></i>
                             <p>Tambah Artikel</p>
-                        </button>
+                        </button>)}
                         <div className="search">
                             <input
                                 type="text"
@@ -456,7 +473,8 @@ export default function ArtikelAdmin() {
                                     <th>Tanggal</th>
                                     <th>Gambar</th>
                                     <th>Deskripsi</th>
-                                    <th>Aksi</th>
+                                    {adminData && adminData.level !== 'kepala desa' && (
+                                    <th>Aksi</th>)}
                                 </tr>
                             </thead>
                             <tbody>
@@ -468,8 +486,8 @@ export default function ArtikelAdmin() {
                                     )
                                     .map((artikel) => (
                                         <tr key={artikel.id}>
-                                            <td>{artikel.judul}</td>
-                                            <td>{artikel.tanggal}</td>
+                                            <td className="judul">{artikel.judul}</td>
+                                            <td className="tanggal">{artikel.tanggal}</td>
                                             <td>
                                                 <img
                                                     src={artikel.foto}
@@ -478,6 +496,7 @@ export default function ArtikelAdmin() {
                                                 />
                                             </td>
                                             <td>{artikel.deskripsi}</td>
+                                            {adminData && adminData.level !== 'kepala desa' && (
                                             <td>
                                                 <div style={{ display: "flex" }}>
                                                     <i
@@ -506,7 +525,7 @@ export default function ArtikelAdmin() {
                                                         onClick={() => handleEditButtonClick(artikel.id)}
                                                     ></i>
                                                 </div>
-                                            </td>
+                                            </td>)}
                                         </tr>
                                     ))}
                             </tbody>

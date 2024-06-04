@@ -131,12 +131,29 @@
   margin-right: 10px;
 }
 
-
-
-.artikel-table th,
 .artikel-table td {
+  text-align: justify;
+  padding: 3px;
+  border: 1px solid #000;
+}
+
+.tanggal {
+  text-align: center;
+  width: 100px;
+  padding: 3px;
+  border: 1px solid #000;
+}
+
+.judul {
   text-align: left;
-  padding: 10px;
+  width: 250px;
+  padding: 3px;
+  border: 1px solid #000;
+}
+
+.artikel-table th {
+  text-align: left;
+  padding: 3px;
   border: 1px solid #000;
 }
 
