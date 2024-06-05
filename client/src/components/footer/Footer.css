@@ -38,6 +38,32 @@
   color: #ccc; /* Warna teks saat hover */
 }
 
+.social-icons {
+  margin-top: 10px;
+  display: flex;
+}
+
+.social-icons a {
+  font-size: 24px;
+  color: #fff;
+  transition: color 0.3s ease; /* Smooth transition */
+  margin-right: 5px;
+}
+.social-icons span{
+  font-size: 17px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  display: inline-block;
+}
+.social-icons a:hover {
+  color: #fff; /* Change color on hover */
+}
+
+.social-icons a:last-child {
+  margin-right: 0; /* Hapus margin di sebelah kanan ikon terakhir */
+}
+
 hr {
   border-color: #fff; /* Warna garis pemisah */
   margin-top: 20px;

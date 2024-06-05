@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faFacebook, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import './Footer.css';
 
 const Footer = () => {
@@ -46,10 +49,25 @@ const Footer = () => {
           <div className='col'>
             <div className='contact'>
               <h2>Kontak Kami</h2>
-              <p>Jl.Poros Majene No.16 Desa Lapeo</p>
-              <p>Kecamatan Campalagian Kabupaten</p>
-              <p>Polewali Mandar Provinsi Sulawesi Barat</p>
-              <p>Kode Pos 91353</p>
+              <p>Garege Desa Kassi</p>
+              <p>Kecamatan Rumbia</p>
+              <p>Kabupaten Jeneponto</p>
+              <p>Kode Pos 92371</p>
+            </div>
+            <div className='social-icons'>
+              <a href='mailto:Kassidesa@gmail.com' aria-label='Email'>
+                <FontAwesomeIcon icon={faEnvelope} />
+                <span>Kassidesa@gmail.com</span>
+              </a>
+              <a href='https://www.facebook.com/Kassi' target='_blank' rel='noopener noreferrer' aria-label='Facebook Kassi'>
+                <FontAwesomeIcon icon={faFacebook} />
+              </a>
+              <a href='https://www.instagram.com/agrowisatadesakassi/' target='_blank' rel='noopener noreferrer' aria-label='Instagram agrowisatadesakassi'>
+                <FontAwesomeIcon icon={faInstagram} />
+              </a>
+              <a href='https://www.youtube.com/channel/CHANNEL_ID' target='_blank' rel='noopener noreferrer' aria-label='Desa Kassi YouTube Channel'>
+                <FontAwesomeIcon icon={faYoutube} />
+              </a>
             </div>
           </div>
         </div>

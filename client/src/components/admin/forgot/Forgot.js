@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './ForgotPassword.css';
 
 export default function ForgotPassword() {
@@ -9,6 +10,7 @@ export default function ForgotPassword() {
     const [message, setMessage] = useState('');
     const [showTokenForm, setShowTokenForm] = useState(false);
     const [showPasswordForm, setShowPasswordForm] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmitEmail = async (e) => {
         e.preventDefault();
@@ -48,9 +50,13 @@ export default function ForgotPassword() {
         }
     };
 
+    const handleCancel = () => {
+        navigate('/login');
+    };
+
     return (
         <div className="container-forgot-password">
-            <div className="forgot-password-container">
+            <div className="password-forgot-container">
                 <h2>Forgot Password</h2>
                 {!showTokenForm && !showPasswordForm && (
                     <form onSubmit={handleSubmitEmail}>
@@ -59,6 +65,7 @@ export default function ForgotPassword() {
                             <input type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} required />
                         </label>
                         <button type="submit" className="button">Submit</button>
+                        <button type="button" className="button" onClick={handleCancel}>Cancel</button>
                     </form>
                 )}
                 {showTokenForm && !showPasswordForm && (
@@ -68,6 +75,7 @@ export default function ForgotPassword() {
                             <input type="text" className="input" value={token} onChange={(e) => setToken(e.target.value)} required />
                         </label>
                         <button type="submit" className="button">Submit Token</button>
+                        
                     </form>
                 )}
                 {showPasswordForm && (
