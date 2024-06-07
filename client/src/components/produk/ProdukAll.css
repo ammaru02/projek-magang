@@ -18,6 +18,7 @@
         flex-wrap: wrap; /* Mengatur agar kartu-kartu bisa pindah ke baris baru */
         justify-content: center;
         margin-bottom: 20px;
+        margin-top: 10px;
     }
 
     .produk-card {
@@ -64,34 +65,55 @@
         color: #000;
     }
 
+    .kategori-buttons-container {
+        max-width: 82%;
+        overflow-x: auto;
+        padding: 10px 0; /* Atur padding atas dan bawah */
+        position: sticky;
+        top: 0;
+        margin-left: 100px;
+        background-color: #ffffff;
+        z-index: 1;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        padding-bottom: 5px;
+        display: flex;
+        justify-content: flex-start; /* Menengahkan konten di dalam container */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        text-align: center;
+    }
+    
     .kategori-buttons {
         display: flex;
-        justify-content: center;
-        margin-bottom: 20px; /* Untuk memberikan jarak dari konten di bawahnya */
-        margin-top: 20px;
-      }
-      
-      .kategori-buttons button {
-        margin: 0 5px; /* Memberikan jarak antara tombol */
+        justify-content: center; /* Menengahkan tombol-tombol di dalam container */
+        padding: 0 10px; /* Tambahkan padding kiri dan kanan */
+        margin: 0;
+        list-style: none;
+    }
+    
+    .kategori-buttons button {
+        margin: 5px;
         padding: 5px;
         font-size: 16px;
-        background-color: #D2D5D7; /* Warna latar belakang */
-        color: #000; /* Warna teks */
+        background-color: #D2D5D7;
+        color: #000;
         border: none;
         border-radius: 20px;
         cursor: pointer;
         transition: background-color 0.3s;
-      }
-      
-      .kategori-buttons button:hover {
-        background-color: #ccc; /* Warna latar belakang saat digulir */
-      }
+    }
+    
+    .kategori-buttons button:hover {
+        background-color: #ccc;
+    }
+    
+    .kategori-buttons button:last-child {
+        margin-right: 0;
+    }
+    
 
-      .kategori-buttons button:last-child {
-        margin-right: 0; /* Hapus margin kanan pada tombol terakhir */
-      }
-
-      .search-bar {
+    .search-bar {
         display: flex;
         justify-content: center;
         margin-bottom: 10px;
@@ -103,8 +125,8 @@
     }
     
     .search-input-container input {
-        width: 100%;
-        max-width: 300px;
+        width: 500px;
+        max-width: 100%;
         height: 30px;
         padding: 15px 25px 15px 15px; /* Adjust padding to make room for icon */
         border-radius: 15px;

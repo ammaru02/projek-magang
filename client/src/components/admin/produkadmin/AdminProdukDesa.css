@@ -134,10 +134,17 @@
 .admin-produk-container th {
   background-color: #008DDA;
   color: white;
+  font-size: 15px;
+}
+.kategori-produk-admin{
+  width: 150px;
+}
+.nama-produk-admin{
+  width: 150px;
 }
 
 .produk-table td {
-  text-align: center;
+  text-align: justify;
 }
 
 .produk-table img {
@@ -230,6 +237,7 @@
   margin-right: 10px; /* Tambahkan margin kanan pada tombol */
   margin-bottom: 20px;
 }
+
 
 @media screen and (max-width: 768px) {
   .admin-produk-container {

@@ -48,21 +48,23 @@ const KategoriProduk = () => {
                 <i className="fa-solid fa-house"><p className="teks-icon">/ PRODUK DESA</p></i>
                 <h2 className="title-kategori">PRODUK DESA KASSI</h2>
             </div>
-            <div className="card-kategori">
-                {kategori.map((item, index) => (
-                    <div key={index} className='kategori-card'>
-                        <div className='card-title-produk'>
-                            <h4>{item.name}</h4>
+            <div className="card-kategori-container">
+                <div className="card-kategori">
+                    {kategori.map((item, index) => (
+                        <div key={index} className='kategori-card'>
+                            <div className='card-title-produk'>
+                                <h4>{item.name}</h4>
+                            </div>
+                            {imageUrls.map((url, idx) => {
+                                if (url.endsWith(item.foto)) {
+                                    return <img key={idx} src={url} alt={item.name} className="card-image" />;
+                                }
+                                return null;
+                            })}
+                            <button onClick={() => handleShowClick(item.id)}>Lihat</button>
                         </div>
-                        {imageUrls.map((url, idx) => {
-                            if (url.endsWith(item.foto)) {
-                                return <img key={idx} src={url} alt={item.name} className="card-image" />;
-                            }
-                            return null;
-                        })}
-                        <button onClick={() => handleShowClick(item.id)}>Show</button>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     );
