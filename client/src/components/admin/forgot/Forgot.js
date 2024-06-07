@@ -57,15 +57,15 @@ export default function ForgotPassword() {
     return (
         <div className="container-forgot-password">
             <div className="password-forgot-container">
-                <h2>Forgot Password</h2>
+                <h2>Lupa Password</h2>
                 {!showTokenForm && !showPasswordForm && (
                     <form onSubmit={handleSubmitEmail}>
                         <label>
                             Email:
                             <input type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} required />
                         </label>
-                        <button type="submit" className="button">Submit</button>
-                        <button type="button" className="button" onClick={handleCancel}>Cancel</button>
+                        <button type="submit" className="button">Kirim</button>
+                        <button type="button" className="button" onClick={handleCancel}>Batal</button>
                     </form>
                 )}
                 {showTokenForm && !showPasswordForm && (
@@ -74,14 +74,14 @@ export default function ForgotPassword() {
                             Token:
                             <input type="text" className="input" value={token} onChange={(e) => setToken(e.target.value)} required />
                         </label>
-                        <button type="submit" className="button">Submit Token</button>
+                        <button type="submit" className="button">Kirim Token</button>
                         
                     </form>
                 )}
                 {showPasswordForm && (
                     <form onSubmit={handleSubmitNewPassword}>
                         <label>
-                            New Password:
+                            Password Baru:
                             <input type="password" className="input" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
                         </label>
                         <button type="submit" className="button">Reset Password</button>

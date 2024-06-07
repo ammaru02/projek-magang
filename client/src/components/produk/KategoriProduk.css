@@ -1,11 +1,11 @@
-.page-kategori-produk{
+.page-kategori-produk {
     width: 100%;
 }
-.teks-icon{
+.teks-icon {
     display: inline-block;
     font-size: 20px;
 }
-.title-kategori{
+.title-kategori {
     margin-top: 20px;
     color: #5739CF;
 }
@@ -15,18 +15,24 @@
     border-radius: 5px; /* Membuat sudut gambar menjadi bulat */
     margin-top: 10px;
 }
-.card-kategori {
-    overflow-x: auto; /* Menambahkan scrollbar horizontal jika konten melebihi lebar */
+.card-kategori-container {
     display: flex;
-    flex-wrap: wrap; /* Mengatur agar kartu-kartu bisa pindah ke baris baru */
     justify-content: center;
-    margin-bottom: 20px;
+}
+.card-kategori {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Mengatur 4 kolom */
+    gap: 10px;
+    justify-items: center; /* Memastikan item di tengah kolom */
+    width: 100%;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    max-width: 1000px; /* Membatasi lebar maksimum grid */
 }
 .kategori-card {
-    width: 200px; /* Lebar kartu */
-    margin: 10px;
-    margin-top: 20px;
-    margin-bottom: 20px; /* Jarak antara kartu */
+    width: 100%; /* Lebar kartu 100% dari kolom */
+    max-width: 200px; /* Lebar maksimum kartu */
+    margin: 5px;
     border: 1px solid #ccc; /* Garis pinggir kartu */
     border-radius: 8px; /* Membuat sudut kartu menjadi bulat */
     padding: 10px; /* Ruang dalam kartu */
@@ -36,7 +42,7 @@
     align-items: center;
 }
 
-.card-title-produk{
+.card-title-produk {
     font-size: 20px;
     margin-bottom: 10px;
 }
@@ -60,20 +66,19 @@ button:hover {
 }
 
 @media (max-width: 768px) {
+    .card-kategori {
+        grid-template-columns: repeat(2, 1fr); /* Mengatur 2 kolom untuk perangkat kecil */
+    }
     .kategori-card {
-        width: calc(50% - 10px); /* Lebar kartu (50% - margin) */
         margin: 5px; /* Mengurangi margin kartu */
     }
-    .card-kategori{
-        margin-top: 20px;
-    }
-    .card-image{
+    .card-image {
         height: 130px;
     }
-    .card-title-produk{
+    .card-title-produk {
         font-size: 16px;
     }
-    button{
+    button {
         padding: 5px 5px;
         width: 100px;
     }

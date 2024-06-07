@@ -541,8 +541,8 @@ export default function AdminProdukDesa() {
                   <th>Gambar</th>
                   <th>Deskripsi</th>
                   {adminData && adminData.level !== 'kepala desa' && (
-    <th>Aksi</th>
-)}
+                  <th>Aksi</th>
+              )}
                 </tr>
               </thead>
               <tbody>
@@ -558,14 +558,14 @@ export default function AdminProdukDesa() {
                   )
                   .map((produk) => (
                     <tr key={produk.id}>
-                      <td>
+                      <td className="kategori-produk-admin">
                         {
                           kategoriList.find(
                             (kategori) => kategori.id === produk.kategori_id
                           )?.name
                         }
                       </td>
-                      <td>{produk.name}</td>
+                      <td className="nama-produk-admin">{produk.name}</td>
                       <td>{produk.harga}</td>
                       <td>
                         <img src={produk.foto} alt={produk.name} />

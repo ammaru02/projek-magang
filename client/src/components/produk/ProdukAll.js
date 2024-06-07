@@ -8,10 +8,9 @@ import './ProdukAll.css'; // import CSS
 const ProdukAll = () => {
     const [produk, setProduk] = useState([]);
     const [imageUrls, setImageUrls] = useState([]);
-    // eslint-disable-next-line no-unused-vars
-    const [kategoriId, setKategoriId] = useState(null); 
-    const [kategori, setKategori] = useState([]); 
-    const [searchTerm, setSearchTerm] = useState(""); // state untuk menyimpan kata kunci pencarian
+    const [kategoriId, setKategoriId] = useState(null);
+    const [kategori, setKategori] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const location = useLocation();
 
     useEffect(() => {
@@ -64,13 +63,12 @@ const ProdukAll = () => {
                 }
             })
             .catch(error => console.error('Error:', error));
-    }, [location.search]); 
+    }, [location.search]);
 
     const handleShowClick = (kategoriId) => {
         window.location.href = `/produk?kategoriId=${kategoriId}`;
     };
 
-    // Fungsi untuk mengatur kata kunci pencarian
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
@@ -92,12 +90,14 @@ const ProdukAll = () => {
                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
                 </div>
             </div>
-            <div className="kategori-buttons">
+            <div className="kategori-buttons-container">
+                <div className="kategori-buttons">
                     {kategori.map((item, index) => (
                         <button key={index} onClick={() => handleShowClick(item.id)}>
                             {item.name}
                         </button>
                     ))}
+                </div>
             </div>
             <div className="card-produk">
                 {produk
@@ -114,7 +114,7 @@ const ProdukAll = () => {
                             })}
                             <h4 className="card-title-produkall">{item.name}</h4>
                             <Link to={`/produkdetail/${item.id}`}>
-                                <button className="detail-button">Detail</button>
+                                <button className="detail-button">Selengkapnya</button>
                             </Link>
                         </div>
                     ))}
