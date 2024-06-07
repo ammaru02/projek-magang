@@ -13,7 +13,11 @@ def upload_to_firebase_storage(file):
 
 def index():
     try:
-        produk = Produk.query.all()
+        kategori_id = request.args.get('kategoriId')
+        if kategori_id:
+            produk = Produk.query.filter_by(kategori_id=kategori_id).all()
+        else:
+            produk = Produk.query.all()
         produk_list = [p.serialize() for p in produk]
         return jsonify(produk_list), 200
     except Exception as e:
@@ -41,6 +45,7 @@ def get(id):
     produk = Produk.query.get(id)
     if not produk:
         return jsonify({'message': 'Produk not found'}), 404
+    return jsonify(single_object(produk)), 200
 
 def create():
     try:

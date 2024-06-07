@@ -10,6 +10,7 @@ const ProdukAll = () => {
     const [imageUrls, setImageUrls] = useState([]);
     const [kategoriId, setKategoriId] = useState(null);
     const [kategori, setKategori] = useState([]);
+    const [kategoriProduk, setKategoriProduk] = useState({}); // Tambahkan state baru untuk menyimpan kategori dan produk terkait
     const [searchTerm, setSearchTerm] = useState("");
     const location = useLocation();
 
@@ -59,7 +60,22 @@ const ProdukAll = () => {
             .then(response => response.json())
             .then(data => {
                 if (data.data && data.data.length > 0) {
-                    setKategori(data.data);
+                    const kategoriData = data.data;
+                    setKategori(kategoriData);
+
+                    // Buat objek untuk menyimpan produk berdasarkan kategori
+                    const kategoriProdukPromises = kategoriData.map(kategoriItem =>
+                        fetch(`http://localhost:5000/produk?kategoriId=${kategoriItem.id}`)
+                            .then(response => response.json())
+                            .then(produkData => ({ [kategoriItem.id]: produkData }))
+                    );
+
+                    Promise.all(kategoriProdukPromises)
+                        .then(results => {
+                            const produkByKategori = results.reduce((acc, curr) => ({ ...acc, ...curr }), {});
+                            setKategoriProduk(produkByKategori);
+                        })
+                        .catch(error => console.error('Error fetching produk by kategori:', error));
                 }
             })
             .catch(error => console.error('Error:', error));
@@ -93,9 +109,11 @@ const ProdukAll = () => {
             <div className="kategori-buttons-container">
                 <div className="kategori-buttons">
                     {kategori.map((item, index) => (
-                        <button key={index} onClick={() => handleShowClick(item.id)}>
-                            {item.name}
-                        </button>
+                        kategoriProduk[item.id] && kategoriProduk[item.id].length > 0 && (
+                            <button key={index} onClick={() => handleShowClick(item.id)}>
+                                {item.name}
+                            </button>
+                        )
                     ))}
                 </div>
             </div>

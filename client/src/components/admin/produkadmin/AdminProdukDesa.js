@@ -144,6 +144,10 @@ export default function AdminProdukDesa() {
     }
   };
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+  };
+
   const handleCancelClick = () => {
     setShowAddForm(false);
     setShowEditForm(false);
@@ -566,7 +570,7 @@ export default function AdminProdukDesa() {
                         }
                       </td>
                       <td className="nama-produk-admin">{produk.name}</td>
-                      <td>{produk.harga}</td>
+                      <td>{formatPrice(produk.harga)}</td>
                       <td>
                         <img src={produk.foto} alt={produk.name} />
                       </td>

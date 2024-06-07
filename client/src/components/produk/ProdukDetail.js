@@ -17,6 +17,9 @@ function ProdukDetail() {
             .then(response => response.json())
             .then(data => setWarga(data));
     }, [id]);
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+      };
 
     if (!produk) {
         return <div>Loading...</div>;
@@ -34,7 +37,7 @@ function ProdukDetail() {
             </div>
             <div className='detail-teks'>
                 <h2>{produk.name}</h2>
-                <p>Rp {produk.harga}</p>
+                <p>{formatPrice(produk.harga)}</p>
                 <p>{produk.deskripsi}</p>
             </div>
             <a href={`https://wa.me/${warga.wa}`} target="_blank" rel="noopener noreferrer">
