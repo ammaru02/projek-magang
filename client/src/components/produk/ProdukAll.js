@@ -8,6 +8,7 @@ import './ProdukAll.css'; // import CSS
 const ProdukAll = () => {
     const [produk, setProduk] = useState([]);
     const [imageUrls, setImageUrls] = useState([]);
+    // eslint-disable-next-line no-unused-vars
     const [kategoriId, setKategoriId] = useState(null);
     const [kategori, setKategori] = useState([]);
     const [kategoriProduk, setKategoriProduk] = useState({}); // Tambahkan state baru untuk menyimpan kategori dan produk terkait

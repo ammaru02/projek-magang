@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 import "./AdminProdukDesa.css";
 import {
   storage,
@@ -15,7 +15,7 @@ export default function AdminProdukDesa() {
   const [newProductFoto, setNewProductFoto] = useState(null);
   const [produkList, setProdukList] = useState([]);
   const [kategoriList, setKategoriList] = useState([]);
-  const [adminData, setAdminData] = useState(null); 
+  const [adminData, setAdminData] = useState(null);
   const [newProduk, setNewProduk] = useState({
     kategori_id: "",
     name: "",
@@ -36,48 +36,46 @@ export default function AdminProdukDesa() {
     fetchKategoriList();
     createPaginationDots();
     fetchAdminData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (!showEditForm) {
       createPaginationDots();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, produkList, itemsPerPage, showEditForm]);
 
   useEffect(() => {
     if (!showAddForm) {
       createPaginationDots();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, produkList, itemsPerPage, showAddForm]);
-  
-  
 
   const createPaginationDots = () => {
     const paginationContainer = document.querySelector(".pagination-dots");
     paginationContainer.innerHTML = ""; // Bersihkan kontainer
-  
+
     // Buat ulang tanda navigasi sesuai dengan jumlah halaman
     for (let i = 1; i <= Math.ceil(produkList.length / itemsPerPage); i++) {
       const dot = document.createElement("span");
       dot.classList.add("dot");
-  
+
       // Tambahkan kelas aktif jika halaman saat ini sama dengan halaman yang sedang diproses
       if (currentPage === i) {
         dot.classList.add("active");
       }
-  
+
       // Tambahkan event listener untuk memanggil fungsi paginate
       dot.addEventListener("click", () => {
         paginate(i);
       });
-  
+
       paginationContainer.appendChild(dot); // Tambahkan dot ke kontainer
     }
   };
-  
+
   const fetchProdukList = async () => {
     try {
       const response = await fetch("http://127.0.0.1:5000/produk");
@@ -97,18 +95,18 @@ export default function AdminProdukDesa() {
   };
   const fetchAdminData = async () => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/admin/profile', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        const adminData = response.data;
-        setAdminData(adminData); // Tambahkan ini
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:5000/admin/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const adminData = response.data;
+      setAdminData(adminData); // Tambahkan ini
     } catch (error) {
-        console.error("Error fetching admin data:", error);
+      console.error("Error fetching admin data:", error);
     }
-};
+  };
 
   const fetchKategoriList = async () => {
     try {
@@ -145,7 +143,10 @@ export default function AdminProdukDesa() {
   };
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(price);
   };
 
   const handleCancelClick = () => {
@@ -160,7 +161,7 @@ export default function AdminProdukDesa() {
       harga: "",
       foto: "",
       deskripsi: "",
-    }); 
+    });
   };
 
   const handleInputChange = (e) => {
@@ -358,11 +359,12 @@ export default function AdminProdukDesa() {
       <div className="admin-produk-desa">
         {!showAddForm && !showEditForm && (
           <div className="toolbar-produk">
-            {adminData && adminData.level !== 'kepala desa' && (
-            <button className="add-button" onClick={handleAddButtonClick}>
-              <i className="fas fa-plus"></i>
-              <p>Tambah Produk</p>
-            </button>)}
+            {adminData && adminData.level !== "kepala desa" && (
+              <button className="add-button" onClick={handleAddButtonClick}>
+                <i className="fas fa-plus"></i>
+                <p>Tambah Produk</p>
+              </button>
+            )}
             <div className="search">
               <input
                 type="text"
@@ -374,11 +376,10 @@ export default function AdminProdukDesa() {
             </div>
           </div>
         )}
-        <div className="form-tambah">
         {showAddForm && (
           <form onSubmit={handleAddSubmit}>
             <h2>Tambah Produk</h2>
-            <br/>
+            <br />
             <div className="form-group">
               <label htmlFor="kategori_id">Kategori Produk</label>
               <select
@@ -442,13 +443,14 @@ export default function AdminProdukDesa() {
               ></textarea>
             </div>
             {uploading && <progress value={uploadProgress} max="100" />}
-            <button type="submit">Tambah</button>
-            <button type="button" onClick={handleCancelClick}>
-              Batal
-            </button>
+            <div className="button-row">
+              <button type="button" onClick={handleCancelClick}>
+                Batal
+              </button>
+              <button type="submit">Tambah</button>
+            </div>
           </form>
         )}
-        </div>
         {showEditForm && editProduk && (
           <form onSubmit={handleEditSubmit}>
             <h2>Edit Produk</h2>
@@ -523,10 +525,12 @@ export default function AdminProdukDesa() {
                 }
               ></textarea>
             </div>
-            <button type="submit">Simpan</button>
-            <button type="button" onClick={handleCancelClick}>
-              Batal
-            </button>
+            <div className="button-row">
+              <button type="button" onClick={handleCancelClick}>
+                Batal
+              </button>
+              <button type="submit">Simpan</button>
+            </div>
           </form>
         )}
         {showEditSuccess && (
@@ -544,9 +548,9 @@ export default function AdminProdukDesa() {
                   <th>Harga</th>
                   <th>Gambar</th>
                   <th>Deskripsi</th>
-                  {adminData && adminData.level !== 'kepala desa' && (
-                  <th>Aksi</th>
-              )}
+                  {adminData && adminData.level !== "kepala desa" && (
+                    <th>Aksi</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -560,6 +564,7 @@ export default function AdminProdukDesa() {
                         .toLowerCase()
                         .includes(searchInput.toLowerCase())
                   )
+                  .sort((a, b) => b.id - a.id) // Urutkan berdasarkan ID produk terbaru ke atas
                   .map((produk) => (
                     <tr key={produk.id}>
                       <td className="kategori-produk-admin">
@@ -575,36 +580,37 @@ export default function AdminProdukDesa() {
                         <img src={produk.foto} alt={produk.name} />
                       </td>
                       <td>{produk.deskripsi}</td>
-                      {adminData && adminData.level !== 'kepala desa' && (
-                      <td>
-                        <div style={{ display: "flex" }}>
-                          <i
-                            className="fas fa-times"
-                            style={{
-                              backgroundColor: "red",
-                              color: "white",
-                              fontSize: "15px",
-                              borderRadius: "10px",
-                              cursor: "pointer",
-                              padding: "3px",
-                              marginRight: "5px",
-                            }}
-                            onClick={() => handleDeleteClick(produk.id)}
-                          ></i>
-                          <i
-                            className="fas fa-edit"
-                            style={{
-                              color: "#000",
-                              fontSize: "20px",
-                              borderRadius: "3px",
-                              cursor: "pointer",
-                              marginRight: "5px",
-                              padding: "0",
-                            }}
-                            onClick={() => handleEditClick(produk)}
-                          ></i>
-                        </div>
-                      </td>)}
+                      {adminData && adminData.level !== "kepala desa" && (
+                        <td>
+                          <div style={{ display: "flex" }}>
+                            <i
+                              className="fas fa-times"
+                              style={{
+                                backgroundColor: "red",
+                                color: "white",
+                                fontSize: "15px",
+                                borderRadius: "10px",
+                                cursor: "pointer",
+                                padding: "3px",
+                                marginRight: "5px",
+                              }}
+                              onClick={() => handleDeleteClick(produk.id)}
+                            ></i>
+                            <i
+                              className="fas fa-edit"
+                              style={{
+                                color: "#000",
+                                fontSize: "20px",
+                                borderRadius: "3px",
+                                cursor: "pointer",
+                                marginRight: "5px",
+                                padding: "0",
+                              }}
+                              onClick={() => handleEditClick(produk)}
+                            ></i>
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   ))}
               </tbody>

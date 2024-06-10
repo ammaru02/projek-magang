@@ -1,38 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
     const [produkCount, setProdukCount] = useState(0);
     const [KeunggulanCount, setKeunggulanCount] = useState(0);
     const [dataArtikelCount, setDataArtikelCount] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const fetchData = async () => {
         try {
-            const produkResponse = await fetch('http://127.0.0.1:5000/produk');
-const produkData = await produkResponse.json();
-if (produkData.length) {
-    setProdukCount(produkData.length);
-}
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setLoading(false);
+                navigate('/login');
+                return;
+            }
 
-            const responKeunggulan = await fetch('http://127.0.0.1:5000/keunggulan');
-            const keunggulanData = await responKeunggulan.json();
+            const [produkResponse, keunggulanResponse, artikelRespon] = await Promise.all([
+                axios.get('http://127.0.0.1:5000/produk', { headers: { Authorization: `Bearer ${token}` } }),
+                axios.get('http://127.0.0.1:5000/keunggulan', { headers: { Authorization: `Bearer ${token}` } }),
+                axios.get('http://127.0.0.1:5000/artikel', { headers: { Authorization: `Bearer ${token}` } })
+            ]);
+
+            const produkData = produkResponse.data;
+            if (produkData.length) {
+                setProdukCount(produkData.length);
+            }
+
+            const keunggulanData = keunggulanResponse.data;
             if (keunggulanData && keunggulanData.data) {
                 setKeunggulanCount(keunggulanData.data.length);
             }
 
-            const artikelRespon = await fetch('http://127.0.0.1:5000/artikel');
-            const artikelData = await artikelRespon.json();
+            const artikelData = artikelRespon.data;
             if (artikelData.length) {
                 setDataArtikelCount(artikelData.length);
             }
         } catch (error) {
             console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className='dashboard-container'>
@@ -45,7 +66,7 @@ if (produkData.length) {
                     <p className="data-card">{produkCount}</p>
                 </div>
                 <div className="card">
-                    <h2 className="title-card">Kunggulan Desa</h2>
+                    <h2 className="title-card">Keunggulan Desa</h2>
                     <p className="data-card">{KeunggulanCount}</p>
                 </div>
                 <div className="card">

@@ -14,6 +14,10 @@
 
 .sidebar {
   width: 35%; /* Lebar sidebar */
+  max-height: calc(3 * 170px); /* Assume each item is 150px tall, adjust as necessary */
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 /* Gaya untuk postingan blog */
@@ -52,16 +56,16 @@
 }
 
 .sidebar-thumbnail {
-  width: 50px; /* Lebar gambar thumbnail, sama dengan lebar sidebar */
+  width: 150px; /* Lebar gambar thumbnail, sama dengan lebar sidebar */
   height: auto; /* Tinggi gambar menyesuaikan proporsi */
   float: left; /* Letakkan gambar di sebelah kiri sidebar */
   margin-right: 10px; /* Jarak kanan gambar dari deskripsi */
   max-width: 100%; /* Batasi lebar maksimum gambar */
-  margin-top: 50px;
+  margin-top: 10px;
 }
 
 .sidebar-content {
-  overflow: hidden; /* Mengatasi float dengan overflow */
+  overflow: auto; /* Mengatasi float dengan overflow */
 }
 
 .sidebar-content h3 {

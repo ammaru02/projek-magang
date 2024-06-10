@@ -161,6 +161,21 @@
   background-color: #008DDA;
   color: #f9f9f9;
 }
+.button-row {
+  display: flex;
+  justify-content: flex-start; /* Atur sesuai kebutuhan, misalnya flex-end atau space-between */
+  gap: 10px; /* Tambahkan jarak antara tombol */
+}
+.truncate-three-lines {
+  max-height: 80px; /* Assume line-height is 1.2em and limit to 3 lines */
+  overflow: auto;
+  text-overflow: ellipsis;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 
 @media screen and (max-width: 768px) {
   .admin-artikel-container {

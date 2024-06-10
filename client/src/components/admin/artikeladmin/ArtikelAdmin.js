@@ -392,10 +392,12 @@ export default function ArtikelAdmin() {
                                     }
                                 ></textarea>
                             </div>
-                            <button type="submit">Simpan</button>
+                            <div className="button-row">
                             <button type="button" onClick={handleCancelClick}>
                                 Batal
                             </button>
+                            <button type="submit">Simpan</button>
+                            </div>
                         </form>
                     </div>
                 )}
@@ -457,10 +459,12 @@ export default function ArtikelAdmin() {
                                     }
                                 ></textarea>
                             </div>
-                            <button type="submit">Simpan</button>
+                            <div className="button-row">
                             <button type="button" onClick={handleCancelClick}>
                                 Batal
                             </button>
+                            <button type="submit">Simpan</button>
+                            </div>
                         </form>
                     </div>
                 )}
@@ -478,57 +482,57 @@ export default function ArtikelAdmin() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {artikels
-                                    .filter((artikel) =>
-                                        artikel.judul
-                                            .toLowerCase()
-                                            .includes(searchInput.toLowerCase())
-                                    )
-                                    .map((artikel) => (
-                                        <tr key={artikel.id}>
-                                            <td className="judul">{artikel.judul}</td>
-                                            <td className="tanggal">{artikel.tanggal}</td>
-                                            <td>
-                                                <img
-                                                    src={artikel.foto}
-                                                    alt={artikel.judul}
-                                                    className="image-artikel"
-                                                />
-                                            </td>
-                                            <td>{artikel.deskripsi}</td>
-                                            {adminData && adminData.level !== 'kepala desa' && (
-                                            <td>
-                                                <div style={{ display: "flex" }}>
-                                                    <i
-                                                        className="fas fa-times"
-                                                        style={{
-                                                            backgroundColor: "red",
-                                                            color: "white",
-                                                            fontSize: "15px",
-                                                            borderRadius: "10px",
-                                                            cursor: "pointer",
-                                                            padding: "3px",
-                                                            marginRight: "5px",
-                                                        }}
-                                                        onClick={() => handleDeleteButtonClick(artikel.id)}
-                                                    ></i>
-                                                    <i
-                                                        className="fas fa-edit"
-                                                        style={{
-                                                            color: "#000",
-                                                            fontSize: "20px",
-                                                            borderRadius: "3px",
-                                                            cursor: "pointer",
-                                                            marginRight: "5px",
-                                                            padding: "0",
-                                                        }}
-                                                        onClick={() => handleEditButtonClick(artikel.id)}
-                                                    ></i>
-                                                </div>
-                                            </td>)}
-                                        </tr>
-                                    ))}
-                            </tbody>
+    {artikels
+        .filter((artikel) =>
+            artikel.judul.toLowerCase().includes(searchInput.toLowerCase())
+        )
+        .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal)) // Urutkan berdasarkan tanggal terbaru ke atas
+        .map((artikel) => (
+            <tr key={artikel.id}>
+                <td className="judul">{artikel.judul}</td>
+                <td className="tanggal">{artikel.tanggal}</td>
+                <td>
+                    <img
+                        src={artikel.foto}
+                        alt={artikel.judul}
+                        className="image-artikel"
+                    />
+                </td>
+                <td className="truncate-three-lines">{artikel.deskripsi}</td>
+                {adminData && adminData.level !== 'kepala desa' && (
+                <td>
+                    <div style={{ display: "flex" }}>
+                        <i
+                            className="fas fa-times"
+                            style={{
+                                backgroundColor: "red",
+                                color: "white",
+                                fontSize: "15px",
+                                borderRadius: "10px",
+                                cursor: "pointer",
+                                padding: "3px",
+                                marginRight: "5px",
+                            }}
+                            onClick={() => handleDeleteButtonClick(artikel.id)}
+                        ></i>
+                        <i
+                            className="fas fa-edit"
+                            style={{
+                                color: "#000",
+                                fontSize: "20px",
+                                borderRadius: "3px",
+                                cursor: "pointer",
+                                marginRight: "5px",
+                                padding: "0",
+                            }}
+                            onClick={() => handleEditButtonClick(artikel.id)}
+                        ></i>
+                    </div>
+                </td>)}
+            </tr>
+        ))}
+</tbody>
+
                         </table>
                     </div>
                 )}
