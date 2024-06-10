@@ -598,6 +598,9 @@ const handleKeunggulanEditSubmit = async (e) => {
 };
 
   const handleDeleteButtonClick = async (id) => {
+    if (!window.confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+      return;
+    }
     try {
       const response = await fetch(`http://127.0.0.1:5000/keunggulan/${id}`, {
         method: 'DELETE'
@@ -841,7 +844,7 @@ const handleKeunggulanEditSubmit = async (e) => {
                 <div className='search'>
                   <input
                     type='text'
-                    placeholder='Cari Produk..'
+                    placeholder='Cari Keunggulan..'
                     value={searchInput}
                     onChange={handleInputChange}
                   />
@@ -862,7 +865,7 @@ const handleKeunggulanEditSubmit = async (e) => {
                     {keunggulan.map((item, index) => (
                       <tr key={index}>
                         <td><img src={item.foto} alt="Gambar Keunggulan" style={{ width: '100px', height: 'auto' }} /></td>
-                        <td>{item.deskripsi}</td>
+                        <td className="truncate-three-lines-keunggulan">{item.deskripsi}</td>
                       {adminData && adminData.level !== 'kepala desa' && (
                       <td>
                         <div style={{ display: "flex" }}>

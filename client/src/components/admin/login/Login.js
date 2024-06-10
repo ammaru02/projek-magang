@@ -55,9 +55,9 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className="forgot-password-container">
-            <a href="/forgotpassword" className="link">Forgot Password?</a>
+            <a href="/forgotpassword" className="link">Lupa Password?</a>
           </div>
-          <button type="submit" className="button">Login</button>
+          <button type="submit" className="button">Masuk</button>
         </form>
         {message && <p className="error-message">{message}</p>}
       </div>
