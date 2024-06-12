@@ -1,37 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import './SejarahMap.css';
 
 function SejarahMap() {
-  const [showFullDescription, setShowFullDescription] = useState(false);
-  const [sejarah, setSejarah] = useState('');
-  const descriptionRef = useRef(null);
-
-  const toggleDescription = () => {
-    setShowFullDescription(!showFullDescription);
-    if (descriptionRef.current) {
-      descriptionRef.current.style.height = showFullDescription ? 'auto' : '300px';
-    }
-  };
-
-  const buttonText = showFullDescription ? "Tutup" : "Baca Selengkapnya";
-
-  const shortenDescription = (text, maxLength) => {
-    if (!showFullDescription && text.length > maxLength) {
-      return text.substr(0, maxLength) + "...";
-    }
-    return text;
-  };
-
-  useEffect(() => {
-    fetch('http://localhost:5000/sejarah')
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          setSejarah(data.map(item => item.deskripsi).join(' ')); // menggabungkan deskripsi dari semua item menjadi satu string
-        }
-      })
-      .catch(error => console.error('Error:', error));
-  }, []);
 
   return (
     <div className="card-sejarah">
@@ -45,15 +15,6 @@ function SejarahMap() {
             allowFullScreen="" 
             loading="lazy">
           </iframe>
-        </div>
-        <div className="card-title-sejarah">
-          <h1>Sejarah Desa</h1>
-          <div className="card-description" ref={descriptionRef}>
-            <p>
-              {shortenDescription(sejarah, 500)}
-            </p>
-            <button onClick={toggleDescription}>{buttonText}</button>
-          </div>
         </div>
       </div>
     </div>

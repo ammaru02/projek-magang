@@ -50,20 +50,27 @@ const KategoriProduk = () => {
             </div>
             <div className="card-kategori-container">
                 <div className="card-kategori">
-                    {kategori.map((item, index) => (
-                        <div key={index} className='kategori-card'>
-                            <div className='card-title-produk'>
-                                <h4>{item.name}</h4>
-                            </div>
-                            {imageUrls.map((url, idx) => {
-                                if (url.endsWith(item.foto)) {
-                                    return <img key={idx} src={url} alt={item.name} className="card-image" />;
-                                }
-                                return null;
-                            })}
-                            <button onClick={() => handleShowClick(item.id)}>Lihat</button>
-                        </div>
-                    ))}
+                    {kategori.map((item, index) => {
+                        // Memeriksa apakah kategori memiliki produk terkait
+                        const hasProduct = imageUrls.some(url => url.endsWith(item.foto));
+                        if (hasProduct) {
+                            return (
+                                <div key={index} className='kategori-card'>
+                                    <div className='card-title-produk'>
+                                        <h4>{item.name}</h4>
+                                    </div>
+                                    {imageUrls.map((url, idx) => {
+                                        if (url.endsWith(item.foto)) {
+                                            return <img key={idx} src={url} alt={item.name} className="card-image" />;
+                                        }
+                                        return null;
+                                    })}
+                                    <button onClick={() => handleShowClick(item.id)}>Lihat</button>
+                                </div>
+                            );
+                        }
+                        return null; // Kategori tidak memiliki produk, maka tidak ditampilkan
+                    })}
                 </div>
             </div>
         </div>
