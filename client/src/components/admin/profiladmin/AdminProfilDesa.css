@@ -75,11 +75,11 @@
 
 .form-container button[type="submit"],
 .form-container button[type="button"] {
-  margin-top: 10px;
+  margin-top: 5px;
   background-color: #D3D5D6;
   color: #000;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 10px;
   cursor: pointer;
   font-size: 16px;
   font-weight: 800;
@@ -89,6 +89,7 @@
 .form-container button[type="submit"]:hover {
   background-color: #D3D5D6;
 }
+
 
 .add-button {
   display: flex;
@@ -197,9 +198,6 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-
-
-
 
 
 @media screen and (max-width: 768px) {
