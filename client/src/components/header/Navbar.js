@@ -54,9 +54,9 @@ function Navbar() {
                         ref={dropdownRef}
                         onClick={handleDropdownClick}
                     >
-                        <Link to='/profildesa' className='nav-links' onClick={closeMobileMenu}> 
+                        {/* <Link to='/profildesa' className='nav-links' onClick={closeMobileMenu}>  */}
                             Profil Desa <i className='fas fa-caret-down' />
-                        </Link>
+                        {/* </Link> */}
                         {dropdown && <Dropdown />}
                     </li>
                     <li className='nav-item'>

@@ -27,6 +27,9 @@
   font-size: 1.6rem;
 }
 
+.fa-caret-down{
+  cursor: pointer;
+}
 .nav-menu {
   display: grid;
   grid-template-columns: repeat(5, auto);
