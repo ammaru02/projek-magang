@@ -26,6 +26,7 @@ export default function AdminProfilDesa() {
   const [showEditStrukturForm, setShowEditStrukturForm] = useState(false);
   const [strukturToEdit, setStrukturToEdit] = useState(null);
   const [adminData, setAdminData] = useState(null); 
+  const [activePage, setActivePage] = useState('');
 
   useEffect(() => {
     fetchInitialData();
@@ -136,6 +137,7 @@ export default function AdminProfilDesa() {
     setShowSejarahForm(false);
     setShowKeunggulanForm(false);
     setShowStrukturDesa(false)
+    setActivePage('visi-misi');
   };
 
   const handleSejarahDesaClick = () => {
@@ -143,6 +145,7 @@ export default function AdminProfilDesa() {
     setShowSejarahForm(true);
     setShowKeunggulanForm(false);
     setShowStrukturDesa(false)
+    setActivePage('sejarah-desa');
   };
 
   const handleKeunggulanDesaClick = () => {
@@ -150,6 +153,7 @@ export default function AdminProfilDesa() {
     setShowSejarahForm(false);
     setShowKeunggulanForm(true);
     setShowStrukturDesa(false)
+    setActivePage('keunggulan-desa');
   };
 
   const handleSejarahChange = (e) => {
@@ -631,9 +635,30 @@ const handleKeunggulanEditSubmit = async (e) => {
   return (
     <div className='profildesa-container'>
       <div className="buttons-container">
-        <button onClick={handleVisiMisiClick}>Visi Misi dan Struktur Desa</button>
-        <button onClick={handleSejarahDesaClick}>Sejarah Desa</button>
-        <button onClick={handleKeunggulanDesaClick}>Keunggulan Desa</button>
+      <button
+        onClick={handleVisiMisiClick}
+        style={{
+          backgroundColor: activePage === 'visi-misi' ? '#ccc' : '#f0f0f0'
+        }}
+      >
+        Visi Misi dan Struktur Desa
+      </button>
+      <button
+        onClick={handleSejarahDesaClick}
+        style={{
+          backgroundColor: activePage === 'sejarah-desa' ? '#ccc' : '#f0f0f0'
+        }}
+      >
+        Sejarah Desa
+      </button>
+      <button
+        onClick={handleKeunggulanDesaClick}
+        style={{
+          backgroundColor: activePage === 'keunggulan-desa' ? '#ccc' : '#f0f0f0'
+        }}
+      >
+        Keunggulan Desa
+      </button>
       </div>
       {showVisiMisiForm && (
         <form className="form-container" onSubmit={handleVisiMisiSubmit}>
@@ -904,29 +929,29 @@ const handleKeunggulanEditSubmit = async (e) => {
             </>
           )}
           {showEditForm && keunggulanToEdit && (
-  <form className="form-container" onSubmit={handleKeunggulanEditSubmit}>
-    <label htmlFor="gambar">Upload Gambar</label>
-    <input type="file" id="gambar" name="gambar" accept="image/*" onChange={handleKeunggulanImageChange} />
-    {keunggulanToEdit.foto && (
-      <div>
-        <img src={keunggulanToEdit.foto} alt="Gambar Keunggulan" style={{ width: '200px', height: 'auto' }} />
-      </div>
-    )}
-    <br />
-    <label htmlFor="keunggulan">Deskripsi</label>
-    <textarea
-      id="keunggulan"
-      name="keunggulan"
-      rows="4"
-      cols="50"
-      value={keunggulanToEdit.deskripsi}
-      onChange={handleKeunggulanDescriptionChange}
-    />
-    <br />
-    <button type="submit">Simpan</button>
-    <button type="button" onClick={handleCancelClick}>Batal</button>
-  </form>
-)}
+        <form className="form-container" onSubmit={handleKeunggulanEditSubmit}>
+          <label htmlFor="gambar">Upload Gambar</label>
+          <input type="file" id="gambar" name="gambar" accept="image/*" onChange={handleKeunggulanImageChange} />
+          {keunggulanToEdit.foto && (
+            <div>
+              <img src={keunggulanToEdit.foto} alt="Gambar Keunggulan" style={{ width: '200px', height: 'auto' }} />
+            </div>
+          )}
+          <br />
+          <label htmlFor="keunggulan">Deskripsi</label>
+          <textarea
+            id="keunggulan"
+            name="keunggulan"
+            rows="4"
+            cols="50"
+            value={keunggulanToEdit.deskripsi}
+            onChange={handleKeunggulanDescriptionChange}
+          />
+          <br />
+          <button type="submit">Simpan</button>
+          <button type="button" onClick={handleCancelClick}>Batal</button>
+        </form>
+      )}
 
           {showAddForm && (
             <form className="form-container" onSubmit={handleKeunggulanSubmit}>
@@ -936,8 +961,8 @@ const handleKeunggulanEditSubmit = async (e) => {
               <label htmlFor="keunggulan">Deskripsi</label>
               <textarea id="keunggulan" name="keunggulan" rows="4" cols="50" onChange={handleKeunggulanDescriptionChange}></textarea>
               <br />
-              <button type="submit">Simpan</button>
-              <button type="button" onClick={handleCancelClick}>Batal</button>
+              <button className='button-form-keunggulan' type="submit">Simpan</button>
+              <button className='button-form-keunggulan' type="button" onClick={handleCancelClick}>Batal</button>
             </form>
           )}
         </div>

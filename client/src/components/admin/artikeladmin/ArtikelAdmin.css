@@ -80,16 +80,16 @@
   border-radius: 10px;
 }
 
-.form-tambah,
+.form-add,
 .form-edit {
-  margin-top: 20px;
+  margin-top: 10px;
   margin-bottom: 20px;
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 5px;
 }
 
-.form-tambah h2,
+.form-add h2,
 .form-edit h2 {
   margin-bottom: 10px;
   font-size: 30px;
@@ -104,12 +104,19 @@
   margin-bottom: 5px;
 }
 
-.form-group input,
-.form-group textarea {
-  width: 100%;
+.form-group input{
+  width: 600px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+.form-group textarea{
+  width: 600px;
+  height: 100px;
+  resize: none;
+  font-size: 15px;
+  padding: 5px;
+  border-radius: 15px;
 }
 
 .artikel-table {
@@ -126,7 +133,7 @@
   margin: 0 auto;
 }
 
-.form-tambah button,
+.form-add button,
 .form-edit button {
   margin-right: 10px;
 }
@@ -233,16 +240,16 @@
     margin-top: 10px;
   }
 
-  .form-tambah,
+  .form-add,
   .form-edit {
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 20px;
     background-color: #f9f9f9;
     padding: 20px;
     border-radius: 5px;
   }
 
-  .form-tambah h2,
+  .form-add h2,
   .form-edit h2 {
     margin-bottom: 10px;
     font-size: 30px;
@@ -259,7 +266,7 @@
 
   .form-group input,
   .form-group textarea {
-    width: 100%;
+    width: 300px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -281,5 +288,15 @@
   .artikel-table th {
     background-color: #008DDA;
     color: #f9f9f9;
+  }
+  .truncate-three-lines{
+    max-height: 250px; /* Assume line-height is 1.2em and limit to 3 lines */
+    overflow: auto;
+    text-overflow: ellipsis;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 }

@@ -482,7 +482,7 @@ export default function ArtikelAdmin() {
                                 </tr>
                             </thead>
                             <tbody>
-    {artikels
+        {artikels
         .filter((artikel) =>
             artikel.judul.toLowerCase().includes(searchInput.toLowerCase())
         )
