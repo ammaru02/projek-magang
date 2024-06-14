@@ -29,6 +29,7 @@
 
 .fa-caret-down{
   cursor: pointer;
+  margin-left: 7px;
 }
 .nav-menu {
   display: grid;
