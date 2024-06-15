@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import './VisimisiStruktur.css'
+import './VisimisiStruktur.css';
 
 const VisimisiStruktu = () => {
     const [visi, setVisi] = useState("");
@@ -39,15 +39,18 @@ const VisimisiStruktu = () => {
             </div>
             <div className="visimisi-isi">
                 <h3>Visi</h3>
-                <p className="deskripsi-visimisi">
-                    {visi}
-                </p>
+                <div 
+                    className="deskripsi-visimisi" 
+                    dangerouslySetInnerHTML={{ __html: visi }}
+                />
             </div>
             <div className="visimisi-isi">
                 <h3>Misi</h3>
                 <ol className="list-misi">
                     {misi.map((item, index) => (
-                        <li key={index}><p>{item.misi}</p></li>
+                        <li key={index}>
+                            <div dangerouslySetInnerHTML={{ __html: item.misi }} />
+                        </li>
                     ))}
                 </ol>
             </div>

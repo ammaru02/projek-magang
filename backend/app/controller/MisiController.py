@@ -13,18 +13,18 @@ def index():
 def update():
     try:
         data = request.json
-        misi = Misi.query.first()  # Ambil misi pertama untuk diperbarui (atau Anda bisa sesuaikan sesuai kebutuhan)
+        misi = Misi.query.first()  # Retrieve the first 'misi' entry to update (or adjust as needed)
         if not misi:
             return jsonify({'message': 'No misi found'}), 404
-            
+        
         if 'misi' in data:
-            misi.misi = data['misi']
-        if 'visi_id' in data:
-            misi.visi_id = data['visi_id']
+            misi.misi = data['misi']  # Expecting HTML content from ReactQuill
+        if 'visi' in data:
+            misi.visi = data['visi']  # Expecting HTML content from ReactQuill
         db.session.commit()
         return jsonify({'message': 'Misi updated successfully'}), 200
     except Exception as e:
-        db.session.rollback()  # Rollback perubahan jika terjadi kesalahan
+        db.session.rollback()  # Rollback changes in case of error
         return jsonify({'message': str(e)}), 500
 
 def formatarray(datas):
@@ -37,6 +37,6 @@ def singleObject(misi):
     misi = {
         'id' : misi.id,
         'misi' : misi.misi,
-        'visiId' : misi.visiId
+        'visi' : misi.visi
     }
     return misi

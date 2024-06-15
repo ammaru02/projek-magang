@@ -263,17 +263,29 @@ export default function AdminProfilDesa() {
     e.preventDefault();
     try {
       let fotoFilename = null;
+      
+      // Check if there's an image file to upload
       if (selectedImageFile) {
-        // Kode untuk mengunggah gambar
+        const formData = new FormData();
+        formData.append('file', selectedImageFile);
+  
+        // Upload the image
+        const imageUploadResponse = await fetch('http://127.0.0.1:5000/upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const imageUploadData = await imageUploadResponse.json();
+        fotoFilename = imageUploadData.filename;  // Adjust this if your backend returns a different property
       }
   
-      // Buat payload untuk visi
+      // Create payload for visi
       const visiPayload = { visi };
       if (fotoFilename) {
         visiPayload.foto = fotoFilename;
       }
   
-      // Kirim data visi
+      // Send visi data
       const visiResponse = await fetch('http://127.0.0.1:5000/visi', {
         method: 'PUT',
         headers: {
@@ -284,10 +296,10 @@ export default function AdminProfilDesa() {
       const visiData = await visiResponse.json();
       console.log('Visi response:', visiData);
   
-      // Buat payload untuk misi
+      // Create payload for misi
       const misiPayload = { misi };
   
-      // Kirim data misi
+      // Send misi data
       const misiResponse = await fetch('http://127.0.0.1:5000/misi', {
         method: 'PUT',
         headers: {
@@ -299,13 +311,14 @@ export default function AdminProfilDesa() {
       const misiData = await misiResponse.json();
       console.log('Misi response:', misiData);
   
-      // Ambil data visi-misi kembali
+      // Fetch updated visi-misi data
       fetchVisiMisi();
       alert('Data visi dan misi berhasil disimpan');
     } catch (error) {
       console.error('Error creating visi/misi:', error);
     }
-  }; 
+  };
+  
   
   const handleStrukturAddSubmit = async (e) => {
     e.preventDefault();
