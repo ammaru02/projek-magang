@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './AdminProfilDesa.css';
 import { storage, ref, uploadBytesResumable, getDownloadURL } from "./txtImgConfig";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function AdminProfilDesa() {
   const [showVisiMisiForm, setShowVisiMisiForm] = useState(true);
@@ -243,12 +245,12 @@ export default function AdminProfilDesa() {
     }
   };
 
-  const handleVisiChange = (e) => {
-    setVisi(e.target.value);
+  const handleVisiChange = (content) => {
+    setVisi(content);
   };
 
-  const handleMisiChange = (e) => {
-    setMisi(e.target.value);
+  const handleMisiChange = (content) => {
+    setMisi(content);
   };
 
   const handleImageChange = (e) => {
@@ -262,37 +264,16 @@ export default function AdminProfilDesa() {
     try {
       let fotoFilename = null;
       if (selectedImageFile) {
-        const storageRef = ref(storage, `images/struktur/${selectedImageFile.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, selectedImageFile);
-  
-        await new Promise((resolve, reject) => {
-          uploadTask.on(
-            'state_changed',
-            snapshot => {
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log('Upload progress:', progress);
-            },
-            error => {
-              console.error('Error uploading image:', error);
-              reject(error);
-            },
-            async () => {
-              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              console.log('Firebase download URL:', downloadURL);
-              setStrukturDesaImageUrl(downloadURL);
-              fotoFilename = downloadURL;
-              resolve();
-            }
-          );
-        });
+        // Kode untuk mengunggah gambar
       }
   
-      // Create payload for visi
+      // Buat payload untuk visi
       const visiPayload = { visi };
       if (fotoFilename) {
         visiPayload.foto = fotoFilename;
       }
   
+      // Kirim data visi
       const visiResponse = await fetch('http://127.0.0.1:5000/visi', {
         method: 'PUT',
         headers: {
@@ -303,9 +284,10 @@ export default function AdminProfilDesa() {
       const visiData = await visiResponse.json();
       console.log('Visi response:', visiData);
   
-      // Create payload for misi
+      // Buat payload untuk misi
       const misiPayload = { misi };
   
+      // Kirim data misi
       const misiResponse = await fetch('http://127.0.0.1:5000/misi', {
         method: 'PUT',
         headers: {
@@ -317,12 +299,13 @@ export default function AdminProfilDesa() {
       const misiData = await misiResponse.json();
       console.log('Misi response:', misiData);
   
+      // Ambil data visi-misi kembali
       fetchVisiMisi();
       alert('Data visi dan misi berhasil disimpan');
     } catch (error) {
       console.error('Error creating visi/misi:', error);
     }
-  };  
+  }; 
   
   const handleStrukturAddSubmit = async (e) => {
     e.preventDefault();
@@ -660,27 +643,27 @@ const handleKeunggulanEditSubmit = async (e) => {
         Keunggulan Desa
       </button>
       </div>
-      {showVisiMisiForm && (
+{showVisiMisiForm && (
         <form className="form-container" onSubmit={handleVisiMisiSubmit}>
           <label htmlFor="visi">Visi Desa</label>
-          <textarea 
+          <ReactQuill 
             id="visi" 
             name="visi" 
             rows="4" 
             cols="50" 
             value={visi} 
             onChange={handleVisiChange}
-          ></textarea>
+          ></ReactQuill>
           <br />
           <label htmlFor="misi">Misi Desa</label>
-          <textarea 
+          <ReactQuill 
             id="misi" 
             name="misi" 
             rows="4" 
             cols="50" 
             value={misi} 
             onChange={handleMisiChange}
-          ></textarea>
+          ></ReactQuill>
           <br />
           <label htmlFor="gambar">Gambar Struktur Desa</label>
           {strukturDesaImageUrl && (
@@ -703,7 +686,7 @@ const handleKeunggulanEditSubmit = async (e) => {
           <button onClick={handleStrukturDesaClick} className='btn-struktur'>Lihat Data Struktur Desa</button>
           </div>)}
         </form>
-      )}
+)}
 {showStrukturDesa && (
   <div>
     <div className='struktur-table-container'>
@@ -825,7 +808,7 @@ const handleKeunggulanEditSubmit = async (e) => {
   </div>
 )}
 
-      {showSejarahForm && (
+{showSejarahForm && (
         <form className="form-container" onSubmit={handleSejarahSubmit}>
           <label htmlFor="sejarah">Deskripsi Sejarah Desa</label>
           <textarea 
@@ -855,8 +838,8 @@ const handleKeunggulanEditSubmit = async (e) => {
           {adminData && adminData.level !== 'kepala desa' && (
           <button type="submit">Simpan</button>)}
         </form>
-      )}
-      {showKeunggulanForm && (
+)}
+{showKeunggulanForm && (
         <div>
           {!showAddForm && !showEditForm && (
             <>
@@ -966,7 +949,7 @@ const handleKeunggulanEditSubmit = async (e) => {
             </form>
           )}
         </div>
-      )}
+)}
     </div>
   );
 }
