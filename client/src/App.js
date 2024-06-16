@@ -9,6 +9,7 @@ import ProdukKategori from './components/pages/ProdukKategori';
 import Keunggulan from './components/pages/Keunggulan';
 import DetailProduk from './components/pages/DetailProduk';
 import HomeAdmin from './components/admin/pagesadmin/HomeAdmin';
+import AdminBanner from './components/admin/pagesadmin/AdminBanner';
 import ProfilDesaAdmin from './components/admin/pagesadmin/ProfilDesaAdmin';
 import ProdukDesaAdmin from './components/admin/pagesadmin/ProdukDesaAdmin';
 import AdminArtikel from './components/admin/pagesadmin/AdminArtikel';
@@ -29,6 +30,7 @@ function App() {
         <Route path='/produk' element={<Produk />} />
         <Route path="/produkdetail/:id" element={<DetailProduk />} />
         <Route path="/homeadmin" element={<HomeAdmin />} />
+        <Route path="/banneradmin" element={<AdminBanner />} />
         <Route path="/profildesaadmin" element={<ProfilDesaAdmin />} />
         <Route path="/produkdesaadmin" element={<ProdukDesaAdmin />} />
         <Route path="/artikeladmin" element={<AdminArtikel />} />

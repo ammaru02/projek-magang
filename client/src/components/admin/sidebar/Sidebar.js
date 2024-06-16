@@ -36,6 +36,11 @@ export default function Sidebar() {
                                 </Link>
                             </li>
                             <li>
+                                <Link to='/banneradmin' className='sidebarListItem' onClick={handleItemClick}>
+                                    Banner
+                                </Link>
+                            </li>
+                            <li>
                                 <Link to='/profildesaadmin' className='sidebarListItem' onClick={handleItemClick}>
                                     Profil Desa
                                 </Link>

@@ -85,18 +85,6 @@
   border-radius: 10px;
 }
 
- .action-icons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-  border: none;
-}
-
- .action-icons i {
-  padding: 5px;
-  cursor: pointer;
-}
 
  .pagination-dots {
   display: flex;
@@ -260,6 +248,10 @@
     margin-top: 80px;
   }
 
+  .search{
+    width: 150px;
+  }
+
   .admin-produk-desa {
     width: 100%; /* Mengisi seluruh lebar konten */
     overflow-x: auto; /* Membuat scroll horizontal jika konten melebihi lebar layar */
@@ -277,7 +269,8 @@
   }
 
   .add-button {
-    flex-shrink: 10; /* Tetapkan agar tombol tambah tidak mengecil saat layar kecil */
+    flex-shrink: 8; /* Tetapkan agar tombol tambah tidak mengecil saat layar kecil */
+    margin-right: 5px;
     margin-top: 10px;
   }
 
@@ -285,22 +278,6 @@
     font-size: 16px;
   }
 
-  .action-icons {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  .action-icons i {
-    margin-bottom: 0; /* Hapus margin bottom */
-    cursor: pointer;
-  }
-
-  .action-icons .icon {
-    margin-left: 10px; /* Menambah jarak antara ikon */
-  }
 
   .pagination {
     margin-top: 10px;

@@ -757,7 +757,8 @@ const handleEditKeunggulanButtonClick = (id) => {
                             borderRadius: "10px",
                             cursor: "pointer",
                             padding: "3px",
-                            marginRight: "5px",
+                            marginRight: "8px",
+                            marginLeft: "5px"
                           }}
                           onClick={() => handleDeleteStrukturButtonClick(item.id)}
                         ></i>
@@ -768,6 +769,7 @@ const handleEditKeunggulanButtonClick = (id) => {
                             fontSize: "20px",
                             borderRadius: "3px",
                             cursor: "pointer",
+                            marginLeft: "8px",
                             marginRight: "5px",
                             padding: "0",
                           }}
@@ -824,9 +826,7 @@ const handleEditKeunggulanButtonClick = (id) => {
   </form>
 )}
 
-
-
-  </div>
+ </div>
 )}
 
 {showSejarahForm && (
@@ -910,7 +910,8 @@ const handleEditKeunggulanButtonClick = (id) => {
                                                 borderRadius: "10px",
                                                 cursor: "pointer",
                                                 padding: "3px",
-                                                marginRight: "5px",
+                                                marginRight: "8px",
+                                                marginLeft: "5px"
                                             }}
                                             onClick={() => handleDeleteButtonClick(item.id)}
                                         ></i>
@@ -921,6 +922,7 @@ const handleEditKeunggulanButtonClick = (id) => {
                                                 fontSize: "20px",
                                                 borderRadius: "3px",
                                                 cursor: "pointer",
+                                                marginLeft: "8px",
                                                 marginRight: "5px",
                                                 padding: "0",
                                             }}

@@ -512,7 +512,8 @@ export default function ArtikelAdmin() {
                                 borderRadius: "10px",
                                 cursor: "pointer",
                                 padding: "3px",
-                                marginRight: "5px",
+                                marginRight: "8px",
+                                marginLeft: "5px"
                             }}
                             onClick={() => handleDeleteButtonClick(artikel.id)}
                         ></i>
@@ -523,6 +524,7 @@ export default function ArtikelAdmin() {
                                 fontSize: "20px",
                                 borderRadius: "3px",
                                 cursor: "pointer",
+                                marginLeft: "8px",
                                 marginRight: "5px",
                                 padding: "0",
                             }}
