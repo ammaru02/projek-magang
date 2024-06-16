@@ -41,6 +41,9 @@ def create():
 
 def update(id):
     artikel = Artikel.query.get(id)
+    if not artikel:
+        return jsonify({'message': 'Article not found'}), 404
+    
     try:
         data = request.json
         if 'judul' in data:
@@ -50,7 +53,7 @@ def update(id):
         if 'foto' in data:
             artikel.foto = data['foto']
         if 'deskripsi' in data:
-            artikel.deskripsi = data['deskripsi']
+            artikel.deskripsi = data['deskripsi']  # Update deskripsi dengan data dari request
         db.session.commit()
         return jsonify({'message': 'Article updated successfully'}), 200
     except Exception as e:
@@ -84,4 +87,3 @@ def singleObject(artikel):
         'desaId' : artikel.desaId
     }
     return artikel
-

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import "./ArtikelAdmin.css";
+import ReactQuill from 'react-quill';
 import {
     storage,
     ref,
@@ -313,8 +314,8 @@ export default function ArtikelAdmin() {
         setShowEditForm(false);
     };
 
-    const handleInputChange = (e) => {
-        setSearchInput(e.target.value);
+    const handleInputChange = (value) => {
+        setSearchInput(value);
     };
 
     return (
@@ -383,14 +384,14 @@ export default function ArtikelAdmin() {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="deskripsi">Deskripsi</label>
-                                <textarea
+                                <ReactQuill
                                     id="deskripsi"
                                     name="deskripsi"
                                     value={formData.deskripsi}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, deskripsi: e.target.value })
+                                    onChange={(value) =>
+                                        setFormData({ ...formData, deskripsi: value })
                                     }
-                                ></textarea>
+                                ></ReactQuill>
                             </div>
                             <div className="button-row">
                             <button type="button" onClick={handleCancelClick}>
@@ -450,14 +451,14 @@ export default function ArtikelAdmin() {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="deskripsi">Deskripsi</label>
-                                <textarea
+                                <ReactQuill
                                     id="deskripsi"
                                     name="deskripsi"
                                     value={formData.deskripsi}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, deskripsi: e.target.value })
+                                    onChange={(value) =>
+                                        setFormData({ ...formData, deskripsi: value })
                                     }
-                                ></textarea>
+                                ></ReactQuill>
                             </div>
                             <div className="button-row">
                             <button type="button" onClick={handleCancelClick}>
@@ -498,7 +499,7 @@ export default function ArtikelAdmin() {
                         className="image-artikel"
                     />
                 </td>
-                <td className="truncate-three-lines">{artikel.deskripsi}</td>
+                <td className="truncate-three-lines" dangerouslySetInnerHTML={{ __html: artikel.deskripsi }}></td>
                 {adminData && adminData.level !== 'kepala desa' && (
                 <td>
                     <div style={{ display: "flex" }}>

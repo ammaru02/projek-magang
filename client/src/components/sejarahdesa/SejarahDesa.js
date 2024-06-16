@@ -20,15 +20,10 @@ const SejarahDesa = () => {
             {sejarah.length > 0 && <img src={sejarah[0].foto} alt="sejarah" className="image-sejarah" />}
             {sejarah.map((item, index) => (
                 <div className="sejarah-isi" key={index}>
-                    <p className="sejarah-deskripsi">{item.deskripsi}</p>
-                    {index === 0 && (
-                        <ul className="list-sejarah" style={{ textAlign: 'left', paddingLeft: '20px' }}>
-                            <li>Sebelah Utara berbatasan dengan Desa Loka</li>
-                            <li>Sebelah Selatan berbatasan dengan Desa Pallantikang</li>
-                            <li>Sebelah Timur berbatasan dengan Kabupaten Bantaeng</li>
-                            <li>Sebelah Barat berbatasan dengan Desa Bonto Tiro</li>
-                        </ul>
-                    )}
+                    <div 
+                        className="sejarah-deskripsi" 
+                        dangerouslySetInnerHTML={{ __html: item.deskripsi }} 
+                    />
                 </div>
             ))}
         </div>

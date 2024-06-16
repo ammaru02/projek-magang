@@ -158,8 +158,8 @@ export default function AdminProfilDesa() {
     setActivePage('keunggulan-desa');
   };
 
-  const handleSejarahChange = (e) => {
-    setSejarahDesa(e.target.value);
+  const handleSejarahChange = (value) => {
+    setSejarahDesa(value);
   };
 
   const handleSejarahImageChange = (e) => {
@@ -182,11 +182,11 @@ export default function AdminProfilDesa() {
     }
   };
 
-  const handleKeunggulanDescriptionChange = (e) => {
+  const handleKeunggulanDescriptionChange = (value) => {
     if (showEditForm) {
-      setKeunggulanToEdit({ ...keunggulanToEdit, deskripsi: e.target.value });
+      setKeunggulanToEdit({ ...keunggulanToEdit, deskripsi: value });
     } else {
-      setKeunggulanDescription(e.target.value);
+      setKeunggulanDescription(value);
     }
   };  
 
@@ -198,50 +198,49 @@ export default function AdminProfilDesa() {
         const uploadTask = uploadBytesResumable(storageRef, selectedImageFile);
 
         uploadTask.on(
-          'state_changed',
+          "state_changed",
           (snapshot) => {
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload progress:', progress);
+            console.log("Upload progress:", progress);
           },
           (error) => {
-            console.error('Error uploading image:', error);
+            console.error("Error uploading image:", error);
           },
           async () => {
             try {
               const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              console.log('Firebase download URL:', downloadURL);
-              
+              console.log("Firebase download URL:", downloadURL);
               setSejarahImageUrl(downloadURL);
 
-              const response = await fetch('http://127.0.0.1:5000/sejarah', {
-                method: 'PUT',
+              const response = await fetch("http://127.0.0.1:5000/sejarah", {
+                method: "PUT",
                 headers: {
-                  'Content-Type': 'application/json'
+                  "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ deskripsi: sejarahDesa, foto: downloadURL })
+                body: JSON.stringify({ deskripsi: sejarahDesa, foto: downloadURL }),
               });
               const data = await response.json();
-              console.log('Sejarah response:', data);
-              alert('Data sejarah berhasil disimpan');
+              console.log("Sejarah response:", data);
+              alert("Data sejarah berhasil disimpan");
             } catch (error) {
-              console.error('Error sending sejarah data:', error);
+              console.error("Error sending sejarah data:", error);
             }
           }
         );
       } else {
-        const response = await fetch('http://127.0.0.1:5000/sejarah', {
-          method: 'PUT',
+        const response = await fetch("http://127.0.0.1:5000/sejarah", {
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ deskripsi: sejarahDesa })
+          body: JSON.stringify({ deskripsi: sejarahDesa }),
         });
         const data = await response.json();
-        console.log('Sejarah response:', data);
-        alert('Data sejarah berhasil disimpan');
+        console.log("Sejarah response:", data);
+        alert("Data sejarah berhasil disimpan");
       }
     } catch (error) {
-      console.error('Error updating sejarah:', error);
+      console.error("Error updating sejarah:", error);
     }
   };
 
@@ -541,61 +540,70 @@ const handleEditKeunggulanButtonClick = (id) => {
     }
   };
   
-const handleKeunggulanEditSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    let downloadURL = keunggulanToEdit.foto; // Default to existing foto URL if no new image is uploaded
-
-    if (keunggulanImage) {
-      const storageRef = ref(storage, `images/keunggulan/${keunggulanImage.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, keunggulanImage);
-
-      await new Promise((resolve, reject) => {
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload progress:', progress);
-          },
-          (error) => {
-            console.error('Error uploading image:', error);
-            reject(error);
-          },
-          async () => {
-            downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            console.log('Firebase download URL:', downloadURL);
-            resolve();
-          }
-        );
+  const handleKeunggulanEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      let downloadURL = keunggulanToEdit.foto; // Default to existing foto URL if no new image is uploaded
+  
+      if (keunggulanImage) {
+        // If new image is uploaded, upload it to Firebase Storage
+        const storageRef = ref(storage, `images/keunggulan/${keunggulanImage.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, keunggulanImage);
+  
+        // Monitor upload progress and get download URL after upload
+        await new Promise((resolve, reject) => {
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload progress:', progress);
+            },
+            (error) => {
+              console.error('Error uploading image:', error);
+              reject(error);
+            },
+            async () => {
+              downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              console.log('Firebase download URL:', downloadURL);
+              resolve();
+            }
+          );
+        });
+      }
+  
+      // Prepare payload for PUT request
+      const payload = {
+        deskripsi: keunggulanToEdit.deskripsi,
+        foto: keunggulanImage ? downloadURL : keunggulanToEdit.foto // Use new downloadURL if uploaded, otherwise keep existing foto
+      };
+  
+      console.log('Sending payload:', payload);
+  
+      // Send PUT request to update keunggulan data
+      const response = await fetch(`http://127.0.0.1:5000/keunggulan/${keunggulanToEdit.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
+      
+      // Handle response from server
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Keunggulan edit response:', data);
+        alert('Data keunggulan berhasil diperbarui');
+        fetchKeunggulan(); // Fetch updated data
+        handleCancelClick(); // Cancel edit mode
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to update keunggulan:', errorData);
+        alert('Gagal memperbarui keunggulan');
+      }
+    } catch (error) {
+      console.error('Error editing keunggulan:', error);
     }
-
-    const payload = { deskripsi: keunggulanToEdit.deskripsi, foto: downloadURL };
-    console.log('Sending payload:', payload);
-
-    const response = await fetch(`http://127.0.0.1:5000/keunggulan/${keunggulanToEdit.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Keunggulan edit response:', data);
-      alert('Data keunggulan berhasil diperbarui');
-      fetchKeunggulan();
-      handleCancelClick();
-    } else {
-      const errorData = await response.json();
-      console.error('Failed to update keunggulan:', errorData);
-      alert('Gagal memperbarui keunggulan');
-    }
-  } catch (error) {
-    console.error('Error editing keunggulan:', error);
-  }
-};
+  };
 
   const handleDeleteButtonClick = async (id) => {
     if (!window.confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
@@ -824,14 +832,14 @@ const handleKeunggulanEditSubmit = async (e) => {
 {showSejarahForm && (
         <form className="form-container" onSubmit={handleSejarahSubmit}>
           <label htmlFor="sejarah">Deskripsi Sejarah Desa</label>
-          <textarea 
+          <ReactQuill 
             id="sejarah" 
             name="sejarah" 
             rows="4" 
             cols="50" 
             value={sejarahDesa} 
             onChange={handleSejarahChange}
-          ></textarea>
+          ></ReactQuill>
           <br />
           <label htmlFor="gambarSejarah">Gambar Sejarah Desa</label>
           {sejarahImageUrl && (
@@ -873,54 +881,58 @@ const handleKeunggulanEditSubmit = async (e) => {
                 </div>
               </div>
               <div className='table-container'>
-                <table className='profil-table'>
-                  <thead>
+                 <table className='profil-table'>
+                <thead>
                     <tr>
-                      <th>Gambar</th>
-                      <th>Deskripsi</th>
-                      {adminData && adminData.level !== 'kepala desa' && (
-                      <th>Aksi</th>)}
+                        <th>Gambar</th>
+                        <th>Deskripsi</th>
+                        {adminData && adminData.level !== 'kepala desa' && (
+                            <th>Aksi</th>
+                        )}
                     </tr>
-                  </thead>
-                  <tbody>
+                </thead>
+                <tbody>
                     {keunggulan.map((item, index) => (
-                      <tr key={index}>
-                        <td><img src={item.foto} alt="Gambar Keunggulan" style={{ width: '100px', height: 'auto' }} /></td>
-                        <td className="truncate-three-lines-keunggulan">{item.deskripsi}</td>
-                      {adminData && adminData.level !== 'kepala desa' && (
-                      <td>
-                        <div style={{ display: "flex" }}>
-                          <i
-                            className="fas fa-times"
-                            style={{
-                              backgroundColor: "red",
-                              color: "white",
-                              fontSize: "15px",
-                              borderRadius: "10px",
-                              cursor: "pointer",
-                              padding: "3px",
-                              marginRight: "5px",
-                            }}
-                            onClick={() => handleDeleteButtonClick(item.id)}
-                          ></i>
-                          <i
-                            className="fas fa-edit"
-                            style={{
-                              color: "#000",
-                              fontSize: "20px",
-                              borderRadius: "3px",
-                              cursor: "pointer",
-                              marginRight: "5px",
-                              padding: "0",
-                            }}
-                            onClick={() => handleEditKeunggulanButtonClick(item.id)}
-                          ></i>
-                        </div>
-                      </td>)}
-                      </tr>
+                        <tr key={index}>
+                            <td><img src={item.foto} alt="Gambar Keunggulan" style={{ width: '100px', height: 'auto' }} /></td>
+                            <td className="truncate-three-lines-keunggulan">
+                                <div dangerouslySetInnerHTML={{ __html: item.deskripsi }} />
+                            </td>
+                            {adminData && adminData.level !== 'kepala desa' && (
+                                <td>
+                                    <div style={{ display: "flex" }}>
+                                        <i
+                                            className="fas fa-times"
+                                            style={{
+                                                backgroundColor: "red",
+                                                color: "white",
+                                                fontSize: "15px",
+                                                borderRadius: "10px",
+                                                cursor: "pointer",
+                                                padding: "3px",
+                                                marginRight: "5px",
+                                            }}
+                                            onClick={() => handleDeleteButtonClick(item.id)}
+                                        ></i>
+                                        <i
+                                            className="fas fa-edit"
+                                            style={{
+                                                color: "#000",
+                                                fontSize: "20px",
+                                                borderRadius: "3px",
+                                                cursor: "pointer",
+                                                marginRight: "5px",
+                                                padding: "0",
+                                            }}
+                                            onClick={() => handleEditKeunggulanButtonClick(item.id)}
+                                        ></i>
+                                    </div>
+                                </td>
+                            )}
+                        </tr>
                     ))}
-                  </tbody>
-                </table>
+                </tbody>
+            </table>
               </div>
             </>
           )}
@@ -935,7 +947,7 @@ const handleKeunggulanEditSubmit = async (e) => {
           )}
           <br />
           <label htmlFor="keunggulan">Deskripsi</label>
-          <textarea
+          <ReactQuill
             id="keunggulan"
             name="keunggulan"
             rows="4"
@@ -955,7 +967,7 @@ const handleKeunggulanEditSubmit = async (e) => {
               <input type="file" id="gambar" name="gambar" accept="image/*" onChange={handleKeunggulanImageChange} />
               <br />
               <label htmlFor="keunggulan">Deskripsi</label>
-              <textarea id="keunggulan" name="keunggulan" rows="4" cols="50" onChange={handleKeunggulanDescriptionChange}></textarea>
+              <ReactQuill id="keunggulan" name="keunggulan" rows="4" cols="50" onChange={handleKeunggulanDescriptionChange}></ReactQuill>
               <br />
               <button className='button-form-keunggulan' type="submit">Simpan</button>
               <button className='button-form-keunggulan' type="button" onClick={handleCancelClick}>Batal</button>

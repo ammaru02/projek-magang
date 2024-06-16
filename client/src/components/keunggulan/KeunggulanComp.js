@@ -16,7 +16,8 @@ const KeunggulanComp = () => {
                 } else {
                     console.error('Data is not an array');
                 }
-            });
+            })
+            .catch(error => console.error('Error fetching keunggulan:', error));
     }, []);
 
     const toggleExpand = (index) => {
@@ -33,23 +34,27 @@ const KeunggulanComp = () => {
                 <i className="fa-solid fa-house"><p className="teks-icon">/ KEUNGGULAN DESA</p></i>
                 <h2 className="title-keunggulan">KEUNGGULAN DESA KASSI</h2>
             </div>
-                {keunggulan.map((item, index) => (
-                    <div className="card-keunggulan" key={index}>
-                        <div className="card-content-keunggulan">
-                            <div className="card-map-keunggulan">
-                                <img src={item.foto} className="card-img-top" alt="..." />
-                            </div>
-                            <div className="card-description-keunggulan">
-                                <p ref={el => descriptionRefs.current[index] = el} className={expandedIndexes.includes(index) ? '' : 'text-clamp'}>
-                                    {expandedIndexes.includes(index) ? item.deskripsi : `${item.deskripsi.split(' ').slice(0, 80).join(' ')}...`}
-                                </p>
-                                <button className="btn btn-primary" onClick={() => toggleExpand(index)}>
-                                    {expandedIndexes.includes(index) ? 'Tutup' : 'Lihat Selengkapnya'}
-                                </button>
-                            </div>
+            {keunggulan.map((item, index) => (
+                <div className="card-keunggulan" key={index}>
+                    <div className="card-content-keunggulan">
+                        <div className="card-map-keunggulan">
+                            <img src={item.foto} className="card-img-top" alt="..." />
+                        </div>
+                        <div className="card-description-keunggulan">
+                            <div 
+                                ref={el => descriptionRefs.current[index] = el} 
+                                className={expandedIndexes.includes(index) ? '' : 'text-clamp'}
+                                dangerouslySetInnerHTML={{
+                                    __html: expandedIndexes.includes(index) ? item.deskripsi : `${item.deskripsi.split(' ').slice(0, 80).join(' ')}...`
+                                }}
+                            />
+                            <button className="btn btn-primary" onClick={() => toggleExpand(index)}>
+                                {expandedIndexes.includes(index) ? 'Tutup' : 'Lihat Selengkapnya'}
+                            </button>
                         </div>
                     </div>
-                ))}
+                </div>
+            ))}
         </div>
     );
 }
