@@ -103,6 +103,11 @@
         cursor: pointer;
         transition: background-color 0.3s;
     }
+
+    .kategori-buttons button.active {
+        background-color: #007bff; /* Warna latar belakang tombol aktif */
+        color: #ffffff; /* Warna teks tombol aktif */
+      }
     
     .kategori-buttons button:hover {
         background-color: #ccc;
