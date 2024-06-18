@@ -8,54 +8,19 @@ import './ProdukAll.css'; // import CSS
 const ProdukAll = () => {
     const [produk, setProduk] = useState([]);
     const [imageUrls, setImageUrls] = useState([]);
-    // eslint-disable-next-line no-unused-vars
-    const [kategoriId, setKategoriId] = useState(null);
     const [kategori, setKategori] = useState([]);
-    const [kategoriProduk, setKategoriProduk] = useState({}); // Tambahkan state baru untuk menyimpan kategori dan produk terkait
+    const [kategoriProduk, setKategoriProduk] = useState({});
     const [searchTerm, setSearchTerm] = useState("");
     const location = useLocation();
+    const [activeCategory, setActiveCategory] = useState(null);
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const newKategoriId = params.get('kategoriId');
         const storage = getStorage();
         const storageRef = ref(storage, 'images/produk/');
-        const apiUrl = newKategoriId 
-            ? `http://localhost:5000/produk?kategoriId=${newKategoriId}` 
-            : `http://localhost:5000/produk`;
 
-        setKategoriId(newKategoriId);
-
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    const sortedProduk = data.sort((a, b) => a.name.localeCompare(b.name));
-                    setProduk(sortedProduk);
-                } else if (data && data.data && Array.isArray(data.data)) {
-                    const sortedProduk = data.data.sort((a, b) => a.name.localeCompare(b.name));
-                    setProduk(sortedProduk);
-                } else {
-                    console.error('Unexpected data format:', data);
-                    setProduk([]);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-
-        listAll(storageRef)
-            .then((res) => {
-                const urls = res.items.map((itemRef) => getDownloadURL(itemRef));
-                Promise.all(urls)
-                    .then((downloadURLs) => {
-                        setImageUrls(downloadURLs);
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching download URLs:", error);
-                    });
-            })
-            .catch((error) => {
-                console.error("Error listing items in storage:", error);
-            });
+        setActiveCategory(newKategoriId);
 
         fetch('http://localhost:5000/kategori')
             .then(response => response.json())
@@ -64,7 +29,6 @@ const ProdukAll = () => {
                     const kategoriData = data.data;
                     setKategori(kategoriData);
 
-                    // Buat objek untuk menyimpan produk berdasarkan kategori
                     const kategoriProdukPromises = kategoriData.map(kategoriItem =>
                         fetch(`http://localhost:5000/produk?kategoriId=${kategoriItem.id}`)
                             .then(response => response.json())
@@ -80,10 +44,75 @@ const ProdukAll = () => {
                 }
             })
             .catch(error => console.error('Error:', error));
+
+        if (newKategoriId) {
+            listAll(storageRef)
+                .then((res) => {
+                    const urls = res.items.map((itemRef) => getDownloadURL(itemRef));
+                    Promise.all(urls)
+                        .then((downloadURLs) => {
+                            setImageUrls(downloadURLs);
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching download URLs:", error);
+                        });
+                })
+                .catch((error) => {
+                    console.error("Error listing items in storage:", error);
+                });
+
+            fetch(`http://localhost:5000/produk?kategoriId=${newKategoriId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        const sortedProduk = data.sort((a, b) => a.name.localeCompare(b.name));
+                        setProduk(sortedProduk);
+                    } else if (data && data.data && Array.isArray(data.data)) {
+                        const sortedProduk = data.data.sort((a, b) => a.name.localeCompare(b.name));
+                        setProduk(sortedProduk);
+                    } else {
+                        console.error('Unexpected data format:', data);
+                        setProduk([]);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            fetch(`http://localhost:5000/produk`)
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        const sortedProduk = data.sort((a, b) => a.name.localeCompare(b.name));
+                        setProduk(sortedProduk);
+                    } else if (data && data.data && Array.isArray(data.data)) {
+                        const sortedProduk = data.data.sort((a, b) => a.name.localeCompare(b.name));
+                        setProduk(sortedProduk);
+                    } else {
+                        console.error('Unexpected data format:', data);
+                        setProduk([]);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
     }, [location.search]);
 
     const handleShowClick = (kategoriId) => {
-        window.location.href = `/produk?kategoriId=${kategoriId}`;
+        setActiveCategory(kategoriId);
+        // fetch produk berdasarkan kategori yang dipilih
+        fetch(`http://localhost:5000/produk?kategoriId=${kategoriId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    const sortedProduk = data.sort((a, b) => a.name.localeCompare(b.name));
+                    setProduk(sortedProduk);
+                } else if (data && data.data && Array.isArray(data.data)) {
+                    const sortedProduk = data.data.sort((a, b) => a.name.localeCompare(b.name));
+                    setProduk(sortedProduk);
+                } else {
+                    console.error('Unexpected data format:', data);
+                    setProduk([]);
+                }
+            })
+            .catch(error => console.error('Error:', error));
     };
 
     const handleSearchChange = (event) => {
@@ -111,7 +140,11 @@ const ProdukAll = () => {
                 <div className="kategori-buttons">
                     {kategori.map((item, index) => (
                         kategoriProduk[item.id] && kategoriProduk[item.id].length > 0 && (
-                            <button key={index} onClick={() => handleShowClick(item.id)}>
+                            <button 
+                                key={index} 
+                                onClick={() => handleShowClick(item.id)} 
+                                className={activeCategory === item.id ? 'active' : ''}
+                            >
                                 {item.name}
                             </button>
                         )

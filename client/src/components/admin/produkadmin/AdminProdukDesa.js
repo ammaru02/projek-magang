@@ -8,8 +8,10 @@ import {
   getDownloadURL,
 } from "./txtImgConfig";
 
+
 export default function AdminProdukDesa() {
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showAddCategoriForm, setShowAddCategoriForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showEditSuccess, setShowEditSuccess] = useState(false);
   const [newProductFoto, setNewProductFoto] = useState(null);
@@ -52,6 +54,13 @@ export default function AdminProdukDesa() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, produkList, itemsPerPage, showAddForm]);
+
+  useEffect(() => {
+    if (!showAddCategoriForm) {
+      createPaginationDots();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, produkList, itemsPerPage, showAddCategoriForm]);
 
   const createPaginationDots = () => {
     const paginationContainer = document.querySelector(".pagination-dots");
@@ -129,6 +138,10 @@ export default function AdminProdukDesa() {
     setShowEditSuccess(false);
   };
 
+  const handleAddCategoryButtonClick = () =>{
+    setShowAddCategoriForm(true);
+  };
+
   const handleEditClick = (produk) => {
     setEditProduk(produk);
     setShowEditForm(true);
@@ -152,6 +165,7 @@ export default function AdminProdukDesa() {
   const handleCancelClick = () => {
     setShowAddForm(false);
     setShowEditForm(false);
+    setShowAddCategoriForm(false);
     setEditProduk(null);
     setShowEditSuccess(false);
     setNewProductFoto(null);
@@ -167,6 +181,10 @@ export default function AdminProdukDesa() {
   const handleInputChange = (e) => {
     setSearchInput(e.target.value);
   };
+
+  const handleAddCategoriSubmit = async (event) =>{
+    event.preventDefault();
+  }
 
   const handleAddSubmit = async (event) => {
     event.preventDefault();
@@ -360,10 +378,16 @@ export default function AdminProdukDesa() {
         {!showAddForm && !showEditForm && (
           <div className="toolbar-produk">
             {adminData && adminData.level !== "kepala desa" && (
+              <>
               <button className="add-button" onClick={handleAddButtonClick}>
                 <i className="fas fa-plus"></i>
                 <p>Tambah Produk</p>
               </button>
+              <button className="add-button" onClick={handleAddCategoryButtonClick}>
+              <i className="fas fa-plus"></i>
+              <p>Tambah Kategori</p>
+              </button>
+              </>
             )}
             <div className="search">
               <input
@@ -376,6 +400,35 @@ export default function AdminProdukDesa() {
             </div>
           </div>
         )}
+        {/* Form Kategori */}
+        {showAddCategoriForm && (
+          <form onSubmit={handleAddCategoriSubmit}>
+            <h2>Tambah Kategori</h2>
+            <br/>
+            <div className="form-group">
+              <label htmlFor="name">Nama Kategori</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="foto">Foto Kategori</label>
+              <input
+                type="file"
+                id="foto"
+                name="foto"
+              />
+            </div>
+            <div className="button-row">
+              <button type="button" onClick={handleCancelClick}>
+                Batal
+              </button>
+              <button type="submit">Tambah</button>
+            </div>
+          </form>
+        )} 
         {showAddForm && (
           <form onSubmit={handleAddSubmit}>
             <h2>Tambah Produk</h2>
@@ -538,7 +591,7 @@ export default function AdminProdukDesa() {
             Produk berhasil diperbarui!
           </div>
         )}
-        {!showAddForm && !showEditForm && !showEditSuccess && (
+        {!showAddForm && !showEditForm && !showEditSuccess && !showAddCategoriForm && (
           <div>
             <table className="produk-table">
               <thead>
@@ -549,7 +602,7 @@ export default function AdminProdukDesa() {
                   <th>Gambar</th>
                   <th>Deskripsi</th>
                   {adminData && adminData.level !== "kepala desa" && (
-                    <th>Aksi</th>
+                  <th>Aksi</th>
                   )}
                 </tr>
               </thead>
@@ -592,7 +645,8 @@ export default function AdminProdukDesa() {
                                 borderRadius: "10px",
                                 cursor: "pointer",
                                 padding: "3px",
-                                marginRight: "5px",
+                                marginRight: "8px",
+                                marginLeft: "5px"
                               }}
                               onClick={() => handleDeleteClick(produk.id)}
                             ></i>
@@ -603,6 +657,7 @@ export default function AdminProdukDesa() {
                                 fontSize: "20px",
                                 borderRadius: "3px",
                                 cursor: "pointer",
+                                marginLeft: "8px",
                                 marginRight: "5px",
                                 padding: "0",
                               }}

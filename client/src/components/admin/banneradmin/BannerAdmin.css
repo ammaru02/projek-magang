@@ -1,0 +1,239 @@
+.admin-banner-container{
+    flex: 6;
+    margin: 0 auto;
+    margin-left: 200px;
+    height: auto;
+    margin-top: 60px;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.title-admin-banner {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-left: 10px;
+    padding: 5px;
+}
+
+.admin-banner-list {
+    width: 70%;
+    margin: auto;
+}
+
+.toolbar-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+    padding: 3px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+.add-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 200px;
+}
+
+.add-button i {
+    margin-right: 5px;
+    font-size: 25px;
+    background-color: #8F9A93;
+}
+
+.add-button p {
+    font-size: 16px;
+    margin-left: 5px;
+    font-weight: 600;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .search label {
+    font-size: 16px;
+    font-weight: 600;
+    display: none;
+  }
+  
+  .search i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  
+  .search input[type="text"] {
+    margin-left: 5px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+.form-add,
+.form-edit {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.form-add button,
+.form-edit button {
+  margin-right: 10px;
+}
+
+.form-add h2,
+.form-edit h2 {
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input{
+    width: 600px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.banner-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  .banner-table td img.image-banner {
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .banner-table td {
+    text-align: justify;
+    padding: 3px;
+    border: 1px solid #000;
+  }
+
+  .banner-table th {
+    text-align: left;
+    padding: 3px;
+    border: 1px solid #000;
+    background-color: #008DDA;
+    color: #f9f9f9;
+  }
+
+  .button-row {
+    display: flex;
+    justify-content: flex-start; /* Atur sesuai kebutuhan, misalnya flex-end atau space-between */
+    gap: 10px; /* Tambahkan jarak antara tombol */
+  }
+
+  @media screen and (max-width: 768px) {
+    .admin-banner-container {
+      flex: 1; /* Mengisi seluruh lebar halaman */
+      margin-left: 0; /* Menghapus margin kiri */
+      margin-top: 50px; /* Menghapus margin atas */
+      border: none; /* Menghapus border */
+      padding: 5px; /* Menambah padding */
+      height: auto;
+    }
+  
+    .admin-banner-list {
+      width: 100%; /* Mengisi seluruh lebar konten */
+      overflow-x: auto; /* Membuat scroll horizontal jika konten melebihi lebar layar */
+    }
+  
+    .banner-table {
+      width: 100%;
+    }
+  
+    .toolbar-banner {
+      position: sticky; /* Mengubah position menjadi fixed untuk layar kecil */
+      width: 100%; /* Atur lebar toolbar menjadi 100% */
+      left: 0; /* Letakkan toolbar di bagian kiri */
+      z-index: 5;
+    }
+  
+    .add-button {
+      flex-shrink: 10; /* Tetapkan agar tombol tambah tidak mengecil saat layar kecil */
+      margin-top: 10px;
+    }
+  
+    .add-button i {
+      font-size: 16px;
+    }
+  
+    .form-add,
+    .form-edit {
+      margin-top: 10px;
+      margin-bottom: 20px;
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+    }
+  
+    .form-add h2,
+    .form-edit h2 {
+      margin-bottom: 10px;
+      font-size: 30px;
+    }
+  
+    .form-group {
+      margin-bottom: 15px;
+    }
+  
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+  
+    .form-group input{
+      width: 300px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  
+    .banner-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+  
+    .banner-table th,
+    .banner-table td {
+      text-align: left;
+      padding: 10px;
+      border: 1px solid #000;
+    }
+  
+    .banner-table th {
+      background-color: #008DDA;
+      color: #f9f9f9;
+    }
+
+    .aksi{
+        width: 20px;
+    }
+  }
