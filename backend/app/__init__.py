@@ -18,7 +18,7 @@ migrate = Migrate(app, db)
 toolbar = DebugToolbarExtension(app)
 
 from app import routes
-from app.model import admin, banner, artikel, desa, deskripsi_produk, kategori, produk, sejarah, struktur, visi, warga, misi, keunggulan
+from app.model import admin, banner, artikel, desa, deskripsi_produk, kategori, produk, sejarah, visi, warga, misi, keunggulan
 from app.routes import register_routes
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587

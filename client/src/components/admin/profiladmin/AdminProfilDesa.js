@@ -26,7 +26,6 @@ export default function AdminProfilDesa() {
   const [strukturDesaData, setStrukturDesaData] = useState([]);
   const [showAddStrukturForm, setShowAddStrukturForm] = useState(false);
   const [showEditStrukturForm, setShowEditStrukturForm] = useState(false);
-  const [strukturToEdit, setStrukturToEdit] = useState(null);
   const [adminData, setAdminData] = useState(null); 
   const [activePage, setActivePage] = useState('');
 
@@ -41,7 +40,6 @@ export default function AdminProfilDesa() {
       await Promise.all([
         fetchVisiMisi(),
         fetchKeunggulan(),
-        fetchStrukturData()
       ]);
     } catch (error) {
       console.error('Error fetching initial data:', error);
@@ -63,29 +61,12 @@ export default function AdminProfilDesa() {
     }
 };
 
-  const fetchStrukturData = async () => {
-    try {
-      const response = await fetch('http://127.0.0.1:5000/struktur');
-      const data = await response.json();
-      setStrukturDesaData(data.data || []);
-    } catch (error) {
-      console.error('Error fetching struktur data:', error);
-    }
-  };
-
   const handleAddButtonClick = () => {
     setShowAddForm(true);
     setShowEditForm(false);
     setShowAddStrukturForm(false);
     setShowEditStrukturForm(false);
   };
-
-  const handleStrukturDesaClick = () => {
-    setShowStrukturDesa(true);
-    setShowVisiMisiForm(false);
-    setShowSejarahForm(false);
-    setShowKeunggulanForm(false);
-  }; 
 
   const handleCancelClick = () => {
     setShowAddForm(false);
@@ -173,14 +154,6 @@ export default function AdminProfilDesa() {
     setKeunggulanImage(file);
   };
 
-  const handleStrukturImageChange = (e) => {
-    if (e.target.files[0]) {
-      setStrukturToEdit({
-        ...strukturToEdit,
-        foto: URL.createObjectURL(e.target.files[0]),
-      });
-    }
-  };
 
   const handleKeunggulanDescriptionChange = (value) => {
     if (showEditForm) {
@@ -317,160 +290,8 @@ export default function AdminProfilDesa() {
       console.error('Error creating visi/misi:', error);
     }
   };
-  
-  
-  const handleStrukturAddSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData(e.target);
-      const nama = formData.get('nama');
-      const jabatan = formData.get('jabatan');
-      
-      let downloadURL = '';
-  
-      // Cek apakah ada file gambar yang dipilih
-      if (formData.get('strukturImage')) {
-        const file = formData.get('strukturImage');
-        const storageRef = ref(storage, `images/struktur/${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-  
-        // Tunggu hingga proses unggah selesai
-        await new Promise((resolve, reject) => {
-          uploadTask.on(
-            'state_changed',
-            (snapshot) => {
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log('Upload progress:', progress);
-            },
-            (error) => {
-              console.error('Error uploading image:', error);
-              reject(error);
-            },
-            async () => {
-              // Dapatkan URL download setelah unggah selesai
-              downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              console.log('Firebase download URL:', downloadURL);
-              resolve();
-            }
-          );
-        });
-  
-        // Setel URL download ke formData
-        formData.set('foto', downloadURL);
-      }
-  
-      const payload = { name: nama, jabatan: jabatan, foto: downloadURL, desaId: 1 };
-      console.log('Sending payload:', payload);
-  
-      // Determine whether to create a new struktur or update an existing one
-      const isUpdating = !!strukturToEdit.id;
-      const url = isUpdating
-        ? `http://127.0.0.1:5000/struktur/${strukturToEdit.id}`
-        : 'http://127.0.0.1:5000/struktur';
-  
-      const method = isUpdating ? 'PUT' : 'POST';
-  
-      // Kirim permintaan POST ke server
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Struktur response:', data);
-        alert('Data struktur berhasil disimpan');
-        fetchStrukturData();
-        handleCancelClick();
-      } else {
-        const errorData = await response.json();
-        console.error('Failed to save struktur:', errorData);
-        alert('Gagal menyimpan struktur: ' + errorData.message);
-      }
-    } catch (error) {
-      console.error('Error adding struktur:', error);
-      alert('Terjadi kesalahan saat menambahkan struktur: ' + error.message);
-    }
-  };
-  
-  const handleStrukturEditSubmit = async (e) => {
-    e.preventDefault();
-  
-    try {
-      const formData = new FormData(e.target);
-      const nama = formData.get('nama');
-      const jabatan = formData.get('jabatan');
-      let downloadURL = strukturToEdit.foto;
-  
-      // Periksa apakah gambar baru dipilih
-      if (formData.get('strukturImage')) {
-        const file = formData.get('strukturImage');
-        const storageRef = ref(storage, `images/struktur/${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-  
-        // Tunggu hingga proses unggah selesai
-        await new Promise((resolve, reject) => {
-          uploadTask.on(
-            'state_changed',
-            (snapshot) => {
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log('Upload progress:', progress);
-            },
-            (error) => {
-              console.error('Error uploading image:', error);
-              reject(error);
-            },
-            async () => {
-              // Dapatkan URL download setelah unggah selesai
-              downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              console.log('Firebase download URL:', downloadURL);
-              resolve();
-            }
-          );
-        });
-  
-        // Setel URL download ke formData
-        formData.set('foto', downloadURL);
-      }
-  
-      // Buat payload dengan data yang diperoleh
-      const payload = { name: nama, jabatan: jabatan, foto: downloadURL };
-      console.log('Sending payload:', payload);
-  
-      // Kirim permintaan PUT ke server
-      const response = await fetch(`http://127.0.0.1:5000/struktur/${strukturToEdit.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      // Tangani respons dari server
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Struktur edit response:', data);
-        alert('Data Struktur berhasil diperbarui');
-        fetchStrukturData();
-        handleCancelClick();
-      } else {
-        const errorData = await response.json();
-        console.error('Failed to update Struktur:', errorData);
-        alert('Gagal memperbarui struktur: ' + errorData.message);
-      }
-    } catch (error) {
-      console.error('Error editing struktur:', error);
-      alert('Terjadi kesalahan saat memperbarui struktur: ' + error.message);
-    }
-  };
 
   const handleEditStrukturButtonClick = (id) => {
-    const selectedStruktur = strukturDesaData.find((item) => item.id === id);
-    setStrukturToEdit(selectedStruktur);
-    setShowAddStrukturForm(false);
     setShowEditStrukturForm(true);
     setShowKeunggulanForm(false);
     setShowEditForm(false);
@@ -621,20 +442,6 @@ const handleEditKeunggulanButtonClick = (id) => {
       console.error('Error deleting keunggulan:', error);
     }
   };
-  const handleDeleteStrukturButtonClick = async (id) => {
-    try {
-      const response = await fetch(`http://127.0.0.1:5000/struktur/${id}`, {
-        method: 'DELETE'
-      });
-      const data = await response.json();
-      console.log('Struktur delete response:', data);
-      alert('Data struktur berhasil dihapus');
-      fetchStrukturData(); // Mengambil data struktur yang diperbarui
-    } catch (error) {
-      console.error('Error deleting struktur:', error);
-    }
-  };
-  
 
   return (
     <div className='profildesa-container'>
@@ -704,129 +511,8 @@ const handleEditKeunggulanButtonClick = (id) => {
           {adminData && adminData.level !== 'kepala desa' && (
             <div>
           <button type="submit">Simpan</button>
-          <button onClick={handleStrukturDesaClick} className='btn-struktur'>Lihat Data Struktur Desa</button>
           </div>)}
         </form>
-)}
-{showStrukturDesa && (
-  <div>
-    <div className='struktur-table-container'>
-      <h2 className='judul-struktur'>Data Struktur Desa</h2>
-      {!showAddStrukturForm && !showEditStrukturForm && (
-        <>
-          <div className="toolbar-profil">
-            <button className="add-button" onClick={() => setShowAddStrukturForm(true)}>
-              <i className="fas fa-plus"></i>
-              <p>Tambah Struktur</p>
-            </button>
-            <div className='search'>
-              <input
-                type='text'
-                placeholder='Cari Produk..'
-                value={searchInput}
-                onChange={handleInputChange}
-              />
-              <i className='fas fa-search'></i>
-            </div>
-          </div>
-          <div className='table-container'>
-            <table>
-              <thead>
-                <tr>
-                  <th>Nama</th>
-                  <th>Jabatan</th>
-                  <th>Foto</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* Isi tabel dengan data struktur desa */}
-                {strukturDesaData.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.name}</td>
-                    <td>{item.jabatan}</td>
-                    <td><img src={item.foto} alt='gambar' style={{ width: '100px', height: 'auto' }} /></td>
-                    <td>
-                      <div style={{ display: "flex" }}>
-                        <i
-                          className="fas fa-times"
-                          style={{
-                            backgroundColor: "red",
-                            color: "white",
-                            fontSize: "15px",
-                            borderRadius: "10px",
-                            cursor: "pointer",
-                            padding: "3px",
-                            marginRight: "8px",
-                            marginLeft: "5px"
-                          }}
-                          onClick={() => handleDeleteStrukturButtonClick(item.id)}
-                        ></i>
-                        <i
-                          className="fas fa-edit"
-                          style={{
-                            color: "#000",
-                            fontSize: "20px",
-                            borderRadius: "3px",
-                            cursor: "pointer",
-                            marginLeft: "8px",
-                            marginRight: "5px",
-                            padding: "0",
-                          }}
-                          onClick={() => handleEditStrukturButtonClick(item.id)} 
-                        ></i>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
-    </div>
-    {showEditStrukturForm && strukturToEdit && (
-      <form className="form-container" onSubmit={handleStrukturEditSubmit}>
-        <label htmlFor="nama">Nama Anggota</label>
-        <input type="text" id="nama" name="nama" value={strukturToEdit.name} onChange={(e) => setStrukturToEdit({...strukturToEdit, name: e.target.value})} />
-        <br />
-        <label htmlFor="jabatan">Jabatan</label>
-        <input type="text" id="jabatan" name="jabatan" value={strukturToEdit.jabatan} onChange={(e) => setStrukturToEdit({...strukturToEdit, jabatan: e.target.value})} />
-        <br />
-        <label htmlFor="gambar">Upload Gambar</label>
-        <input type="file" id="gambar" name="strukturImage" accept="image/*" onChange={handleStrukturImageChange} />
-        {strukturToEdit.foto && (
-          <div>
-            <img src={strukturToEdit.foto} alt="Gambar Struktur" style={{ width: '200px', height: 'auto' }} />
-          </div>
-        )}
-        <br />{adminData && adminData.level !== 'kepala desa' && (
-        <div>
-        <button type="submit">Simpan</button>
-        <button type="button" onClick={handleCancelClick}>Batal</button>
-        </div>)}
-      </form>
-    )}
-{showAddStrukturForm && (
-  <form className="form-container" onSubmit={handleStrukturAddSubmit}>
-    <label htmlFor="nama">Nama Anggota</label>
-    <input type="text" id="nama" name="nama" onChange={(e) => setStrukturToEdit({...strukturToEdit, name: e.target.value})}/>
-    <br />
-    <label htmlFor="jabatan">Jabatan</label>
-    <input type="text" id="jabatan" name="jabatan" onChange={(e) => setStrukturToEdit({...strukturToEdit, jabatan: e.target.value})}  />
-    <br />
-    <label htmlFor="gambar">Gambar</label>
-    <input type="file" id="gambar" name="strukturImage" accept="image/*" onChange={handleStrukturImageChange} />
-    <br />
-    {adminData && adminData.level !== 'kepala desa' && (
-      <div>
-    <button type="submit">Simpan</button>
-    <button type="button" onClick={handleCancelClick}>Batal</button>
-    </div>)}
-  </form>
-)}
-
- </div>
 )}
 
 {showSejarahForm && (

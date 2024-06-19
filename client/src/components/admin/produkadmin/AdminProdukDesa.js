@@ -10,20 +10,24 @@ import {
 
 
 export default function AdminProdukDesa() {
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [showAddCategoriForm, setShowAddCategoriForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showEditSuccess, setShowEditSuccess] = useState(false);
   const [newProductFoto, setNewProductFoto] = useState(null);
   const [produkList, setProdukList] = useState([]);
   const [kategoriList, setKategoriList] = useState([]);
   const [adminData, setAdminData] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showAddCategoriForm, setShowAddCategoriForm] = useState(false);
   const [newProduk, setNewProduk] = useState({
     kategori_id: "",
     name: "",
     harga: "",
     foto: "",
     deskripsi: "",
+  });
+  const [newKategori, setNewKategori] = useState({
+    name: '',
+    foto: null,
   });
   const [editProduk, setEditProduk] = useState(null);
   const [searchInput, setSearchInput] = useState("");
@@ -38,6 +42,7 @@ export default function AdminProdukDesa() {
     fetchKategoriList();
     createPaginationDots();
     fetchAdminData();
+    fetchKategori();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -61,6 +66,15 @@ export default function AdminProdukDesa() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, produkList, itemsPerPage, showAddCategoriForm]);
+ 
+  const fetchKategori = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/kategori');
+      setKategoriList(response.data.data); // Update category list
+    } catch (error) {
+      console.error('Error fetching kategoris:', error);
+    }
+  };
 
   const createPaginationDots = () => {
     const paginationContainer = document.querySelector(".pagination-dots");
@@ -168,6 +182,7 @@ export default function AdminProdukDesa() {
     setShowAddCategoriForm(false);
     setEditProduk(null);
     setShowEditSuccess(false);
+    setNewKategori({ name: "", foto: null });
     setNewProductFoto(null);
     setNewProduk({
       kategori_id: "",
@@ -182,12 +197,69 @@ export default function AdminProdukDesa() {
     setSearchInput(e.target.value);
   };
 
-  const handleAddCategoriSubmit = async (event) =>{
+  const handleAddCategoriSubmit = async (event) => {
     event.preventDefault();
-  }
+  
+    try {
+      const fotoRef = ref(storage, `images/kategori/${newKategori.foto.name}`);
+      const uploadTask = uploadBytesResumable(fotoRef, newKategori.foto);
+  
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadProgress(progress);
+          setUploading(true);
+        },
+        (error) => {
+          console.error("Error uploading image:", error);
+          alert('Gagal mengunggah foto kategori');
+          setUploading(false);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log("Firebase download URL:", downloadURL);
+  
+            const formData = {
+              name: newKategori.name,
+              foto: downloadURL,
+            };
+  
+            const response = await axios.post('http://localhost:5000/kategori', formData, {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+  
+            if (response.status === 201) {
+              alert('Kategori berhasil ditambahkan');
+              fetchKategori(); // Refresh category list after successful addition
+              setShowAddCategoriForm(false); // Close add category form
+              setNewKategori({ name: "", foto: null }); // Reset form
+            } else {
+              console.error(`Error: ${response.status} ${response.statusText}`);
+              alert(`Gagal menambahkan kategori: ${response.data.message}`);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('kategori sudah ada!');
+          }
+  
+          setUploading(false);
+        }
+      );
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Gagal mengunggah foto kategori');
+      setUploading(false);
+    }
+  };  
 
   const handleAddSubmit = async (event) => {
     event.preventDefault();
+  
+    // Validasi form
     if (
       !newProduk.name ||
       !newProductFoto ||
@@ -198,17 +270,16 @@ export default function AdminProdukDesa() {
       console.error("Please fill in all fields and select an image.");
       return;
     }
-
+  
     try {
       // Upload the image to Firebase Storage
       const fotoRef = ref(storage, `images/produk/${newProductFoto.name}`);
       const uploadTask = uploadBytesResumable(fotoRef, newProductFoto);
-
+  
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setUploadProgress(progress);
         },
         (error) => {
@@ -217,13 +288,14 @@ export default function AdminProdukDesa() {
         async () => {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
           console.log("Firebase download URL:", downloadURL);
-
+  
           // Prepare the payload to send to the server
           const formData = {
             ...newProduk,
             foto: downloadURL,
           };
-
+  
+          // POST request to add the product
           const response = await fetch("http://127.0.0.1:5000/produk", {
             method: "POST",
             headers: {
@@ -231,15 +303,22 @@ export default function AdminProdukDesa() {
             },
             body: JSON.stringify(formData),
           });
-
+  
+          const responseBody = await response.json();
+  
           if (!response.ok) {
             console.error(
               `Server responded with ${response.status}: ${response.statusText}`
             );
-            const responseBody = await response.json();
             console.error("Response body:", responseBody);
+  
+            // Check if the error message indicates the product already exists in the same category
+            if (responseBody.message && responseBody.message.includes("already exists in this category")) {
+              alert("Produk sudah ada di kategori yang sama");
+            }
           } else {
             console.log("New product added successfully.");
+            alert("Produk berhasil ditambahkan");
             setNewProduk({
               kategori_id: "",
               name: "",
@@ -256,7 +335,7 @@ export default function AdminProdukDesa() {
     } catch (error) {
       console.error("Failed to add product:", error);
     }
-  };
+  };  
 
   const handleDeleteClick = async (productId) => {
     if (!window.confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
@@ -384,9 +463,9 @@ export default function AdminProdukDesa() {
                 <p>Tambah Produk</p>
               </button>
               <button className="add-button" onClick={handleAddCategoryButtonClick}>
-              <i className="fas fa-plus"></i>
-              <p>Tambah Kategori</p>
-              </button>
+        <i className="fas fa-plus"></i>
+        <p>Tambah Kategori</p>
+      </button>
               </>
             )}
             <div className="search">
@@ -401,34 +480,42 @@ export default function AdminProdukDesa() {
           </div>
         )}
         {/* Form Kategori */}
+        {currentItems.map((item) => (
+  <div key={item.id}>{item.name}</div>
+))}
         {showAddCategoriForm && (
-          <form onSubmit={handleAddCategoriSubmit}>
-            <h2>Tambah Kategori</h2>
-            <br/>
-            <div className="form-group">
-              <label htmlFor="name">Nama Kategori</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="foto">Foto Kategori</label>
-              <input
-                type="file"
-                id="foto"
-                name="foto"
-              />
-            </div>
-            <div className="button-row">
-              <button type="button" onClick={handleCancelClick}>
-                Batal
-              </button>
-              <button type="submit">Tambah</button>
-            </div>
-          </form>
-        )} 
+        <form onSubmit={handleAddCategoriSubmit}>
+          <h2>Tambah Kategori</h2>
+          <br />
+          <div className="form-group">
+            <label htmlFor="name">Nama Kategori</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={newKategori.name}
+              onChange={(e) => setNewKategori({ ...newKategori, name: e.target.value })}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="foto">Foto Kategori</label>
+            <input
+              type="file"
+              id="foto"
+              name="foto"
+              onChange={(e) => setNewKategori({ ...newKategori, foto: e.target.files[0] })}
+              required
+            />
+          </div>
+          <div className="button-row">
+            <button type="button" onClick={handleCancelClick}>
+              Batal
+            </button>
+            <button type="submit">Tambah</button>
+          </div>
+        </form>
+      )}
         {showAddForm && (
           <form onSubmit={handleAddSubmit}>
             <h2>Tambah Produk</h2>
@@ -591,100 +678,96 @@ export default function AdminProdukDesa() {
             Produk berhasil diperbarui!
           </div>
         )}
-        {!showAddForm && !showEditForm && !showEditSuccess && !showAddCategoriForm && (
-          <div>
-            <table className="produk-table">
-              <thead>
-                <tr>
-                  <th>Kategori Produk</th>
-                  <th>Nama Produk</th>
-                  <th>Harga</th>
-                  <th>Gambar</th>
-                  <th>Deskripsi</th>
-                  {adminData && adminData.level !== "kepala desa" && (
-                  <th>Aksi</th>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems
-                  .filter(
-                    (produk) =>
-                      produk.name
-                        .toLowerCase()
-                        .includes(searchInput.toLowerCase()) ||
-                      produk.deskripsi
-                        .toLowerCase()
-                        .includes(searchInput.toLowerCase())
-                  )
-                  .sort((a, b) => b.id - a.id) // Urutkan berdasarkan ID produk terbaru ke atas
-                  .map((produk) => (
-                    <tr key={produk.id}>
-                      <td className="kategori-produk-admin">
-                        {
-                          kategoriList.find(
-                            (kategori) => kategori.id === produk.kategori_id
-                          )?.name
-                        }
-                      </td>
-                      <td className="nama-produk-admin">{produk.name}</td>
-                      <td>{formatPrice(produk.harga)}</td>
-                      <td>
-                        <img src={produk.foto} alt={produk.name} />
-                      </td>
-                      <td>{produk.deskripsi}</td>
-                      {adminData && adminData.level !== "kepala desa" && (
-                        <td>
-                          <div style={{ display: "flex" }}>
-                            <i
-                              className="fas fa-times"
-                              style={{
-                                backgroundColor: "red",
-                                color: "white",
-                                fontSize: "15px",
-                                borderRadius: "10px",
-                                cursor: "pointer",
-                                padding: "3px",
-                                marginRight: "8px",
-                                marginLeft: "5px"
-                              }}
-                              onClick={() => handleDeleteClick(produk.id)}
-                            ></i>
-                            <i
-                              className="fas fa-edit"
-                              style={{
-                                color: "#000",
-                                fontSize: "20px",
-                                borderRadius: "3px",
-                                cursor: "pointer",
-                                marginLeft: "8px",
-                                marginRight: "5px",
-                                padding: "0",
-                              }}
-                              onClick={() => handleEditClick(produk)}
-                            ></i>
-                          </div>
-                        </td>
-                      )}
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-            <div className="pagination-dots">
-              {Array.from({
-                length: Math.ceil(produkList.length / itemsPerPage),
-              }).map((_, index) => (
-                <span
-                  key={index}
-                  onClick={() => paginate(index + 1)}
-                  className={currentPage === index + 1 ? "active" : ""}
-                >
-                  {index + 1}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+{
+  !showAddForm && !showEditForm && !showEditSuccess && !showAddCategoriForm && (
+    <div>
+      <table className="produk-table">
+        <thead>
+          <tr>
+            <th>Kategori Produk</th>
+            <th>Nama Produk</th>
+            <th>Harga</th>
+            <th>Gambar</th>
+            <th>Deskripsi</th>
+            {adminData && adminData.level !== "kepala desa" && (
+              <th>Aksi</th>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {produkList
+            .filter(
+              (produk) =>
+                produk.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                produk.deskripsi.toLowerCase().includes(searchInput.toLowerCase())
+            )
+            .sort((a, b) => b.id - a.id) // Urutkan berdasarkan ID produk terbaru ke atas
+            .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) // Pagination logic
+            .map((produk) => (
+              <tr key={produk.id}>
+                <td className="kategori-produk-admin">
+                  {kategoriList.find((kategori) => kategori.id === produk.kategori_id)?.name}
+                </td>
+                <td className="nama-produk-admin">{produk.name}</td>
+                <td>{formatPrice(produk.harga)}</td>
+                <td>
+                  <img src={produk.foto} alt={produk.name} />
+                </td>
+                <td>{produk.deskripsi}</td>
+                {adminData && adminData.level !== "kepala desa" && (
+                  <td>
+                    <div style={{ display: "flex" }}>
+                      <i
+                        className="fas fa-times"
+                        style={{
+                          backgroundColor: "red",
+                          color: "white",
+                          fontSize: "15px",
+                          borderRadius: "10px",
+                          cursor: "pointer",
+                          padding: "3px",
+                          marginRight: "8px",
+                          marginLeft: "5px"
+                        }}
+                        onClick={() => handleDeleteClick(produk.id)}
+                      ></i>
+                      <i
+                        className="fas fa-edit"
+                        style={{
+                          color: "#000",
+                          fontSize: "20px",
+                          borderRadius: "3px",
+                          cursor: "pointer",
+                          marginLeft: "8px",
+                          marginRight: "5px",
+                          padding: "0",
+                        }}
+                        onClick={() => handleEditClick(produk)}
+                      ></i>
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+        </tbody>
+      </table>
+      <div className="pagination-dots">
+        {Array.from({
+          length: Math.ceil(produkList.length / itemsPerPage),
+        }).map((_, index) => (
+          <span
+            key={index}
+            onClick={() => paginate(index + 1)}
+            className={currentPage === index + 1 ? "active" : ""}
+          >
+            {index + 1}
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
       </div>
     </div>
   );

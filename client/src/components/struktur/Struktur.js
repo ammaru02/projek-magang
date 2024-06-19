@@ -1,41 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import './Struktur.css';
 
-function Struktur() {
-    const [strukturData, setStrukturData] = useState([]);
+const Struktu = () => {
+    const [strukturImage, setStrukturImage] = useState(""); // State untuk menyimpan URL gambar
 
-    // Mengambil data dari pangkalan data
     useEffect(() => {
-        fetch('http://localhost:5000/struktur') // Gantikan '/api/struktur' dengan URL API sebenar anda
+        fetch('http://localhost:5000/visi') 
             .then(response => response.json())
-            .then(data => setStrukturData(data.data)) // Gunakan data.data untuk mendapatkan array sebenar
-            .catch(error => console.error('Error fetching data:', error)); // Periksa jika terdapat kesalahan semasa mengambil data
+            .then(data => {
+                console.log('Data Visi:', data);
+                if (Array.isArray(data) && data.length > 0) {
+                    setStrukturImage(data[0].foto); // Ambil URL gambar dari data
+                }
+            })
+            .catch(error => console.error('Error:', error));
     }, []);
-
-    // Periksa jika strukturData adalah null atau bukan array sebelum menggunakan map
-    if (!Array.isArray(strukturData)) {
-        console.error('Invalid data format:', strukturData);
-        return null; // Return early jika data tidak dalam format yang dijangkakan
-    }
+    
+    useEffect(() => {
+        fetch('http://localhost:5000/misi') 
+            .then(response => response.json())
+            .then(data => {
+                console.log('Data Misi:', data);
+                if (Array.isArray(data) && data.length > 0) {
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }, []);    
 
     return (
-        <>
-            <div className='card-struktur'>
-                <h1 className='struktur-judul'>STRUKTUR DESA</h1>
-                <div className='container'>
-                    {strukturData.map((item, index) => (
-                        <div key={index} className='struktur-card'>
-                            <img src={item.foto} alt={item.name} className='card-image-struktur' />
-                            <div className='card-title'>
-                                <h4>{item.name}</h4>
-                                <p>{item.jabatan}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+        <div className="container-sm">
+            <div className="page-struktur">
+            <h1 className='struktur-judul'>STRUKTUR DESA</h1>
+                {strukturImage && <img src={strukturImage} alt="struktur" className="image-struktur"/>}
             </div>
-        </>
+        </div>
     );
 }
 
-export default Struktur;
+export default Struktu;

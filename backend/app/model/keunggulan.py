@@ -5,7 +5,7 @@ from app.model.kategori import Kategori
 
 class Keunggulan(db.Model):
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    foto = db.Column(db.String(1000), nullable=False)
+    foto = db.Column(db.String(300), nullable=False)
     deskripsi = db.Column(db.String(1000), nullable=False)
     desa_id = db.Column(db.BigInteger, db.ForeignKey('desa.id'))
     

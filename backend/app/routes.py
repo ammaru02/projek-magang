@@ -3,7 +3,7 @@ from flask import Blueprint
 from flask_cors import cross_origin
 from app.model.admin import Admin
 from app import app, db
-from app.controller import DesaController, WargaController, ArtikelController, SejarahController, MisiController, VisiController, ProdukController, AdminController, KategoriController, StrukturController, KeunggulanController
+from app.controller import DesaController, WargaController, ArtikelController, SejarahController, MisiController, VisiController, ProdukController, AdminController, KategoriController, KeunggulanController, BannerController
 from app.model.banner import Banner  
 from app.controller.AdminController import token_required
 
@@ -29,21 +29,21 @@ def wargas():
 def get_warga(id):
     return WargaController.get(id)
 
-@app.route('/banner', methods=['POST'])
-def add_banner():
-    data = request.get_json()
-    new_banner = Banner(gambar=data['gambar'], url_gambar=data['url_gambar'])
-    db.session.add(new_banner)
-    db.session.commit()
-    return {'id': new_banner.id}, 201
+@app.route('/banner', methods=['GET', 'POST'])
+def banners():
+    if request.method == 'POST':
+        return BannerController.create()
+    elif request.method == 'GET':
+        return BannerController.index()
 
-@app.route('/banner', methods=['GET'])
-def get_banners():
-    try:
-        banners = Banner.query.all()
-        return jsonify([{'id': banner.id, 'gambar': banner.gambar, 'url_gambar': banner.url_gambar} for banner in banners])
-    except Exception as e:
-        return str(e), 500
+@app.route('/banner/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def get_update_or_delete_banner(id):
+    if request.method == 'GET':
+        return BannerController.get(id)
+    elif request.method == 'PUT':
+        return BannerController.update(id)
+    elif request.method == 'DELETE':
+        return BannerController.delete(id)
     
 @app.route("/api/saveImage", methods=['POST'])
 @cross_origin(origin='localhost',headers=['Content-Type','Authorization'])
@@ -174,6 +174,13 @@ def kategoris():
     else:
         return KategoriController.index()
 
+@app.route('/kategori/<int:id>', methods=['PUT', 'DELETE'])
+def kategori_detail(id):
+    if request.method == 'PUT':
+        return KategoriController.update(id)
+    elif request.method == 'DELETE':
+        return KategoriController.delete(id)
+
 from flask import request, jsonify
 
 @app.route('/produk', methods=['GET', 'POST'])
@@ -198,23 +205,6 @@ def get_update_sejarah():
         return SejarahController.index()
     elif request.method == 'PUT':
         return SejarahController.update()
-
-@app.route('/struktur', methods=['GET', 'POST'])
-def strukturs():
-    if request.method == 'POST':
-        return StrukturController.create()
-    elif request.method == 'GET':
-        return StrukturController.index()
-
-@app.route('/struktur/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def get_update_or_delete_struktur(id):
-    if request.method == 'GET':
-        return StrukturController.get(id)
-    elif request.method == 'PUT':
-        return StrukturController.update(id)
-    elif request.method == 'DELETE':
-        return StrukturController.delete(id)
-
 
 @app.route('/visi', methods=['GET', 'PUT'])
 def get_update_visi():

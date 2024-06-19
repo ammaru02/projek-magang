@@ -8,6 +8,18 @@
     overflow-x: auto;
 }
 
+.current-banner-image img {
+  height: 100px; /* Set the desired height */
+  width: auto; /* Maintain aspect ratio */
+  margin-bottom: 10px; /* Optional: Add margin for spacing */
+}
+
+.image-preview img {
+  height: 100px; /* Set the desired height */
+  width: auto; /* Maintain aspect ratio */
+  margin-bottom: 10px; /* Optional: Add margin for spacing */
+}
+
 .title-admin-banner {
     font-size: 16px;
     margin-top: 20px;

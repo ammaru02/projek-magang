@@ -40,10 +40,10 @@
 }
 
 .truncate-text {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
   overflow: hidden;
-  -webkit-line-clamp: 3; /* Batasi teks hingga 3 baris */
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .sidebar ul {

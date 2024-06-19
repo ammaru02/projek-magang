@@ -3,33 +3,26 @@ import React, { useState, useEffect } from "react";
 import './Banner.css';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
-
 
 const Banner = () => {
     const [imageUrls, setImageUrls] = useState([]);
 
     useEffect(() => {
-        const storage = getStorage();
-        const storageRef = ref(storage, 'images/'); // Ubah 'images' sesuai dengan path folder gambar di Firebase Storage
+        const fetchBannerUrls = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:5000/banner");
+                if (response.ok) {
+                    const result = await response.json();
+                    setImageUrls(result.data.map(banner => banner.url_gambar)); // Assuming the JSON response has a 'data' field with banner URLs
+                } else {
+                    console.error("Failed to fetch banners:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Error fetching banners:", error);
+            }
+        };
 
-        // Mengambil daftar semua item di dalam folder 'images'
-        listAll(storageRef)
-            .then((res) => {
-                // Mendapatkan URL download untuk setiap item
-                const urls = res.items.map((itemRef) => getDownloadURL(itemRef));
-                // Mengatur state imageUrls dengan array URL download
-                Promise.all(urls)
-                    .then((downloadURLs) => {
-                        setImageUrls(downloadURLs);
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching download URLs:", error);
-                    });
-            })
-            .catch((error) => {
-                console.error("Error listing images:", error);
-            });
+        fetchBannerUrls();
     }, []);
 
     return (

@@ -15,9 +15,9 @@ def index():
     try:
         kategori_id = request.args.get('kategoriId')
         if kategori_id:
-            produk = Produk.query.filter_by(kategori_id=kategori_id).all()
+            produk = Produk.query.filter_by(kategori_id=kategori_id).order_by(Produk.id.desc()).all()
         else:
-            produk = Produk.query.all()
+            produk = Produk.query.order_by(Produk.id.desc()).all()
         produk_list = [p.serialize() for p in produk]
         return jsonify(produk_list), 200
     except Exception as e:
@@ -58,6 +58,11 @@ def create():
 
         if not (kategori_id and name and harga and deskripsi and foto_url):
             return jsonify({'message': 'Incomplete data provided'}), 400
+
+        # Check if a product with the same name already exists in the same category
+        existing_product_same_category = Produk.query.filter_by(name=name, kategori_id=kategori_id).first()
+        if existing_product_same_category:
+            return jsonify({'message': f"Product with name '{name}' already exists in this category."}), 400
 
         # Set desa_id dan warga_id ke 1
         desa_id = 1

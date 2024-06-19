@@ -2,7 +2,7 @@ from app import db
 
 class Misi(db.Model):
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    misi = db.Column(db.String(250), nullable=False)
+    misi = db.Column(db.String(2500), nullable=False)
     visiId = db.Column(db.BigInteger, db.ForeignKey('visi.id'))
 
     def serialize(self):
