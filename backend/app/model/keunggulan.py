@@ -1,6 +1,5 @@
 from app import db
 from app.model.desa import Desa
-from app.model.warga import Warga
 from app.model.kategori import Kategori
 
 class Keunggulan(db.Model):

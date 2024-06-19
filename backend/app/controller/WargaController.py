@@ -24,6 +24,7 @@ def singleObject(data):
         'id' : data.id,
         'name' : data.name,
         'wa' : data.wa,
+        'email' : data.email,
     }
     return data
 
@@ -48,6 +49,7 @@ def singleDetailProduk(warga, produk):
         'id': warga.id,
         'name': warga.name,
         'wa': warga.wa,
+        'email': warga.email,
         'produk': produk
     } 
     return data
@@ -75,6 +77,7 @@ def get(id):
     warga_dict = {
         'id': warga.id,
         'wa': warga.wa,
+        'email': warga.email,
         # tambahkan field lainnya jika ada
     }
 

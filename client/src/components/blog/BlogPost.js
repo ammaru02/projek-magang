@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './BlogPost.css';
 
 const Blog = () => {
-  const [showFullContent, setShowFullContent] = useState(false);
+  const [fullContent, setFullContent] = useState(false); // State to manage full content display
   const [mainNews, setMainNews] = useState(null);
   const [sidebarNews, setSidebarNews] = useState([]);
 
@@ -12,8 +12,8 @@ const Blog = () => {
         const response = await fetch('http://localhost:5000/artikel');
         const data = await response.json();
         if (Array.isArray(data)) {
-          setMainNews(data[0]); // Set data utama dengan data pertama dari response
-          setSidebarNews(data.slice(1)); // Set data sidebar dengan sisa data dari response
+          setMainNews(data[0]);
+          setSidebarNews(data.slice(1));
         } else {
           console.error('Data is not an array:', data);
         }
@@ -21,9 +21,9 @@ const Blog = () => {
         console.error('Error fetching news data:', error);
       }
     };
-  
+
     fetchNewsData();
-  }, []);  
+  }, []);
 
   const handleSidebarItemClick = (news) => {
     const clickedNewsIndex = sidebarNews.findIndex(item => item === news);
@@ -34,17 +34,11 @@ const Blog = () => {
     setMainNews(clickedNews);
   };
 
-  const toggleShowFullContent = () => {
-    setShowFullContent(!showFullContent); // Toggle status tampilan deskripsi
-  };
-
-  const truncateDescription = (text) => {
-    const words = text.split(' ');
-    if (words.length > 100) {
-      return words.slice(0, 100).join(' ') + '...';
-    } else {
-      return text;
+  const truncateDescription = (description) => {
+    if (description.length > 100) {
+      return `${description.substring(0, 100)}...`;
     }
+    return description;
   };
 
   return (
@@ -56,13 +50,11 @@ const Blog = () => {
               <h2>{mainNews.judul}</h2>
               <p>Date: {mainNews.tanggal}</p>
               <img src={mainNews.foto} alt={mainNews.judul} />
-              {showFullContent ? (
-                <div className="full-description" dangerouslySetInnerHTML={{ __html: mainNews.deskripsi }} />
-              ) : (
-                <p className="short-description">{truncateDescription(mainNews.deskripsi)}</p>
-              )}
-              <button onClick={toggleShowFullContent} className='read-more-button1'>
-                {showFullContent ? "Tutup" : "Baca Selengkapnya"}
+              <div className={fullContent ? "full-description" : "short-description"}>
+                <p dangerouslySetInnerHTML={{ __html: fullContent ? mainNews.deskripsi : truncateDescription(mainNews.deskripsi) }} />
+              </div>
+              <button onClick={() => setFullContent(!fullContent)} className='read-more-button1'>
+                {fullContent ? "Tutup" : "Baca Selengkapnya"}
               </button>
             </div>
           )}
@@ -76,7 +68,7 @@ const Blog = () => {
                   <div className="sidebar-content">
                     <h3>{news.judul}</h3>
                     <p>{news.tanggal}</p>
-                    <p className="truncate-text">{truncateDescription(news.deskripsi)}</p>
+                    <p className="truncate-text" dangerouslySetInnerHTML={{ __html: truncateDescription(news.deskripsi) }} />
                     <button onClick={() => handleSidebarItemClick(news)} className='read-more-button2'>
                       Selengkapnya
                     </button>
@@ -89,6 +81,6 @@ const Blog = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Blog;
