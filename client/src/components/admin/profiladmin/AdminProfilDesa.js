@@ -22,9 +22,13 @@ export default function AdminProfilDesa() {
   const [keunggulanImage, setKeunggulanImage] = useState(null);
   const [keunggulanDescription, setKeunggulanDescription] = useState("");
   const [keunggulanToEdit, setKeunggulanToEdit] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [showStrukturDesa, setShowStrukturDesa] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [strukturDesaData, setStrukturDesaData] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [showAddStrukturForm, setShowAddStrukturForm] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [showEditStrukturForm, setShowEditStrukturForm] = useState(false);
   const [adminData, setAdminData] = useState(null); 
   const [activePage, setActivePage] = useState('');
@@ -291,6 +295,7 @@ export default function AdminProfilDesa() {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleEditStrukturButtonClick = (id) => {
     setShowEditStrukturForm(true);
     setShowKeunggulanForm(false);
