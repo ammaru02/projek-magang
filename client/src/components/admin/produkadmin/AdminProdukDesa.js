@@ -15,9 +15,12 @@ export default function AdminProdukDesa() {
   const [newProductFoto, setNewProductFoto] = useState(null);
   const [produkList, setProdukList] = useState([]);
   const [kategoriList, setKategoriList] = useState([]);
+  const [editKategori, setEditKategori] = useState(null);
+  const [showEditKategoriForm, setShowEditKategoriForm] = useState(false);
   const [adminData, setAdminData] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAddCategoriForm, setShowAddCategoriForm] = useState(false);
+  const [showFormAddKategori , setShowFormAddKategori] = useState(false);
   const [newProduk, setNewProduk] = useState({
     kategori_id: "",
     name: "",
@@ -154,6 +157,12 @@ export default function AdminProdukDesa() {
 
   const handleAddCategoryButtonClick = () =>{
     setShowAddCategoriForm(true);
+    setShowFormAddKategori(false);
+  };
+
+  const handleEditKategoriClick = (kategori) => {
+    setEditKategori(kategori);
+    setShowEditKategoriForm(true);
   };
 
   const handleEditClick = (produk) => {
@@ -254,7 +263,40 @@ export default function AdminProdukDesa() {
       alert('Gagal mengunggah foto kategori');
       setUploading(false);
     }
-  };  
+  };
+  
+  const handleEditKategoriSubmit = async (e) => {
+    e.preventDefault();
+  }
+
+  const handleEditKategoriFotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditKategori({
+          ...editKategori,
+          foto: file,
+          fotoPreview: reader.result, // hasil pembacaan gambar untuk ditampilkan
+        });
+      };
+      reader.readAsDataURL(file); // membaca file sebagai URL data
+    }
+  };
+  
+
+  const handleCancelEditKategori = () => {
+    setEditKategori(null);
+    setShowEditKategoriForm(false);
+  };
+
+  const handleDeleteKategoriClick = async (kategoriId) => {
+    
+  };
+
+  const handleShowAddKategoriForm = () => {
+    setShowFormAddKategori(true); 
+  };
 
   const handleAddSubmit = async (event) => {
     event.preventDefault();
@@ -438,6 +480,7 @@ export default function AdminProdukDesa() {
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // eslint-disable-next-line no-unused-vars
   const currentItems = produkList
     .filter(
       (produk) =>
@@ -454,18 +497,17 @@ export default function AdminProdukDesa() {
         <h1>Produk Desa</h1>
       </div>
       <div className="admin-produk-desa">
-        {!showAddForm && !showEditForm && (
+        {!showAddForm && !showEditForm && !showAddCategoriForm && !showEditKategoriForm && (
           <div className="toolbar-produk">
             {adminData && adminData.level !== "kepala desa" && (
               <>
-              <button className="add-button" onClick={handleAddButtonClick}>
-                <i className="fas fa-plus"></i>
-                <p>Tambah Produk</p>
-              </button>
-              <button className="add-button" onClick={handleAddCategoryButtonClick}>
-        <i className="fas fa-plus"></i>
-        <p>Tambah Kategori</p>
-      </button>
+                <button className="add-button" onClick={handleAddButtonClick}>
+                  <i className="fas fa-plus"></i>
+                  <p>Tambah Produk</p>
+                </button>
+                <button className="show-button" onClick={handleAddCategoryButtonClick}>
+                  <p>Lihat Kategori</p>
+                </button>
               </>
             )}
             <div className="search">
@@ -479,43 +521,162 @@ export default function AdminProdukDesa() {
             </div>
           </div>
         )}
-        {/* Form Kategori */}
-        {currentItems.map((item) => (
-  <div key={item.id}>{item.name}</div>
-))}
-        {showAddCategoriForm && (
-        <form onSubmit={handleAddCategoriSubmit}>
-          <h2>Tambah Kategori</h2>
-          <br />
-          <div className="form-group">
-            <label htmlFor="name">Nama Kategori</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={newKategori.name}
-              onChange={(e) => setNewKategori({ ...newKategori, name: e.target.value })}
-              required
-            />
+        
+        {/* Tabel Kategori */}
+        {showAddCategoriForm && !showFormAddKategori && !showEditKategoriForm && (
+          <div>
+            <h2>Daftar Kategori</h2>
+            <div className="toolbar-produk">
+            {adminData && adminData.level !== "kepala desa" && (
+              <>
+                <button className="add-button" onClick={handleShowAddKategoriForm}>
+                  <i className="fas fa-plus"></i>
+                  <p>Tambah Kategori</p>
+                </button>
+              </>
+            )}
+            <div className="search">
+              <input
+                type="text"
+                placeholder="Cari Produk..."
+                value={searchInput}
+                onChange={handleInputChange}
+              />
+              <i className="fas fa-search"></i>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="foto">Foto Kategori</label>
-            <input
-              type="file"
-              id="foto"
-              name="foto"
-              onChange={(e) => setNewKategori({ ...newKategori, foto: e.target.files[0] })}
-              required
-            />
+            <table className="kategori-table">
+              <thead>
+                <tr>
+                  <th>Nama Kategori</th>
+                  <th>Foto</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {kategoriList.map((kategori) => (
+                  <tr key={kategori.id}>
+                    <td>{kategori.name}</td>
+                    <td>
+                      <img src={kategori.foto} alt={kategori.name} style={{ width: "100px", height: "100px" }} />
+                    </td>
+                    <td>
+                          <div style={{ display: "flex", justifyContent: "center"}}>
+                            <i
+                              className="fas fa-times"
+                              style={{
+                                backgroundColor: "red",
+                                color: "white",
+                                fontSize: "15px",
+                                borderRadius: "10px",
+                                cursor: "pointer",
+                                padding: "3px",
+                                marginRight: "8px",
+                                marginLeft: "5px"
+                              }}
+                              onClick={() => handleDeleteKategoriClick()}
+                            ></i>
+                            <i
+                              className="fas fa-edit"
+                              style={{
+                                color: "#000",
+                                fontSize: "20px",
+                                borderRadius: "3px",
+                                cursor: "pointer",
+                                marginLeft: "8px",
+                                marginRight: "5px",
+                                padding: "0",
+                              }}
+                              onClick={() => handleEditKategoriClick(kategori)} 
+                            ></i>
+                          </div>
+                        </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div className="button-row">
-            <button type="button" onClick={handleCancelClick}>
-              Batal
-            </button>
-            <button type="submit">Tambah</button>
-          </div>
-        </form>
-      )}
+        )}
+  
+        {/* Form Tambah Kategori */}
+        {showAddCategoriForm && showFormAddKategori && (
+          <form onSubmit={handleAddCategoriSubmit}>
+            <h2>Tambah Kategori</h2>
+            <br />
+            <div className="form-group">
+              <label htmlFor="name">Nama Kategori</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={newKategori.name}
+                onChange={(e) => setNewKategori({ ...newKategori, name: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="foto">Foto Kategori</label>
+              <input
+                type="file"
+                id="foto"
+                name="foto"
+                onChange={(e) => setNewKategori({ ...newKategori, foto: e.target.files[0] })}
+                required
+              />
+            </div>
+            <div className="button-row">
+              <button type="button" onClick={handleCancelClick}>
+                Batal
+              </button>
+              <button type="submit">Tambah</button>
+            </div>
+          </form>
+        )}
+
+        {/* Form Edit Kategori */}
+        {showEditKategoriForm && editKategori && (
+          <form onSubmit={handleEditKategoriSubmit}>
+            <h2>Edit Kategori</h2>
+            <div className="form-group">
+              <label htmlFor="editKategoriName">Nama Kategori</label>
+              <input
+                type="text"
+                id="editKategoriName"
+                name="editKategoriName"
+                value={editKategori.name}
+                onChange={(e) => setEditKategori({ ...editKategori, name: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="editKategoriFoto">Foto Kategori</label>
+              <input
+                type="file"
+                id="editKategoriFoto"
+                name="editKategoriFoto"
+                onChange={handleEditKategoriFotoChange}
+                required
+              />
+              {editKategori.foto && (
+                <img
+                  src={editKategori.fotoPreview}
+                  alt="Preview Foto"
+                  style={{ maxWidth: '200px', maxHeight: '200px', marginTop: '10px' }}
+                />
+              )}
+            </div>
+            <div className="button-row">
+              <button type="button" onClick={handleCancelEditKategori}>
+                Batal
+              </button>
+              <button type="submit">Simpan</button>
+            </div>
+          </form>
+        )}
+
+
+  
+        {/* Form Tambah Produk */}
         {showAddForm && (
           <form onSubmit={handleAddSubmit}>
             <h2>Tambah Produk</h2>
@@ -591,6 +752,8 @@ export default function AdminProdukDesa() {
             </div>
           </form>
         )}
+  
+        {/* Form Edit Produk */}
         {showEditForm && editProduk && (
           <form onSubmit={handleEditSubmit}>
             <h2>Edit Produk</h2>
@@ -673,102 +836,101 @@ export default function AdminProdukDesa() {
             </div>
           </form>
         )}
+  
         {showEditSuccess && (
           <div className="edit-success-message">
             Produk berhasil diperbarui!
           </div>
         )}
-{
-  !showAddForm && !showEditForm && !showEditSuccess && !showAddCategoriForm && (
-    <div>
-      <table className="produk-table">
-        <thead>
-          <tr>
-            <th>Kategori Produk</th>
-            <th>Nama Produk</th>
-            <th>Harga</th>
-            <th>Gambar</th>
-            <th>Deskripsi</th>
-            {adminData && adminData.level !== "kepala desa" && (
-              <th>Aksi</th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {produkList
-            .filter(
-              (produk) =>
-                produk.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-                produk.deskripsi.toLowerCase().includes(searchInput.toLowerCase())
-            )
-            .sort((a, b) => b.id - a.id) // Urutkan berdasarkan ID produk terbaru ke atas
-            .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) // Pagination logic
-            .map((produk) => (
-              <tr key={produk.id}>
-                <td className="kategori-produk-admin">
-                  {kategoriList.find((kategori) => kategori.id === produk.kategori_id)?.name}
-                </td>
-                <td className="nama-produk-admin">{produk.name}</td>
-                <td>{formatPrice(produk.harga)}</td>
-                <td>
-                  <img src={produk.foto} alt={produk.name} />
-                </td>
-                <td>{produk.deskripsi}</td>
-                {adminData && adminData.level !== "kepala desa" && (
-                  <td>
-                    <div style={{ display: "flex" }}>
-                      <i
-                        className="fas fa-times"
-                        style={{
-                          backgroundColor: "red",
-                          color: "white",
-                          fontSize: "15px",
-                          borderRadius: "10px",
-                          cursor: "pointer",
-                          padding: "3px",
-                          marginRight: "8px",
-                          marginLeft: "5px"
-                        }}
-                        onClick={() => handleDeleteClick(produk.id)}
-                      ></i>
-                      <i
-                        className="fas fa-edit"
-                        style={{
-                          color: "#000",
-                          fontSize: "20px",
-                          borderRadius: "3px",
-                          cursor: "pointer",
-                          marginLeft: "8px",
-                          marginRight: "5px",
-                          padding: "0",
-                        }}
-                        onClick={() => handleEditClick(produk)}
-                      ></i>
-                    </div>
-                  </td>
-                )}
-              </tr>
-            ))}
-        </tbody>
-      </table>
-      <div className="pagination-dots">
-        {Array.from({
-          length: Math.ceil(produkList.length / itemsPerPage),
-        }).map((_, index) => (
-          <span
-            key={index}
-            onClick={() => paginate(index + 1)}
-            className={currentPage === index + 1 ? "active" : ""}
-          >
-            {index + 1}
-          </span>
-        ))}
+  
+        {!showAddForm && !showEditForm && !showEditSuccess && !showAddCategoriForm && (
+          <div>
+            <table className="produk-table">
+              <thead>
+                <tr>
+                  <th>Kategori Produk</th>
+                  <th>Nama Produk</th>
+                  <th>Harga</th>
+                  <th>Gambar</th>
+                  <th>Deskripsi</th>
+                  {adminData && adminData.level !== "kepala desa" && (
+                    <th>Aksi</th>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {produkList
+                  .filter(
+                    (produk) =>
+                      produk.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                      produk.deskripsi.toLowerCase().includes(searchInput.toLowerCase())
+                  )
+                  .sort((a, b) => b.id - a.id) // Urutkan berdasarkan ID produk terbaru ke atas
+                  .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) // Pagination logic
+                  .map((produk) => (
+                    <tr key={produk.id}>
+                      <td className="kategori-produk-admin">
+                        {kategoriList.find((kategori) => kategori.id === produk.kategori_id)?.name}
+                      </td>
+                      <td className="nama-produk-admin">{produk.name}</td>
+                      <td>{formatPrice(produk.harga)}</td>
+                      <td>
+                        <img src={produk.foto} alt={produk.name} />
+                      </td>
+                      <td>{produk.deskripsi}</td>
+                      {adminData && adminData.level !== "kepala desa" && (
+                        <td>
+                          <div style={{ display: "flex" }}>
+                            <i
+                              className="fas fa-times"
+                              style={{
+                                backgroundColor: "red",
+                                color: "white",
+                                fontSize: "15px",
+                                borderRadius: "10px",
+                                cursor: "pointer",
+                                padding: "3px",
+                                marginRight: "8px",
+                                marginLeft: "5px"
+                              }}
+                              onClick={() => handleDeleteClick(produk.id)}
+                            ></i>
+                            <i
+                              className="fas fa-edit"
+                              style={{
+                                color: "#000",
+                                fontSize: "20px",
+                                borderRadius: "3px",
+                                cursor: "pointer",
+                                marginLeft: "8px",
+                                marginRight: "5px",
+                                padding: "0",
+                              }}
+                              onClick={() => handleEditClick(produk)}
+                            ></i>
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            <div className="pagination-dots">
+              {Array.from({
+                length: Math.ceil(produkList.length / itemsPerPage),
+              }).map((_, index) => (
+                <span
+                  key={index}
+                  onClick={() => paginate(index + 1)}
+                  className={currentPage === index + 1 ? "active" : ""}
+                >
+                  {index + 1}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
-  )
-}
-
-      </div>
-    </div>
-  );
+  );  
 }
