@@ -119,6 +119,7 @@ export default function AdminProdukDesa() {
       console.error("Error fetching produk:", error);
     }
   };
+  
   const fetchAdminData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -208,91 +209,164 @@ export default function AdminProdukDesa() {
 
   const handleAddCategoriSubmit = async (event) => {
     event.preventDefault();
-  
+
     try {
-      const fotoRef = ref(storage, `images/kategori/${newKategori.foto.name}`);
-      const uploadTask = uploadBytesResumable(fotoRef, newKategori.foto);
-  
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setUploadProgress(progress);
-          setUploading(true);
-        },
-        (error) => {
-          console.error("Error uploading image:", error);
-          alert('Gagal mengunggah foto kategori');
-          setUploading(false);
-        },
-        async () => {
-          try {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            console.log("Firebase download URL:", downloadURL);
-  
-            const formData = {
-              name: newKategori.name,
-              foto: downloadURL,
-            };
-  
-            const response = await axios.post('http://localhost:5000/kategori', formData, {
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            });
-  
-            if (response.status === 201) {
-              alert('Kategori berhasil ditambahkan');
-              fetchKategori(); // Refresh category list after successful addition
-              setShowAddCategoriForm(false); // Close add category form
-              setNewKategori({ name: "", foto: null }); // Reset form
-            } else {
-              console.error(`Error: ${response.status} ${response.statusText}`);
-              alert(`Gagal menambahkan kategori: ${response.data.message}`);
+        const fotoRef = ref(storage, `images/kategori/${newKategori.foto.name}`);
+        const uploadTask = uploadBytesResumable(fotoRef, newKategori.foto);
+
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                setUploadProgress(progress);
+                setUploading(true);
+            },
+            (error) => {
+                console.error("Error uploading image:", error);
+                alert('Gagal mengunggah foto kategori');
+                setUploading(false);
+            },
+            async () => {
+                try {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    console.log("Firebase download URL:", downloadURL);
+
+                    const formData = {
+                        name: newKategori.name,
+                        foto: downloadURL,
+                    };
+
+                    const response = await axios.post('http://localhost:5000/kategori', formData, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.status === 201) {
+                        alert('Kategori berhasil ditambahkan');
+                        fetchKategori();
+                        setShowAddCategoriForm(false);
+                        setNewKategori({ name: "", foto: null });
+                    } else {
+                        console.error(`Error: ${response.status} ${response.statusText}`);
+                        alert(`Gagal menambahkan kategori: ${response.data.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('kategori sudah ada!');
+                }
+
+                setUploading(false);
             }
-          } catch (error) {
-            console.error('Error:', error);
-            alert('kategori sudah ada!');
-          }
-  
-          setUploading(false);
-        }
-      );
+        );
     } catch (error) {
-      console.error('Error:', error);
-      alert('Gagal mengunggah foto kategori');
-      setUploading(false);
+        console.error('Error:', error);
+        alert('Gagal mengunggah foto kategori');
+        setUploading(false);
     }
-  };
+};
   
-  const handleEditKategoriSubmit = async (e) => {
-    e.preventDefault();
+const handleEditKategoriSubmit = async (event) => {
+  event.preventDefault();
+  if (!editKategori) return;
+
+  try {
+    let downloadURL = editKategori.foto;
+
+    // Upload the new photo if a new file is selected
+    if (editKategori.foto instanceof File) {
+      const fotoRef = ref(storage, `images/kategori/${editKategori.foto.name}`);
+      const uploadTask = uploadBytesResumable(fotoRef, editKategori.foto);
+
+      await new Promise((resolve, reject) => {
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setUploadProgress(progress);
+            setUploading(true);
+          },
+          (error) => {
+            console.error("Error uploading image:", error);
+            alert('Gagal mengunggah foto kategori');
+            setUploading(false);
+            reject(error);
+          },
+          async () => {
+            downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve();
+          }
+        );
+      });
+    }
+
+    // Prepare form data for the PUT request
+    const formData = {
+      name: editKategori.name,
+      foto: downloadURL,
+    };
+
+    // Make the PUT request to update the category
+    const response = await axios.put(`http://localhost:5000/kategori/${editKategori.id}`, formData, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // Check response status and handle accordingly
+    if (response.status === 200) {
+      alert('Kategori berhasil diperbarui');
+      fetchKategori(); // Refresh category list after update
+      setShowEditKategoriForm(false); // Close edit form
+      setEditKategori(null); // Clear editKategori state
+    } else {
+      console.error(`Error: ${response.status} ${response.statusText}`);
+      alert(`Gagal memperbarui kategori: ${response.data.message}`);
+    }
+
+    setUploading(false); // Set uploading state to false after request completes
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Gagal memperbarui kategori');
+    setUploading(false);
   }
+};
 
-  const handleEditKategoriFotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditKategori({
-          ...editKategori,
-          foto: file,
-          fotoPreview: reader.result, // hasil pembacaan gambar untuk ditampilkan
-        });
-      };
-      reader.readAsDataURL(file); // membaca file sebagai URL data
-    }
-  };
+const handleEditKategoriFotoChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setEditKategori({
+        ...editKategori,
+        foto: file,
+        fotoPreview: reader.result,
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+};
   
+const handleCancelEditKategori = () => {
+  setEditKategori(null);
+  setShowEditKategoriForm(false);
+};
 
-  const handleCancelEditKategori = () => {
-    setEditKategori(null);
-    setShowEditKategoriForm(false);
-  };
-
-  const handleDeleteKategoriClick = async (kategoriId) => {
-    
-  };
+const handleDeleteKategoriClick = async (kategoriId) => {
+  if (!window.confirm("Apakah Anda yakin ingin menghapus kategori ini?")) {
+    return;
+  }
+  try {
+    const response = await axios.delete(`http://localhost:5000/kategori/${kategoriId}`);
+    if (response.status === 200) {
+      alert('Kategori berhasil dihapus');
+      fetchKategori(); // Metode untuk mengambil kembali kategori setelah penghapusan
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Tidak dapat menghapus kategori yang memiliki produk terkait. Hapus produk terlebih dahulu.');
+  }
+};
 
   const handleShowAddKategoriForm = () => {
     setShowFormAddKategori(true); 
@@ -574,7 +648,7 @@ export default function AdminProdukDesa() {
                                 marginRight: "8px",
                                 marginLeft: "5px"
                               }}
-                              onClick={() => handleDeleteKategoriClick()}
+                              onClick={() => handleDeleteKategoriClick(kategori.id)}
                             ></i>
                             <i
                               className="fas fa-edit"
@@ -598,83 +672,79 @@ export default function AdminProdukDesa() {
           </div>
         )}
   
-        {/* Form Tambah Kategori */}
-        {showAddCategoriForm && showFormAddKategori && (
-          <form onSubmit={handleAddCategoriSubmit}>
-            <h2>Tambah Kategori</h2>
-            <br />
-            <div className="form-group">
-              <label htmlFor="name">Nama Kategori</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={newKategori.name}
-                onChange={(e) => setNewKategori({ ...newKategori, name: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="foto">Foto Kategori</label>
-              <input
-                type="file"
-                id="foto"
-                name="foto"
-                onChange={(e) => setNewKategori({ ...newKategori, foto: e.target.files[0] })}
-                required
-              />
-            </div>
-            <div className="button-row">
-              <button type="button" onClick={handleCancelClick}>
-                Batal
-              </button>
-              <button type="submit">Tambah</button>
-            </div>
-          </form>
+  {showAddCategoriForm && showFormAddKategori && (
+            <form onSubmit={handleAddCategoriSubmit}>
+                <h2>Tambah Kategori</h2>
+                <br />
+                <div className="form-group">
+                    <label htmlFor="name">Nama Kategori</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={newKategori.name}
+                        onChange={(e) => setNewKategori({ ...newKategori, name: e.target.value })}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="foto">Foto Kategori</label>
+                    <input
+                        type="file"
+                        id="foto"
+                        name="foto"
+                        onChange={(e) => setNewKategori({ ...newKategori, foto: e.target.files[0] })}
+                        required
+                    />
+                </div>
+                <div className="button-row">
+                    <button type="button" onClick={handleCancelClick}>
+                        Batal
+                    </button>
+                    <button type="submit">Tambah</button>
+                </div>
+            </form>
         )}
 
-        {/* Form Edit Kategori */}
         {showEditKategoriForm && editKategori && (
-          <form onSubmit={handleEditKategoriSubmit}>
-            <h2>Edit Kategori</h2>
-            <div className="form-group">
-              <label htmlFor="editKategoriName">Nama Kategori</label>
-              <input
-                type="text"
-                id="editKategoriName"
-                name="editKategoriName"
-                value={editKategori.name}
-                onChange={(e) => setEditKategori({ ...editKategori, name: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="editKategoriFoto">Foto Kategori</label>
-              <input
-                type="file"
-                id="editKategoriFoto"
-                name="editKategoriFoto"
-                onChange={handleEditKategoriFotoChange}
-                required
-              />
-              {editKategori.foto && (
-                <img
-                  src={editKategori.fotoPreview}
-                  alt="Preview Foto"
-                  style={{ maxWidth: '200px', maxHeight: '200px', marginTop: '10px' }}
-                />
-              )}
-            </div>
-            <div className="button-row">
-              <button type="button" onClick={handleCancelEditKategori}>
-                Batal
-              </button>
-              <button type="submit">Simpan</button>
-            </div>
-          </form>
+            <form onSubmit={handleEditKategoriSubmit}>
+                <h2>Edit Kategori</h2>
+                <div className="form-group">
+                    <label htmlFor="editKategoriName">Nama Kategori</label>
+                    <input
+                        type="text"
+                        id="editKategoriName"
+                        name="editKategoriName"
+                        value={editKategori.name}
+                        onChange={(e) => setEditKategori({ ...editKategori, name: e.target.value })}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="editKategoriFoto">Foto Kategori</label>
+                    <input
+                        type="file"
+                        id="editKategoriFoto"
+                        name="editKategoriFoto"
+                        onChange={handleEditKategoriFotoChange}
+                        required
+                    />
+                    {editKategori.foto && (
+                        <img
+                            src={editKategori.fotoPreview}
+                            alt="Preview Foto"
+                            style={{ maxWidth: '200px', maxHeight: '200px', marginTop: '10px' }}
+                        />
+                    )}
+                </div>
+                <div className="button-row">
+                    <button type="button" onClick={handleCancelEditKategori}>
+                        Batal
+                    </button>
+                    <button type="submit">Simpan</button>
+                </div>
+            </form>
         )}
-
-
   
         {/* Form Tambah Produk */}
         {showAddForm && (
