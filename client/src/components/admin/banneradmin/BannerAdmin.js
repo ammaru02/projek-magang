@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import "./BannerAdmin.css";
 
@@ -6,12 +7,14 @@ export default function BannerAdmin() {
     const [banners, setBanners] = useState([]);
     const [showAddForm, setShowAddForm] = useState(false);
     const [showEditForm, setShowEditForm] = useState(false);
+    const [adminData, setAdminData] = useState(null); 
     const [searchInput, setSearchInput] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentBanner, setCurrentBanner] = useState(null);
 
     useEffect(() => {
+      fetchAdminData();
         const fetchBanners = async () => {
           try {
             const response = await fetch("http://127.0.0.1:5000/banner");
@@ -31,6 +34,20 @@ export default function BannerAdmin() {
     
         fetchBanners();
       }, []);
+      const fetchAdminData = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://localhost:5000/admin/profile', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const adminData = response.data;
+            setAdminData(adminData); // Tambahkan ini
+        } catch (error) {
+            console.error("Error fetching admin data:", error);
+        }
+    };
 
   const handleAddButtonClick = () => {
     setShowAddForm(true);
@@ -236,10 +253,11 @@ export default function BannerAdmin() {
       <div className='admin-banner-list'>
         {!showAddForm && !showEditForm && (
           <div className='toolbar-banner'>
+            {adminData && adminData.level !== "kepala desa" && (
             <button className="add-button" onClick={handleAddButtonClick}>
               <i className="fas fa-plus"></i>
               <p>Tambah Banner</p>
-            </button>
+            </button>)}
             <div className="search">
               <input
                 type="text"
@@ -309,7 +327,8 @@ export default function BannerAdmin() {
               <thead>
                 <tr>
                   <th>Gambar</th>
-                  <th className='aksi'>Aksi</th>
+                  {adminData && adminData.level !== 'kepala desa' && (
+                  <th className='aksi'>Aksi</th>)}
                 </tr>
               </thead>
               <tbody>
@@ -328,6 +347,7 @@ export default function BannerAdmin() {
                           className="image-banner"
                         />
                       </td>
+                      {adminData && adminData.level !== 'kepala desa' && (
                       <td>
                         <div style={{ display: "flex", justifyContent: "center" }}>
                           <i
@@ -358,7 +378,7 @@ export default function BannerAdmin() {
                             onClick={() => handleEditButtonClick(banner)}
                           ></i>
                         </div>
-                      </td>
+                      </td>)}
                     </tr>
                   ))}
               </tbody>

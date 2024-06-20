@@ -11,6 +11,18 @@ def upload_to_firebase_storage(file):
     blob.make_public()  # Membuat URL gambar publik
     return blob.public_url
 
+def count_produk_by_kategori():
+    try:
+        kategori_id = request.args.get('kategori_id')
+        if not kategori_id:
+            return jsonify({'error': 'Kategori ID is required'}), 400
+        
+        produk_count = Produk.query.filter_by(kategori_id=kategori_id).count()
+        return jsonify({'count': produk_count}), 200
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
 def index():
     try:
         kategori_id = request.args.get('kategoriId')

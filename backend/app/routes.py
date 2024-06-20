@@ -182,6 +182,9 @@ def kategori_detail(id):
         return KategoriController.delete(id)
 
 from flask import request, jsonify
+@app.route('/produk/count', methods=['GET'])
+def count_produk_by_kategoris():
+    return ProdukController.count_produk_by_kategori()
 
 @app.route('/produk', methods=['GET', 'POST'])
 def produks():

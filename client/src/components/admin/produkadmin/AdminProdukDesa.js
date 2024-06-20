@@ -357,14 +357,27 @@ const handleDeleteKategoriClick = async (kategoriId) => {
     return;
   }
   try {
-    const response = await axios.delete(`http://localhost:5000/kategori/${kategoriId}`);
-    if (response.status === 200) {
-      alert('Kategori berhasil dihapus');
-      fetchKategori(); // Metode untuk mengambil kembali kategori setelah penghapusan
+    // Lakukan fetch jumlah produk terkait berdasarkan kategoriId
+    const produkCountResponse = await axios.get(`http://localhost:5000/produk/count?kategori_id=${kategoriId}`);
+    const produkCount = produkCountResponse.data.count;
+
+    // Tampilkan alert dengan jumlah produk terkait jika ada
+    if (produkCount > 0) {
+      alert(`Tidak dapat menghapus kategori, masih ada ${produkCount} produk. Hapus produk terlebih dahulu.`);
+    } else {
+      // Lanjutkan untuk menghapus kategori jika tidak ada produk terkait
+      const response = await axios.delete(`http://localhost:5000/kategori/${kategoriId}`);
+      if (response.status === 200) {
+        alert('Kategori berhasil dihapus');
+        fetchKategori(); // Metode untuk mengambil kembali kategori setelah penghapusan
+      } else {
+        console.error(`Error: ${response.status} ${response.statusText}`);
+        alert(`Gagal menghapus kategori: ${response.data.error}`);
+      }
     }
   } catch (error) {
+    alert('Terjadi kesalahan saat menghapus kategori');
     console.error('Error:', error);
-    alert('Tidak dapat menghapus kategori yang memiliki produk terkait. Hapus produk terlebih dahulu.');
   }
 };
 
