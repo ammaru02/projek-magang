@@ -36,7 +36,7 @@
 
 .blog-post img {
   width: 100%; /* Lebar gambar mengisi lebar konten utama */
-  height: 200px;
+  height: 300px;
 }
 
 .truncate-text {
