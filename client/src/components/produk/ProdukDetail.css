@@ -47,6 +47,15 @@
     margin-bottom: 5px;
 }
 
+.contact-options{
+    display: flex;
+    gap: 2px;
+    margin-right: 900px;
+    margin-bottom: 5px;
+}
+
+
+
 /* Media query untuk ukuran layar mobile */
 @media (max-width: 768px) {
     .page-detail {
