@@ -214,12 +214,20 @@ export default function ArtikelAdmin() {
 
     const handleAddFormSubmit = async (e) => {
         e.preventDefault();
+    
+        // Validasi form
+        const { judul, tanggal, gambar, deskripsi } = formData;
+        if (!judul || !tanggal || !gambar || !deskripsi) {
+            alert("Form harus diisi semua.");
+            return;
+        }
+    
         try {
             // Jika ada gambar yang diunggah, unggah ke Firebase Storage terlebih dahulu
             if (formData.gambar instanceof File) {
                 const fotoRef = ref(storage, `images/artikel/${formData.gambar.name}`);
                 const uploadTask = uploadBytesResumable(fotoRef, formData.gambar);
-
+    
                 // Menangani status perubahan unggah foto
                 uploadTask.on(
                     "state_changed",
@@ -235,10 +243,10 @@ export default function ArtikelAdmin() {
                         // Dapatkan URL unduhan gambar setelah proses unggah selesai
                         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
                         console.log("Firebase download URL:", downloadURL);
-
+    
                         // Perbarui formData dengan URL gambar yang baru diunggah
                         const newFormData = { ...formData, foto: downloadURL };
-
+    
                         // Kirim permintaan POST ke server XAMPP untuk menambahkan artikel
                         const requestOptions = {
                             method: "POST",
@@ -250,7 +258,7 @@ export default function ArtikelAdmin() {
                             throw new Error("Failed to add article.");
                         }
                         console.log("Article added successfully.");
-
+    
                         // Refresh halaman setelah berhasil tambah
                         window.location.reload();
                     }
@@ -264,7 +272,7 @@ export default function ArtikelAdmin() {
             setError("Failed to add article: " + error.message);
         }
     };
-
+    
     // Fungsi untuk mengirim permintaan POST ke server untuk menambah artikel
     const sendAddRequest = async () => {
         const requestOptions = {
@@ -287,6 +295,7 @@ export default function ArtikelAdmin() {
                 setError("Failed to add article: " + error.message); // Menyimpan pesan kesalahan ke state
             });
     };
+    
 
     const handleDeleteButtonClick = async (artikelId) => {
         if (window.confirm("Apakah Anda yakin ingin menghapus artikel ini?")) {
@@ -357,6 +366,7 @@ export default function ArtikelAdmin() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, judul: e.target.value })
                                     }
+                                    required
                                 />
                             </div>
                             <div className="form-group">
@@ -369,6 +379,7 @@ export default function ArtikelAdmin() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, tanggal: e.target.value })
                                     }
+                                    required
                                 />
                             </div>
                             <div className="form-group">
@@ -380,6 +391,7 @@ export default function ArtikelAdmin() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, gambar: e.target.files[0] })
                                     }
+                                    required
                                 />
                             </div>
                             <div className="form-group">
@@ -417,6 +429,7 @@ export default function ArtikelAdmin() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, judul: e.target.value })
                                     }
+                                    required
                                 />
                             </div>
                             <div className="form-group">
@@ -429,6 +442,7 @@ export default function ArtikelAdmin() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, tanggal: e.target.value })
                                     }
+                                    required
                                 />
                             </div>
                             <div className="form-group">
@@ -458,6 +472,7 @@ export default function ArtikelAdmin() {
                                     onChange={(value) =>
                                         setFormData({ ...formData, deskripsi: value })
                                     }
+                                    required
                                 ></ReactQuill>
                             </div>
                             <div className="button-row">
