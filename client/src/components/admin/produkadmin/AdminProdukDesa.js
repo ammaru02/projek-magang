@@ -363,7 +363,7 @@ const handleDeleteKategoriClick = async (kategoriId) => {
 
     // Tampilkan alert dengan jumlah produk terkait jika ada
     if (produkCount > 0) {
-      alert(`Tidak dapat menghapus kategori, masih ada ${produkCount} produk. Hapus produk terlebih dahulu.`);
+      alert(`Tidak dapat menghapus kategori, masih ada ${produkCount} produk dalam kategori. Hapus produk terlebih dahulu.`);
     } else {
       // Lanjutkan untuk menghapus kategori jika tidak ada produk terkait
       const response = await axios.delete(`http://localhost:5000/kategori/${kategoriId}`);
@@ -390,81 +390,81 @@ const handleDeleteKategoriClick = async (kategoriId) => {
   
     // Validasi form
     if (
-      !newProduk.name ||
-      !newProductFoto ||
-      !newProduk.kategori_id ||
-      !newProduk.harga ||
-      !newProduk.deskripsi
+        !newProduk.name ||
+        !newProductFoto ||
+        !newProduk.kategori_id ||
+        !newProduk.harga ||
+        !newProduk.deskripsi
     ) {
-      console.error("Please fill in all fields and select an image.");
-      return;
+        console.error("Form harus diisi semua!");
+        alert("Form harus diisi semua!");
+        return;
     }
   
     try {
-      // Upload the image to Firebase Storage
-      const fotoRef = ref(storage, `images/produk/${newProductFoto.name}`);
-      const uploadTask = uploadBytesResumable(fotoRef, newProductFoto);
+        // Upload the image to Firebase Storage
+        const fotoRef = ref(storage, `images/produk/${newProductFoto.name}`);
+        const uploadTask = uploadBytesResumable(fotoRef, newProductFoto);
   
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setUploadProgress(progress);
-        },
-        (error) => {
-          console.error("Error uploading image:", error);
-        },
-        async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          console.log("Firebase download URL:", downloadURL);
-  
-          // Prepare the payload to send to the server
-          const formData = {
-            ...newProduk,
-            foto: downloadURL,
-          };
-  
-          // POST request to add the product
-          const response = await fetch("http://127.0.0.1:5000/produk", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                setUploadProgress(progress);
             },
-            body: JSON.stringify(formData),
-          });
+            (error) => {
+                console.error("Error uploading image:", error);
+            },
+            async () => {
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                console.log("Firebase download URL:", downloadURL);
   
-          const responseBody = await response.json();
+                // Prepare the payload to send to the server
+                const formData = {
+                    ...newProduk,
+                    foto: downloadURL,
+                };
   
-          if (!response.ok) {
-            console.error(
-              `Server responded with ${response.status}: ${response.statusText}`
-            );
-            console.error("Response body:", responseBody);
+                // POST request to add the product
+                const response = await fetch("http://127.0.0.1:5000/produk", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
   
-            // Check if the error message indicates the product already exists in the same category
-            if (responseBody.message && responseBody.message.includes("already exists in this category")) {
-              alert("Produk sudah ada di kategori yang sama");
+                const responseBody = await response.json();
+  
+                if (!response.ok) {
+                    console.error(`Server responded with ${response.status}: ${response.statusText}`);
+                    console.error("Response body:", responseBody);
+  
+                    // Check if the error message indicates the product already exists in the same category
+                    if (responseBody.message && responseBody.message.includes("already exists in this category")) {
+                        alert("Produk sudah ada di kategori yang sama");
+                    }
+                } else {
+                    console.log("New product added successfully.");
+                    alert("Produk berhasil ditambahkan");
+                    setNewProduk({
+                        kategori_id: "",
+                        name: "",
+                        harga: "",
+                        foto: "",
+                        deskripsi: "",
+                    });
+                    setNewProductFoto(null);
+                    fetchProdukList();
+                    setShowAddForm(false);
+                }
             }
-          } else {
-            console.log("New product added successfully.");
-            alert("Produk berhasil ditambahkan");
-            setNewProduk({
-              kategori_id: "",
-              name: "",
-              harga: "",
-              foto: "",
-              deskripsi: "",
-            });
-            setNewProductFoto(null);
-            fetchProdukList();
-            setShowAddForm(false);
-          }
-        }
-      );
+        );
     } catch (error) {
-      console.error("Failed to add product:", error);
+        console.error("Failed to add product:", error);
     }
-  };  
+};
+
 
   const handleDeleteClick = async (productId) => {
     if (!window.confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
@@ -732,9 +732,16 @@ const handleDeleteKategoriClick = async (kategoriId) => {
                         onChange={(e) => setEditKategori({ ...editKategori, name: e.target.value })}
                         required
                     />
-                </div>
+                </div>                
                 <div className="form-group">
                     <label htmlFor="editKategoriFoto">Foto Kategori</label>
+                    {editKategori.foto && (
+                        <img
+                            src={editKategori.foto}
+                            alt="Preview Foto"
+                            style={{ maxWidth: '200px', maxHeight: '200px', marginTop: '10px' }}
+                        />
+                    )}
                     <input
                         type="file"
                         id="editKategoriFoto"
@@ -742,13 +749,7 @@ const handleDeleteKategoriClick = async (kategoriId) => {
                         onChange={handleEditKategoriFotoChange}
                         required
                     />
-                    {editKategori.foto && (
-                        <img
-                            src={editKategori.fotoPreview}
-                            alt="Preview Foto"
-                            style={{ maxWidth: '200px', maxHeight: '200px', marginTop: '10px' }}
-                        />
-                    )}
+                    
                 </div>
                 <div className="button-row">
                     <button type="button" onClick={handleCancelEditKategori}>
@@ -773,6 +774,7 @@ const handleDeleteKategoriClick = async (kategoriId) => {
                 onChange={(e) =>
                   setNewProduk({ ...newProduk, kategori_id: e.target.value })
                 }
+                required
               >
                 <option value="">Pilih Kategori</option>
                 {kategoriList.map((kategori) => (
@@ -792,18 +794,20 @@ const handleDeleteKategoriClick = async (kategoriId) => {
                 onChange={(e) =>
                   setNewProduk({ ...newProduk, name: e.target.value })
                 }
+                required
               />
             </div>
             <div className="form-group">
               <label htmlFor="harga">Harga</label>
               <input
-                type="text"
+                type="number"
                 id="harga"
                 name="harga"
                 value={newProduk.harga}
                 onChange={(e) =>
                   setNewProduk({ ...newProduk, harga: e.target.value })
-                }
+                }                
+                required
               />
             </div>
             <div className="form-group">
@@ -813,6 +817,7 @@ const handleDeleteKategoriClick = async (kategoriId) => {
                 id="foto"
                 name="foto"
                 onChange={handleNewProductFotoChange}
+                required
               />
             </div>
             <div className="form-group">
@@ -824,6 +829,7 @@ const handleDeleteKategoriClick = async (kategoriId) => {
                 onChange={(e) =>
                   setNewProduk({ ...newProduk, deskripsi: e.target.value })
                 }
+                required
               ></textarea>
             </div>
             {uploading && <progress value={uploadProgress} max="100" />}
@@ -849,6 +855,7 @@ const handleDeleteKategoriClick = async (kategoriId) => {
                 onChange={(e) =>
                   setEditProduk({ ...editProduk, kategori_id: e.target.value })
                 }
+                required
               >
                 <option value="">Pilih Kategori</option>
                 {kategoriList.map((kategori) => (
@@ -868,18 +875,20 @@ const handleDeleteKategoriClick = async (kategoriId) => {
                 onChange={(e) =>
                   setEditProduk({ ...editProduk, name: e.target.value })
                 }
+                required
               />
             </div>
             <div className="form-group">
               <label htmlFor="harga">Harga</label>
               <input
-                type="text"
+                type="number"
                 id="harga"
                 name="harga"
                 value={editProduk.harga}
                 onChange={(e) =>
                   setEditProduk({ ...editProduk, harga: e.target.value })
                 }
+                required
               />
             </div>
             <div className="form-group">
@@ -909,6 +918,7 @@ const handleDeleteKategoriClick = async (kategoriId) => {
                 onChange={(e) =>
                   setEditProduk({ ...editProduk, deskripsi: e.target.value })
                 }
+                required
               ></textarea>
             </div>
             <div className="button-row">

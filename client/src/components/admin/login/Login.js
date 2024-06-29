@@ -26,7 +26,7 @@ export default function Login() {
         setMessage(response.data.message || 'Login failed');
       }
     } catch (error) {
-      setMessage('Error logging in');
+      setMessage('Username atau password salah. Silakan cek kembali.');
       console.error('Error during login:', error);
     }
   };
