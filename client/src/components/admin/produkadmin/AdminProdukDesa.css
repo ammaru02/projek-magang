@@ -185,6 +185,7 @@
 }
 
 .admin-produk-container form input[type="text"],
+.admin-produk-container form input[type="number"],
 .admin-produk-container form input[type="file"],
 .admin-produk-container form textarea {
   width: 100%;
