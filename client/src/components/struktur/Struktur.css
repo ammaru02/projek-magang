@@ -1,12 +1,5 @@
-.card-struktur {
-    width: 100%;
-    margin: auto;
-    padding: 20px;
-}
-
 .struktur-judul {
     text-align: center;
-    margin-top: 20px;
     position: relative;
 }
 
@@ -17,28 +10,7 @@
     margin: 0 auto; /* Mengatur margin untuk pusat */
 }
 
-.struktur-card {
-    width: 200px;
-    margin: 5px;
-    margin-top: 50px; /* Mengurangi margin atas */
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-height: 300px; /* Atur tinggi maksimum card */
-    overflow-y: hidden; /* Tambahkan scroll jika konten melebihi tinggi maksimum */
-}
 
-.card-image-struktur {
-    width: 100%;
-    height: 200px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-}
-
-.card-title {
-    padding: 5px;
-    margin-bottom: 10px; /* Mengurangi margin bawah */
-}
 
 @media (max-width: 768px) {
     .container {
