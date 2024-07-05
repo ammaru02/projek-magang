@@ -31,7 +31,7 @@ export default function AdminProfilDesa() {
   // eslint-disable-next-line no-unused-vars
   const [showEditStrukturForm, setShowEditStrukturForm] = useState(false);
   const [adminData, setAdminData] = useState(null); 
-  const [activePage, setActivePage] = useState('');
+  const [activePage, setActivePage] = useState('visi-misi');
 
   useEffect(() => {
     fetchInitialData();
