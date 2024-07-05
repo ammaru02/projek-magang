@@ -20,7 +20,7 @@
 }
 
 .card {
-    border: 5px solid #007258;
+    border: 5px solid #008DDA;
     border-radius: 10px;
     width: calc(50% - 20px); /* Mengatur lebar kartu menjadi setengah lebar kontainer dengan margin */
     max-width: 300px; /* Batasi lebar maksimum kartu */
