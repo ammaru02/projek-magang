@@ -200,3 +200,37 @@ def change_password(current_user):
     current_user.password = generate_password_hash(new_password)
     db.session.commit()
     return jsonify({'message': 'Password updated successfully'}), 200
+
+def create():
+    data = request.get_json()
+        
+    name = data.get('name')
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    level = data.get('level')
+
+    if not name or not username or not email or not password or not level:
+        return jsonify({'message': 'All fields are required'}), 400
+        
+    if Admin.query.filter_by(email=email).first() or Admin.query.filter_by(username=username).first():
+        return jsonify({'message': 'User with this email or username already exists'}), 400
+
+    hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        
+    new_admin = Admin(
+        name=name,
+        username=username,
+        email=email,
+        password=hashed_password,
+        level=level
+    )
+
+    try:
+        db.session.add(new_admin)
+        db.session.commit()
+        logger.info(f"Admin created: {new_admin.serialize()}")
+        return jsonify({'message': 'Admin created successfully'}), 201
+    except Exception as e:
+        logger.error(f"Error creating admin: {str(e)}", exc_info=True)
+        return jsonify({'message': 'Error creating admin'}), 500

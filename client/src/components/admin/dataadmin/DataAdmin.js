@@ -86,7 +86,7 @@ export default function AdminPanel() {
         e.preventDefault();
         if (view === 'edit') {
             if (formData.oldPassword === '' || formData.newPassword === '') {
-                setMessage('Old Password and New Password fields cannot be empty');
+                setMessage('Password lama and Password baru tidak boleh kosong');
                 return;
             }
 
@@ -149,7 +149,7 @@ export default function AdminPanel() {
                                 <input type="text" name="level" value={formData.level} readOnly />
                             </label>
                             <label>
-                                Name:
+                                Nama:
                                 <input type="text" name="name" value={formData.name} readOnly />
                             </label>
                             <label>
@@ -163,19 +163,19 @@ export default function AdminPanel() {
                             <div className="password-fields">
                                 <div className="password-field">
                                     <label>
-                                        Old Password:
+                                        Password Lama:
                                         <input type="password" name="oldPassword" value={formData.oldPassword} onChange={handleChange} />
                                     </label>
                                 </div>
                                 <div className="password-field">
                                     <label>
-                                        New Password:
+                                        Password Baru:
                                         <input type="password" name="newPassword" value={formData.newPassword} onChange={handleChange} />
                                     </label>
                                 </div>
                             </div>
                             <div className="button-group">
-                                <button type="submit">Change Password</button>
+                                <button type="submit">Ubah Password</button>
                                 {(formData.level === 'super admin') && <button type="button" onClick={() => setView('input')}>Input Data</button>}
                             </div>
                         </>
